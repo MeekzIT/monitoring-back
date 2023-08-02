@@ -1,7 +1,11 @@
+const { map } = require("../app");
 const {
   getBenefit,
   getExpenses,
   getBenefitByDays,
+  getBenefitsByMode,
+  getExpensesByModes,
+  transformData,
 } = require("../services/graphics");
 const { getModeName, getInfoItemValues } = require("../services/item");
 
@@ -54,8 +58,8 @@ const clacData = async (req, res) => {
       modeUsedTime6,
     ];
     const data = [];
-    await info.map((i, idx) => {
-      const itemValues = getInfoItemValues(
+    await info.map(async (i, idx) => {
+      const itemValues = await getInfoItemValues(
         i.enginePower,
         i.electricPrice,
         i.waterPrice,
@@ -82,8 +86,9 @@ const clacData = async (req, res) => {
 const expensesBenefitPrcent = async (req, res) => {
   try {
     const { ownerID } = req.query;
-    let benefits = getBenefit(ownerID);
-    let expenses = getExpenses(ownerID);
+
+    let benefits = await getBenefit(ownerID);
+    let expenses = await getExpenses(ownerID);
     let prcent = (expenses / benefits) * 100;
     return res.json({
       succes: true,
@@ -100,7 +105,14 @@ const expensesBenefitPrcent = async (req, res) => {
 const getBenefitsByDate = async (req, res) => {
   try {
     const { ownerID } = req.query;
-    let data = getBenefitByDays(ownerID);
+    const owners = JSON.parse(ownerID);
+
+    let data = [];
+    owners.map(async (i) => {
+      let newData = await getBenefitByDays(i);
+      data.push(newData);
+    });
+
     return res.json({
       succes: true,
       data,
@@ -109,10 +121,35 @@ const getBenefitsByDate = async (req, res) => {
     console.log(e, "Somethig went wrong");
   }
 };
+
+const getBenefitsByModes = async (req, res) => {
+  try {
+    const { ownerID } = req.query;
+    const data = [];
+    const items = await ItemValues.findAll({
+      where: {
+        p2: ownerID,
+      },
+    });
+    await items.map(async (i) => {
+      let newData = await getExpensesByModes(i, ownerID);
+      data.push(newData);
+    });
+    console.log(data, "0000000000000000000000000000");
+    await res.json({
+      succes: true,
+      data: transformData(data),
+    });
+  } catch (e) {
+    console.log(e, "Somethig went wrong");
+  }
+};
+
 module.exports = {
   edit,
   getInfo,
   clacData,
   expensesBenefitPrcent,
   getBenefitsByDate,
+  getBenefitsByModes,
 };
