@@ -17,10 +17,10 @@ const getAll = async () => {
         await response.data.map(async (item) => {
           await Item.create(item);
           await ItemValues.create(item);
-          const itemInfo = await Info.findOne({ where: { ownerId: item.p2 } });
-          if (!itemInfo) {
-            await Info.create({ ownerId: item.p2 });
-          }
+          // const itemInfo = await Info.findOne({ where: { ownerId: item.p2 } });
+          // if (!itemInfo) {
+          //   await Info.create({ ownerId: item.p2 });
+          // }
           console.log(
             "ready",
             "----------------------------------------------------"
@@ -61,8 +61,8 @@ const editData = async (data) => {
       .post(
         `${process.env.SERVER_URL}/devie/edit`,
         {
-          OwnerID: String(data.id),
-          ParamNO: data.fileld,
+          OwnerID: Number(data.id),
+          ParamNO: Number(data.fileld),
           NewData: data.fieldValue,
         },
         {
@@ -140,16 +140,18 @@ const getInfoItemValues = (
   try {
     const prcent =
       Number(PrcetOfModeValueFirst) + Number(PrcetOfModeValueSecond);
-    const prcetByModeByPrce = (Number(modeValuePerLitre) / prcent) * 1000;
+    const prcetByModeByPrce = (Number(modeValuePerLitre) / prcent) * 1000 || 0;
     const caxsPerMinuteByElectricy =
-      (Number(enginePower) * Number(electricPrice)) / 60;
+      (Number(enginePower) * Number(electricPrice)) / 60 || 0;
     const caxsPerMinuteByWater =
-      (Number(waterPrice) / 1000) * Number(waterPerMinute);
+      (Number(waterPrice) / 1000) * Number(waterPerMinute) || 0;
     const caxsPerMinuteByModeValue =
       (Number(modeValuePerLitre) / 1000) *
-      Number(PrcentOfRegulator) *
-      0.2 *
-      Number(prcetByModeByPrce);
+        Number(PrcentOfRegulator) *
+        50 *
+        Number(prcetByModeByPrce) || 0;
+    // prcent = 4
+    //  prcetByModeByPrce = 1500 / 4
 
     const caxsPerDayByElectricy = time * caxsPerMinuteByElectricy;
     const caxsPerDayByWater = time * caxsPerMinuteByWater;
@@ -166,10 +168,65 @@ const getInfoItemValues = (
   }
 };
 
+const getInfoItemValuesGraph = async (item, ownerID) => {
+  try {
+    const info = await Info.findAll({ where: { ownerID } });
+    const modeUsedTime1 = Number(item.p44);
+    const modeUsedTime2 = Number(item.p45);
+    const modeUsedTime3 = Number(item.p46);
+    const modeUsedTime4 = Number(item.p47);
+    const modeUsedTime5 = Number(item.p48);
+    const modeUsedTime6 = Number(item.p49);
+    const allTimesers = [
+      modeUsedTime1,
+      modeUsedTime2,
+      modeUsedTime3,
+      modeUsedTime4,
+      modeUsedTime5,
+      modeUsedTime6,
+    ];
+    const data = [];
+    await info.map(async (i, idx) => {
+      const itemValues = getInfoItemValues(
+        i.enginePower,
+        i.electricPrice,
+        i.waterPrice,
+        i.waterPerMinute,
+        i.modeValuePerLitre,
+        i.PrcentOfRegulator,
+        i.PrcetOfModeValueFirst,
+        i.PrcetOfModeValueSecond,
+        allTimesers[idx]
+      );
+      data.push(itemValues);
+    });
+    let total = {
+      electric: 0,
+      water: 0,
+      modeValue: 0,
+      date: item.createdAt,
+    };
+    await data.map((i) => {
+      total = {
+        ...total,
+        electric: total.electric + i.electric,
+        water: total.water + i.water,
+        modeValue: total.modeValue + i.modeValue,
+      };
+    });
+    return {
+      ...total,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getAll,
   getOwnerItems,
   editData,
   getModeName,
   getInfoItemValues,
+  getInfoItemValuesGraph,
 };

@@ -23,4 +23,19 @@ router.post("/edit-item", authMiddleWare, itemController.edit);
 router.post("/item-info-edit", authMiddleWare, infoControllers.edit);
 router.get("/item-info", authMiddleWare, infoControllers.getInfo);
 router.get("/item-info-calc", authMiddleWare, infoControllers.clacData);
+router.get(
+  "/item-info-getBenefitsByDate",
+  authMiddleWare,
+  infoControllers.getBenefitsByDate
+);
+router.get(
+  "/item-info-getBenefitsByModes",
+  authMiddleWare,
+  infoControllers.getBenefitsByModes
+);
+router.get(
+  "/item-info-expensesBenefitPrcent",
+  authMiddleWare,
+  infoControllers.expensesBenefitPrcent
+);
 module.exports = router;

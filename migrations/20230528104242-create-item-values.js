@@ -9,153 +9,152 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      DeviceType: Sequelize.STRING, // 1-moyka, 2-cux
-      P0: Sequelize.INTEGER, // 1-moyka, 2-cux
-      P1: Sequelize.INTEGER, // 1056,
-      name: Sequelize.STRING,
-      P2: Sequelize.INTEGER, // ownerId
-      P3: Sequelize.BOOLEAN, // online te offline
-      P4: Sequelize.INTEGER, // Moyki hamary
-      P5: Sequelize.INTEGER, // M1-i hamari takaynelutyuny
-      P6: Sequelize.STRING, // hayastan 3001 (kartoshki id owneri hamar #1)
-      P7: Sequelize.STRING, // hayastan 0 (kartoshki id owneri hamar #2)
-      P8: Sequelize.STRING, // langId heto stugvi ete 0=>ruseren
-      P9: Sequelize.INTEGER, // 1|0 kam stop kam standart
-      P10: Sequelize.STRING, // zri kartochki chap (or` 500dram)
-      P11: Sequelize.INTEGER, // kopeki tesaky
-      P12: Sequelize.STRING, // toxtpoxi tesaky
-      P13: Sequelize.STRING, // bankayini tesaky
-      P14: Sequelize.STRING, // kopeki qanak obshi kopeki tivy  CoinCount*CoinNominal aktual (karanq 0acnenq)
-      P15: Sequelize.STRING, //tuxt qanak obshi tuxt tivy  BillCount*BillNominal  aktual  (karanq 0acnenq)
-      P16: Sequelize.STRING, // qarti obshi tivy CashLessCount*CashLessNominal aktual (karanq 0acnenq)
-      P17: Sequelize.STRING, // CoinCountTotal*CoinNominal chzroyacacf
-      P18: Sequelize.STRING, //tuxy BillCountTotal*BillNominal
-      P19: Sequelize.STRING, //qartov CashLessCountTotal*CashLessNominal
-      P20: Sequelize.STRING, // kuroky toxcelu heto matory anjatvelu jamanakahatvac
-      P21: Sequelize.STRING, // 1 rejimi tevoxutyun yst CoinNominal
-      P22: Sequelize.STRING, // 2 rejimi tevoxutyun yst CoinNominal
-      P23: Sequelize.STRING, // 3 rejimi tevoxutyun yst CoinNominal
-      P24: Sequelize.STRING, // 4 rejimi tevoxutyun yst CoinNominal
-      P25: Sequelize.STRING, // 5 rejimi tevoxutyun yst CoinNominal
-      P26: Sequelize.STRING, // 6 rejimi tevoxutyun yst CoinNominal
-      P27: Sequelize.STRING, // Rejimi anvanum 0-16
-      P28: Sequelize.STRING, // Rejimi anvanum
-      P29: Sequelize.STRING, // Rejimi anvanum
-      P30: Sequelize.STRING, // Rejimi anvanum
-      P31: Sequelize.STRING, // Rejimi anvanum
-      P32: Sequelize.STRING, // Rejimi anvanum
-      P33: Sequelize.STRING, // guyni hamaranishy 15 1y verev 5y nerqev 0-6 amen meky
-      P34: Sequelize.STRING, // guyni hamaranishy 15 1y verev 5y nerqev
-      P35: Sequelize.STRING, // guyni hamaranishy 15 1y verev 5y nerqev
-      P36: Sequelize.STRING, // guyni hamaranishy 15 1y verev 5y nerqev
-      P37: Sequelize.STRING, // guyni hamaranishy 15 1y verev 5y nerqev
-      P38: Sequelize.STRING, // guyni hamaranishy 15 1y verev 5y nerqev
-      P39: Sequelize.STRING, // rejimi ogtagorcman jamanak yst ropeneri (0 acman hnaravorutyamb)
-      P40: Sequelize.STRING, // rejimi ogtagorcman jamanak yst ropeneri (0 acman hnaravorutyamb)
-      P41: Sequelize.STRING, // rejimi ogtagorcman jamanak yst ropeneri (0 acman hnaravorutyamb)
-      P42: Sequelize.STRING, // rejimi ogtagorcman jamanak yst ropeneri (0 acman hnaravorutyamb)
-      P43: Sequelize.STRING, // rejimi ogtagorcman jamanak yst ropeneri (0 acman hnaravorutyamb)
-      P44: Sequelize.STRING, // rejimi ogtagorcman jamanak yst ropeneri (0 acman hnaravorutyamb)
-      P45: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      P46: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      P47: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      P48: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      P49: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      P50: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      P51: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      P52: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      P53: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      P54: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      P55: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      P56: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      P57: Sequelize.STRING, // Reklamneri qanak
-      P58: Sequelize.STRING, // inchqan jamanaky mek poxi reklamy
-      P59: Sequelize.STRING, // inch reklam tpi  0-8
-      P60: Sequelize.STRING, // inch reklam tpi 0-8
-      P61: Sequelize.STRING, // inch reklam tpi 0-8
-      P62: Sequelize.STRING, // inch reklam tpi 0-8
-      P63: Sequelize.STRING, // inch reklam tpi 0-8
-      P64: Sequelize.STRING, // inch reklam tpi 0-8
-      P65: Sequelize.STRING, // reklami guyny 0-6
-      P67: Sequelize.STRING, // reklami guyny 0-6
-      P68: Sequelize.STRING, // reklami guyny 0-6
-      P69: Sequelize.STRING, // reklami guyny 0-6
-      P70: Sequelize.STRING, // reklami guyny 0-6
-      P71: Sequelize.STRING, // reklami guyny 0-6
-      P72: Sequelize.STRING,
-      P73: Sequelize.STRING,
-      P74: Sequelize.STRING,
-      P75: Sequelize.STRING,
-      P76: Sequelize.STRING,
-      P77: Sequelize.STRING,
-      P78: Sequelize.STRING,
-      P79: Sequelize.STRING,
-      P70: Sequelize.STRING,
-      P71: Sequelize.STRING,
-      P72: Sequelize.STRING,
-      P73: Sequelize.STRING,
-      P74: Sequelize.STRING,
-      P75: Sequelize.STRING,
-      P77: Sequelize.STRING,
-      P78: Sequelize.STRING,
-      P79: Sequelize.STRING,
-      P80: Sequelize.STRING,
-      P81: Sequelize.STRING,
-      P82: Sequelize.STRING,
-      P83: Sequelize.STRING,
-      P84: Sequelize.STRING,
-      P85: Sequelize.STRING,
-      P86: Sequelize.STRING,
-      P87: Sequelize.STRING,
-      P88: Sequelize.STRING,
-      P89: Sequelize.STRING,
-      P90: Sequelize.STRING,
-      P91: Sequelize.STRING,
-      P92: Sequelize.STRING,
-      P93: Sequelize.STRING,
-      P94: Sequelize.STRING,
-      P95: Sequelize.STRING,
-      P97: Sequelize.STRING,
-      P98: Sequelize.STRING,
-      P99: Sequelize.STRING,
-      P100: Sequelize.STRING,
-      P101: Sequelize.STRING,
-      P102: Sequelize.STRING,
-      P103: Sequelize.STRING,
-      P104: Sequelize.STRING,
-      P105: Sequelize.STRING,
-      P106: Sequelize.STRING,
-      P107: Sequelize.STRING,
-      P108: Sequelize.STRING,
-      P109: Sequelize.STRING,
-      P110: Sequelize.STRING,
-      P111: Sequelize.STRING,
-      P112: Sequelize.STRING,
-      P113: Sequelize.STRING,
-      P114: Sequelize.STRING,
-      P115: Sequelize.STRING,
-      P117: Sequelize.STRING,
-      P118: Sequelize.STRING,
-      P119: Sequelize.STRING,
-      P120: Sequelize.STRING,
-      P130: Sequelize.STRING,
-      P131: Sequelize.STRING,
-      P132: Sequelize.STRING,
-      P133: Sequelize.STRING,
-      P134: Sequelize.STRING,
-      P135: Sequelize.STRING,
-      P137: Sequelize.STRING,
-      P138: Sequelize.STRING,
-      P139: Sequelize.STRING,
-      P140: Sequelize.STRING,
-      P141: Sequelize.STRING,
-      P142: Sequelize.STRING,
-      P143: Sequelize.STRING,
-      P144: Sequelize.STRING,
-      P145: Sequelize.STRING,
-      P147: Sequelize.STRING,
-      P148: Sequelize.STRING,
-      P149: Sequelize.STRING,
+      p0: Sequelize.INTEGER, // device type
+      p1: Sequelize.INTEGER, // version
+      p2: Sequelize.INTEGER, // ownerId
+      p3: Sequelize.BOOLEAN, // RFID 1
+      p4: Sequelize.INTEGER, // RFID 2
+      p5: Sequelize.INTEGER, // moikaID
+      p6: Sequelize.STRING, // boxId
+      p7: Sequelize.STRING, // lang
+      p8: Sequelize.STRING, // work mode
+      p9: Sequelize.INTEGER, // freecard
+      p10: Sequelize.STRING, // coin nominal
+      p11: Sequelize.INTEGER, // nill nominal
+      p12: Sequelize.STRING, // cash less nominall
+      p13: Sequelize.STRING, //coin count
+      p14: Sequelize.STRING, // bill count
+      p15: Sequelize.STRING, //cesh less count
+      p16: Sequelize.STRING, // counin count total +
+      p17: Sequelize.STRING, // bill count total +
+      p18: Sequelize.STRING, //cash less count total +
+      p19: Sequelize.STRING, //rele off time
+      p20: Sequelize.STRING, // 1 rejimi tevoxutyun yst CoinNominal
+      p21: Sequelize.STRING, // 2 rejimi tevoxutyun yst CoinNominal
+      p22: Sequelize.STRING, // 3 rejimi tevoxutyun yst CoinNominal
+      p23: Sequelize.STRING, // 4 rejimi tevoxutyun yst CoinNominal
+      p24: Sequelize.STRING, // 5 rejimi tevoxutyun yst CoinNominal
+      p25: Sequelize.STRING, // 6 rejimi tevoxutyun yst CoinNominal
+      p26: Sequelize.STRING, // Rejimi anvanum
+      p27: Sequelize.STRING, //  Rejimi anvanum
+      p28: Sequelize.STRING, // Rejimi anvanum
+      p29: Sequelize.STRING, // Rejimi anvanum
+      p30: Sequelize.STRING, // Rejimi anvanum
+      p31: Sequelize.STRING, // Rejimi anvanum
+      p32: Sequelize.STRING, // f1 goyn
+      p33: Sequelize.STRING, // f2 guyn
+      p34: Sequelize.STRING, // guyn
+      p35: Sequelize.STRING, // guyn
+      p36: Sequelize.STRING, // guyn
+      p37: Sequelize.STRING, // guyn
+      p38: Sequelize.STRING, // f count
+      p39: Sequelize.STRING, // f count
+      p40: Sequelize.STRING, // f count
+      p41: Sequelize.STRING, // f count
+      p42: Sequelize.STRING, // f count
+      p43: Sequelize.STRING, // f count
+      p44: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
+      p45: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
+      p46: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
+      p47: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
+      p48: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
+      p49: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
+      p50: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
+      p51: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
+      p52: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
+      p53: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
+      p54: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
+      p55: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
+      p56: Sequelize.STRING, // Reklamneri qanak
+      p57: Sequelize.STRING, // inchqan jamanaky mek poxi reklamy
+      p58: Sequelize.STRING, // inch reklam tpi  0-8
+      p59: Sequelize.STRING, // inch reklam tpi  0-8
+      p60: Sequelize.STRING, // inch reklam tpi 0-8
+      p61: Sequelize.STRING, // inch reklam tpi 0-8
+      p62: Sequelize.STRING, // inch reklam tpi 0-8
+      p63: Sequelize.STRING, // inch reklam tpi 0-8
+      p64: Sequelize.STRING, // reklami guyn
+      p65: Sequelize.STRING, // reklami guyny 0-6
+      p66: Sequelize.STRING, // reklami guyny 0-6
+      p67: Sequelize.STRING, // reklami guyny 0-6
+      p68: Sequelize.STRING, // reklami guyny 0-6
+      p69: Sequelize.STRING, // reklami guyny 0-6
+      p70: Sequelize.STRING, // bonus size
+      p71: Sequelize.STRING, // bonus value
+      p72: Sequelize.STRING, // bonus type
+      p73: Sequelize.STRING,
+      p74: Sequelize.STRING,
+      p75: Sequelize.STRING,
+      p76: Sequelize.STRING,
+      p77: Sequelize.STRING,
+      p78: Sequelize.STRING,
+      p79: Sequelize.STRING,
+      p70: Sequelize.STRING,
+      p71: Sequelize.STRING,
+      p72: Sequelize.STRING,
+      p73: Sequelize.STRING,
+      p74: Sequelize.STRING,
+      p75: Sequelize.STRING,
+      p77: Sequelize.STRING,
+      p78: Sequelize.STRING,
+      p79: Sequelize.STRING,
+      p80: Sequelize.STRING,
+      p81: Sequelize.STRING,
+      p82: Sequelize.STRING,
+      p83: Sequelize.STRING,
+      p84: Sequelize.STRING,
+      p85: Sequelize.STRING,
+      p86: Sequelize.STRING,
+      p87: Sequelize.STRING,
+      p88: Sequelize.STRING,
+      p89: Sequelize.STRING,
+      p90: Sequelize.STRING,
+      p91: Sequelize.STRING,
+      p92: Sequelize.STRING,
+      p93: Sequelize.STRING,
+      p94: Sequelize.STRING,
+      p95: Sequelize.STRING,
+      p97: Sequelize.STRING,
+      p98: Sequelize.STRING,
+      p99: Sequelize.STRING,
+      p100: Sequelize.STRING,
+      p101: Sequelize.STRING,
+      p102: Sequelize.STRING,
+      p103: Sequelize.STRING,
+      p104: Sequelize.STRING,
+      p105: Sequelize.STRING,
+      p106: Sequelize.STRING,
+      p107: Sequelize.STRING,
+      p108: Sequelize.STRING,
+      p109: Sequelize.STRING,
+      p110: Sequelize.STRING,
+      p111: Sequelize.STRING,
+      p112: Sequelize.STRING,
+      p113: Sequelize.STRING,
+      p114: Sequelize.STRING,
+      p115: Sequelize.STRING,
+      p117: Sequelize.STRING,
+      p118: Sequelize.STRING,
+      p119: Sequelize.STRING,
+      p120: Sequelize.STRING,
+      p130: Sequelize.STRING,
+      p131: Sequelize.STRING,
+      p132: Sequelize.STRING,
+      p133: Sequelize.STRING,
+      p134: Sequelize.STRING,
+      p135: Sequelize.STRING,
+      p137: Sequelize.STRING,
+      p138: Sequelize.STRING,
+      p139: Sequelize.STRING,
+      p140: Sequelize.STRING,
+      p141: Sequelize.STRING,
+      p142: Sequelize.STRING,
+      p143: Sequelize.STRING,
+      p144: Sequelize.STRING,
+      p145: Sequelize.STRING,
+      p147: Sequelize.STRING,
+      p148: Sequelize.STRING,
+      p149: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

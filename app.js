@@ -17,6 +17,7 @@ const countryRouter = require("./routes/country");
 const superStatisticsRouter = require("./routes/superStatistics");
 const categoryRouter = require("./routes/categories");
 const OwnerRouter = require("./routes/owner");
+const boxRouter = require("./routes/box");
 const { getAll } = require("./services/item");
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -35,11 +36,15 @@ app.use("/api/v1/country", countryRouter);
 app.use("/api/v1/superStatistics", superStatisticsRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/owner", OwnerRouter);
+app.use("/api/v1/box", boxRouter);
 
-cron.schedule("0 * * * *", () => {
-  console.log("running a task every minute");
-  getAll();
-});
+// cron.schedule("0 * * * *", () => {
+//   console.log("running a task every minute");cron.schedule("0 * * * *", () => {
+//   console.log("running a task every minute");
+//   getAll();
+// });
+//   getAll();
+// });
 
 // cron.schedule("20 16 * * *", () => {
 //   // This code will run every day at 16:20
