@@ -15,7 +15,7 @@ module.exports = {
       p3: Sequelize.BOOLEAN, // online te offline
       p4: Sequelize.INTEGER, // Moyki hamary
       p5: Sequelize.INTEGER, // M1-i hamari takaynelutyuny
-      p6: Sequelize.STRING, // hayastan 3001 (kartoshki id owneri hamar #1)
+      p6: Sequelize.INTEGER, // hayastan 3001 (kartoshki id owneri hamar #1)
       p7: Sequelize.STRING, // hayastan 0 (kartoshki id owneri hamar #2)
       p8: Sequelize.STRING, // langId heto stugvi ete 0=>ruseren
       p9: Sequelize.INTEGER, // 1|0 kam stop kam standart
@@ -114,6 +114,7 @@ module.exports = {
       p93: Sequelize.STRING,
       p94: Sequelize.STRING,
       p95: Sequelize.STRING,
+      p96: Sequelize.STRING,
       p97: Sequelize.STRING,
       p98: Sequelize.STRING,
       p99: Sequelize.STRING,
@@ -133,16 +134,27 @@ module.exports = {
       p113: Sequelize.STRING,
       p114: Sequelize.STRING,
       p115: Sequelize.STRING,
+      p116: Sequelize.STRING,
       p117: Sequelize.STRING,
       p118: Sequelize.STRING,
       p119: Sequelize.STRING,
       p120: Sequelize.STRING,
+      p121: Sequelize.STRING,
+      p122: Sequelize.STRING,
+      p123: Sequelize.STRING,
+      p124: Sequelize.STRING,
+      p125: Sequelize.STRING,
+      p126: Sequelize.STRING,
+      p127: Sequelize.STRING,
+      p128: Sequelize.STRING,
+      p129: Sequelize.STRING,
       p130: Sequelize.STRING,
       p131: Sequelize.STRING,
       p132: Sequelize.STRING,
       p133: Sequelize.STRING,
       p134: Sequelize.STRING,
       p135: Sequelize.STRING,
+      p136: Sequelize.STRING,
       p137: Sequelize.STRING,
       p138: Sequelize.STRING,
       p139: Sequelize.STRING,
@@ -152,9 +164,11 @@ module.exports = {
       p143: Sequelize.STRING,
       p144: Sequelize.STRING,
       p145: Sequelize.STRING,
+      p146: Sequelize.STRING,
       p147: Sequelize.STRING,
       p148: Sequelize.STRING,
       p149: Sequelize.STRING,
+      datatime: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

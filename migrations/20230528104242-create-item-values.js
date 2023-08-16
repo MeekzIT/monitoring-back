@@ -155,6 +155,8 @@ module.exports = {
       p147: Sequelize.STRING,
       p148: Sequelize.STRING,
       p149: Sequelize.STRING,
+      datatime: Sequelize.STRING,
+      datatime: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

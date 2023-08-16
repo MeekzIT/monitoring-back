@@ -21,10 +21,7 @@ const getAll = async () => {
           // if (!itemInfo) {
           //   await Info.create({ ownerId: item.p2 });
           // }
-          console.log(
-            "ready",
-            "----------------------------------------------------"
-          );
+          console.log("--------------------- ready --------------------------");
         });
       })
       .catch(function (error) {
@@ -36,16 +33,40 @@ const getAll = async () => {
   }
 };
 
+const getSingle = async (ownerId) => {
+  try {
+    axios
+      .get(`${process.env.SERVER_URL}/devices/`, {
+        params: {
+          id: ownerId,
+        },
+      })
+      .then(async (response) => {
+        // handle success
+        const item = await Item.findOne({
+          where: { p2: ownerId },
+        });
+        await item.update(response.data[0]);
+        console.log("--------------------- updated --------------------------");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const getOwnerItems = async (id) => {
   try {
     axios
-      .get(`${process.env.SERVER_URL}/Owner/`, {
+      .get(`${process.env.SERVER_URL}/devices/`, {
         params: {
           id: id.slice(0, id.length - 3),
         },
       })
       .then(function (response) {
-        console.log(response.data);
+        console.log(response.data, "!11111111111111111111111111111");
       })
       .catch(function (error) {
         console.log(error);
@@ -229,4 +250,5 @@ module.exports = {
   getModeName,
   getInfoItemValues,
   getInfoItemValuesGraph,
+  getSingle,
 };

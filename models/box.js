@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Box.hasMany(Item, {
-    foreignKey: "p5",
+    foreignKey: "p6",
   });
 
   return Box;
