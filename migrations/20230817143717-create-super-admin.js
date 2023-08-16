@@ -2,19 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Admins", {
+    await queryInterface.createTable("SuperAdmins", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      firstName: {
-        type: Sequelize.STRING,
-      },
-      lastName: {
-        type: Sequelize.STRING,
-      },
+      firstName: Sequelize.STRING,
+      lastName: Sequelize.STRING,
       email: {
         type: Sequelize.STRING,
       },
@@ -27,8 +23,6 @@ module.exports = {
       role: {
         type: Sequelize.STRING,
       },
-      countryId: Sequelize.INTEGER,
-      block: Sequelize.BOOLEAN,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -40,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Admins");
+    await queryInterface.dropTable("SuperAdmins");
   },
 };

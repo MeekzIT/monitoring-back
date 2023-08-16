@@ -1,9 +1,87 @@
 const Admin = require("../models").Admin;
+const SuperAdmin = require("../models").SuperAdmin;
 const Users = require("../models").User;
 const Contry = require("../models").Country;
 const Owner = require("../models").Owner;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
+const create = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, countryId } = req.body;
+    const { role } = req.user;
+    if (role == "superAdmin") {
+      const oldUser = await Admin.findOne({
+        where: { email },
+      });
+      if (oldUser) {
+        return res.json({ message: "alredy exist" });
+      } else {
+        let encryptedPassword = await bcrypt.hash(password, 10);
+        const admin = await Admin.create({
+          firstName,
+          lastName,
+          email: email.toLowerCase(),
+          password: encryptedPassword,
+          countryId,
+          role: "admin",
+          block: false,
+        });
+
+        return res.json({ succes: true, data: admin });
+      }
+    } else return res.json({ succes: false });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const adminActivity = async (req, res) => {
+  try {
+    const { id, block } = req.body;
+    const { role } = req.user;
+
+    if (role == "superAdmin") {
+      const admin = await Admin.findOne({
+        where: { id },
+      });
+      admin.block = block;
+      await admin.save();
+      return res.json({ succes: true, data: admin });
+    } else return res.json({ succes: false });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const destroyAdmin = async (req, res) => {
+  try {
+    const { id, block } = req.body;
+    const { role } = req.user;
+
+    if (role == "superAdmin") {
+      await Admin.destroy({
+        where: { id },
+      });
+      return res.json({ succes: true });
+    } else return res.json({ succes: false });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const getAdmins = async (req, res) => {
+  try {
+    const { role } = req.user;
+
+    if (role == "superAdmin") {
+      const admin = await Admin.findAll();
+      return res.json({ succes: true, data: admin });
+    } else return res.json({ succes: false });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
 
 const login = async (req, res) => {
   try {
@@ -13,6 +91,20 @@ const login = async (req, res) => {
       return res.json({
         error: ["Password and email are required fields"],
       });
+    }
+
+    const superAdmin = await SuperAdmin.findOne({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (superAdmin && (await bcrypt.compare(password, superAdmin.password))) {
+      const token = jwt.sign(
+        { user_id: superAdmin.id, email, role: superAdmin.role },
+        process.env.TOKEN_KEY_ADMIN
+      );
+      superAdmin.token = token;
+      superAdmin.save();
+      return res.json({ data: superAdmin, succes: true });
     }
 
     const user = await Admin.findOne({
@@ -71,6 +163,11 @@ const logout = async (req, res) => {
       user.token = null;
       await user.save();
       return res.json({ succes: true });
+    } else if (role == "superAdmin") {
+      const user = await SuperAdmin.findOne({ where: { id: 1 } });
+      user.token = null;
+      await user.save();
+      return res.json({ succes: true });
     } else if (role == "user") {
       const user = await Users.findOne({ where: { id: user_id } });
       user.token = null;
@@ -94,6 +191,14 @@ const changeSettings = async (req, res) => {
     if (role == "admin") {
       const user = await Admin.findOne({ where: { id: 1 } });
       user.email = email;
+      user.firstName = firstName;
+      user.lastName = lastName;
+      await user.save();
+      return res.json({ succes: true });
+    } else if (role == "superAdmin") {
+      const user = await SuperAdmin.findOne({ where: { id: user_id } });
+      user.email = email;
+      user.password = password;
       user.firstName = firstName;
       user.lastName = lastName;
       await user.save();
@@ -132,6 +237,15 @@ const changePassword = async (req, res) => {
       user.password = encryptedPassword;
       await user.save();
       return res.json({ succes: true });
+    } else if (role == "superAdmin") {
+      const user = await SuperAdmin.findOne({
+        where: { id: user_id },
+      });
+      let encryptedPassword = await bcrypt.hash(password, 10);
+      user.password = encryptedPassword;
+      await user.save();
+
+      return res.json({ succes: true });
     } else if (role == "user") {
       const user = await Users.findOne({
         where: { id: user_id },
@@ -164,6 +278,11 @@ const getMe = async (req, res) => {
         where: { id: 1 },
       });
       return res.json({ data: user, super: "admin", succes: true });
+    } else if (role == "superAdmin") {
+      const user = await SuperAdmin.findOne({
+        where: { id: user_id },
+      });
+      return res.json({ data: user, super: "user", succes: true });
     } else if (role == "user") {
       const user = await Users.findOne({
         where: { id: user_id },
@@ -191,4 +310,8 @@ module.exports = {
   changeSettings,
   getMe,
   changePassword,
+  create,
+  adminActivity,
+  destroyAdmin,
+  getAdmins,
 };

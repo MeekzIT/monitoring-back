@@ -20,7 +20,7 @@ const edit = async (req, res) => {
       where: { ownerID: data.ownerID, functionId: data.functionId },
     });
     await item.update(data);
-    const allItem = await Info.findAll({ where: { ownerID: id } });
+    const allItem = await Info.findAll({ where: { ownerID: data.ownerID } });
 
     return res.json({ succes: true, info: allItem });
   } catch (e) {
@@ -135,7 +135,6 @@ const getBenefitsByModes = async (req, res) => {
       let newData = await getExpensesByModes(i, ownerID);
       data.push(newData);
     });
-    console.log(data, "0000000000000000000000000000");
     await res.json({
       succes: true,
       data: transformData(data),

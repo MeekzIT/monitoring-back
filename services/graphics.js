@@ -149,10 +149,6 @@ const getExpensesByModes = async (item, ownerID) => {
     data.push(itemValues);
 
     const transformedData = await transformData(data);
-    console.log(
-      transformedData,
-      "33333333333333333333333333333333333333333333333333333333333"
-    );
     return transformedData;
   } catch (e) {
     console.log(e, "Somethig went wrong");

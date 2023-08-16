@@ -17,4 +17,9 @@ router.post(
 );
 router.get("/me", authAdminMiddleWare, adminController.getMe);
 
+
+router.get("/create", authAdminMiddleWare, adminController.create);
+router.get("/activiyty", authAdminMiddleWare, adminController.adminActivity);
+router.get("/destroy", authAdminMiddleWare, adminController.destroyAdmin);
+
 module.exports = router;

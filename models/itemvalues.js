@@ -159,6 +159,7 @@ module.exports = (sequelize, DataTypes) => {
       p147: DataTypes.STRING,
       p148: DataTypes.STRING,
       p149: DataTypes.STRING,
+      datatime: DataTypes.STRING,
     },
     {
       sequelize,
