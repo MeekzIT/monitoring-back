@@ -52,7 +52,7 @@ app.use("/api/v1/box", boxRouter);
 //   getAll();
 // });
 
-getAll();
+// getAll();
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
