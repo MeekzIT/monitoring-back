@@ -38,14 +38,14 @@ const create = async (req, res) => {
 
 const adminActivity = async (req, res) => {
   try {
-    const { id, block } = req.body;
+    const { id, activity } = req.body;
     const { role } = req.user;
 
     if (role == "superAdmin") {
       const admin = await Admin.findOne({
         where: { id },
       });
-      admin.block = block;
+      admin.block = activity;
       await admin.save();
       return res.json({ succes: true, data: admin });
     } else return res.json({ succes: false });

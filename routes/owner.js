@@ -21,6 +21,7 @@ router.post("/edit-item", authMiddleWare, itemController.edit);
 // info
 
 router.post("/item-info-edit", authMiddleWare, infoControllers.edit);
+router.post("/item-accessability", authMiddleWare, itemController.changeAccessability);
 router.get("/item-info", authMiddleWare, infoControllers.getInfo);
 router.get("/item-info-calc", authMiddleWare, infoControllers.clacData);
 router.get(

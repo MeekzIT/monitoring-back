@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       lastPay: DataTypes.STRING,
       variant: DataTypes.STRING,
       countryId: DataTypes.INTEGER,
+      adminId: DataTypes.INTEGER,
       role: DataTypes.STRING,
     },
     {

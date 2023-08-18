@@ -5,6 +5,7 @@ const Box = require("../models").Box;
 const ItemValues = require("../models/").ItemValues;
 const Item = require("../models").Item;
 const bcrypt = require("bcryptjs");
+const { Op } = require("sequelize");
 
 const create = async (req, res) => {
   try {
@@ -47,7 +48,7 @@ const create = async (req, res) => {
 //admin controllers
 
 const getAll = async (req, res) => {
-  const { search } = req.query;
+  const { search, adminId } = req.query;
   const offset = Number.parseInt(req.query.offset) || 0;
   const limit = Number.parseInt(req.query.limit) || 12;
   const count = await Users.findAll();
@@ -57,6 +58,13 @@ const getAll = async (req, res) => {
       [Op.like]: "%" + String(search) + "%",
     };
   }
+
+  if (adminId) {
+    queryObj["adminId"] = {
+      [Op.eq]: adminId,
+    };
+  }
+
   try {
     const allUsers = await Users.findAll({
       where: {

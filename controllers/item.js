@@ -23,4 +23,19 @@ const edit = async (req, res) => {
   }
 };
 
-module.exports = { edit };
+const changeAccessability = async (req, res) => {
+  try {
+    const { id, access } = req.body;
+    const { role } = req.user;
+    if(role == "owner"){
+      const item = await Items.findOne({ where: { p2:id } });
+      item.access = access;
+      await item.save();
+      return res.json({ succes: true, data: item });
+    }else return res.json({succes:false,})
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+module.exports = { edit, changeAccessability };

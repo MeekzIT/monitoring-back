@@ -33,6 +33,9 @@ module.exports = {
       variant: {
         type: Sequelize.STRING,
       },
+      adminId: {
+        type: Sequelize.INTEGER,
+      },
       countryId: {
         type: Sequelize.INTEGER,
       },

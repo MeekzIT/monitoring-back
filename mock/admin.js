@@ -1,6 +1,5 @@
 const data = [
   {
-    id: 1,
     firstName: "Admin",
     lastName: "Admin",
     email: "admin@mail.com",

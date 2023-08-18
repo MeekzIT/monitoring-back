@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Item.init(
     {
       p0: DataTypes.INTEGER, // device type
+      access:DataTypes.BOOLEAN,
       p1: DataTypes.INTEGER, // version
       p2: DataTypes.INTEGER, // ownerId
       p3: DataTypes.BOOLEAN, // RFID 1
@@ -37,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       p21: DataTypes.STRING, // 2 rejimi tevoxutyun yst CoinNominal
       p22: DataTypes.STRING, // 3 rejimi tevoxutyun yst CoinNominal
       p23: DataTypes.STRING, // 4 rejimi tevoxutyun yst CoinNominal
-      p24: DataTypes.STRING, // 5 rejimi tevoxutyun yst CoinNominal
+      p24: DataTypes.STRING, // 5 rejimi tevoxutyun ystaccess CoinNominal
       p25: DataTypes.STRING, // 6 rejimi tevoxutyun yst CoinNominal
       p26: DataTypes.STRING, // Rejimi anvanum
       p27: DataTypes.STRING, //  Rejimi anvanum
