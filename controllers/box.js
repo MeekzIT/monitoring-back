@@ -1,7 +1,10 @@
 const { getSingle } = require("../services/item");
+const { Op } = require("sequelize");
 
 const Boxes = require("../models").Box;
-const Item = require("../models").Item;
+const Items = require("../models").Item;
+const Items2 = require("../models").Item2;
+const Items3 = require("../models").Item3;
 const BoxExpenses = require("../models").BoxExpenses;
 
 function extractValues(inputArray) {
@@ -51,7 +54,7 @@ const edit = async (req, res) => {
 };
 
 const getAllBoxesOfOwners = async (req, res) => {
-  const { search, ownerId } = req.query;
+  const { search, ownerId, boxId } = req.query;
   const offset = Number.parseInt(req.query.offset) || 0;
   const limit = Number.parseInt(req.query.limit) || 12;
   const count = await Boxes.findAll({ where: { ownerId: ownerId } });
@@ -61,19 +64,54 @@ const getAllBoxesOfOwners = async (req, res) => {
       [Op.like]: "%" + String(search) + "%",
     };
   }
-  try {
-    const allBoxes = await Boxes.findAll({
-      where: {
-        ownerId: ownerId,
+  const allItems = await Items.findAll({
+    where: {
+      p2: {
+        [Op.like]: "%" + String(ownerId) + "%",
       },
-      include: [
-        {
-          model: Item,
+    },
+  });
+  const allItems2 = await Items2.findAll({
+    where: {
+      p2: {
+        [Op.like]: "%" + String(ownerId) + "%",
+      },
+    },
+  });
+  const allItems3 = await Items3.findAll({
+    where: {
+      p2: {
+        [Op.like]: "%" + String(ownerId) + "%",
+      },
+    },
+  });
+  try {
+    await allItems
+      .concat(allItems3)
+      .concat(allItems2)
+      .map(async (i) => await getSingle(Number(i.p2), i.p0));
+
+    const boxItems1 = await Items.findAll({
+      where: {
+        p2: {
+          [Op.like]: "%" + String(ownerId) + "%",
         },
-      ],
+      },
     });
-    const test = extractValues(allBoxes);
-    await test.map(async (i) => await getSingle(i));
+    const boxItems2 = await Items2.findAll({
+      where: {
+        p2: {
+          [Op.like]: "%" + String(ownerId) + "%",
+        },
+      },
+    });
+    const boxItems3 = await Items3.findAll({
+      where: {
+        p2: {
+          [Op.like]: "%" + String(ownerId) + "%",
+        },
+      },
+    });
     const allUsers = await Boxes.findAll({
       where: {
         ...queryObj,
@@ -81,14 +119,11 @@ const getAllBoxesOfOwners = async (req, res) => {
       },
       offset: offset * limit,
       limit,
-      include: [
-        {
-          model: Item,
-        },
-      ],
     });
+
     return res.json({
       paginateData: allUsers,
+      items: boxItems1.concat(boxItems3).concat(boxItems2),
       count: count.length,
     });
   } catch (e) {

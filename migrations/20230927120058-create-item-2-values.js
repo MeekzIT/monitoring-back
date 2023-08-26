@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("ItemValues", {
+    await queryInterface.createTable("Item2Values", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,14 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       p0: Sequelize.INTEGER, // device type
+      access: Sequelize.BOOLEAN,
       p1: Sequelize.INTEGER, // version
       p2: Sequelize.STRING, // ownerId
       p3: Sequelize.BOOLEAN, // RFID 1
       p4: Sequelize.INTEGER, // RFID 2
       p5: Sequelize.INTEGER, // moikaID
-      p6: Sequelize.STRING, // boxId
+      p6: Sequelize.INTEGER, // boxId
       p7: Sequelize.STRING, // lang
-      p8: Sequelize.STRING, // work mode
+      p8: Sequelize.STRING, // Dozator_OFF_Time
       p9: Sequelize.INTEGER, // freecard
       p10: Sequelize.STRING, // coin nominal
       p11: Sequelize.INTEGER, // nill nominal
@@ -29,59 +30,59 @@ module.exports = {
       p17: Sequelize.STRING, // bill count total +
       p18: Sequelize.STRING, //cash less count total +
       p19: Sequelize.STRING, //rele off time
-      p20: Sequelize.STRING, // 1 rejimi tevoxutyun yst CoinNominal
-      p21: Sequelize.STRING, // 2 rejimi tevoxutyun yst CoinNominal
-      p22: Sequelize.STRING, // 3 rejimi tevoxutyun yst CoinNominal
-      p23: Sequelize.STRING, // 4 rejimi tevoxutyun yst CoinNominal
-      p24: Sequelize.STRING, // 5 rejimi tevoxutyun yst CoinNominal
-      p25: Sequelize.STRING, // 6 rejimi tevoxutyun yst CoinNominal
-      p26: Sequelize.STRING, // Rejimi anvanum
-      p27: Sequelize.STRING, //  Rejimi anvanum
-      p28: Sequelize.STRING, // Rejimi anvanum
-      p29: Sequelize.STRING, // Rejimi anvanum
-      p30: Sequelize.STRING, // Rejimi anvanum
-      p31: Sequelize.STRING, // Rejimi anvanum
-      p32: Sequelize.STRING, // f1 goyn
-      p33: Sequelize.STRING, // f2 guyn
-      p34: Sequelize.STRING, // guyn
-      p35: Sequelize.STRING, // guyn
-      p36: Sequelize.STRING, // guyn
-      p37: Sequelize.STRING, // guyn
-      p38: Sequelize.STRING, // f count
-      p39: Sequelize.STRING, // f count
-      p40: Sequelize.STRING, // f count
-      p41: Sequelize.STRING, // f count
-      p42: Sequelize.STRING, // f count
-      p43: Sequelize.STRING, // f count
-      p44: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p45: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p46: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p47: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p48: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p49: Sequelize.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p50: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      p51: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      p52: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      p53: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      p54: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      p55: Sequelize.STRING, // Buttoni tuylatvutyan poxi chap
-      p56: Sequelize.STRING, // Reklamneri qanak
-      p57: Sequelize.STRING, // inchqan jamanaky mek poxi reklamy
-      p58: Sequelize.STRING, // inch reklam tpi  0-8
-      p59: Sequelize.STRING, // inch reklam tpi  0-8
-      p60: Sequelize.STRING, // inch reklam tpi 0-8
-      p61: Sequelize.STRING, // inch reklam tpi 0-8
-      p62: Sequelize.STRING, // inch reklam tpi 0-8
-      p63: Sequelize.STRING, // inch reklam tpi 0-8
-      p64: Sequelize.STRING, // reklami guyn
-      p65: Sequelize.STRING, // reklami guyny 0-6
-      p66: Sequelize.STRING, // reklami guyny 0-6
-      p67: Sequelize.STRING, // reklami guyny 0-6
-      p68: Sequelize.STRING, // reklami guyny 0-6
-      p69: Sequelize.STRING, // reklami guyny 0-6
-      p70: Sequelize.STRING, // bonus size
-      p71: Sequelize.STRING, // bonus value
-      p72: Sequelize.STRING, // bonus type
+      p20: Sequelize.STRING, // Wait1_Time
+      p21: Sequelize.STRING, // Wait2_Time
+      p22: Sequelize.STRING, // Smock_Time
+      p23: Sequelize.STRING, // Func_Colors 0
+      p24: Sequelize.STRING, // Func_Colors 1
+      p25: Sequelize.STRING, // Func_Colors 2
+      p26: Sequelize.STRING, // Value_Nominal
+      p27: Sequelize.STRING, // Value2_Nominal
+      p28: Sequelize.STRING, // SleepManu_Count
+      p29: Sequelize.STRING, // Roll_Time
+      p30: Sequelize.STRING, // SleepManuPtr 0
+      p31: Sequelize.STRING, // SleepManuPtr 1
+      p32: Sequelize.STRING, // SleepManuPtr 2
+      p33: Sequelize.STRING, // SleepManuPtr 3
+      p34: Sequelize.STRING, // SleepManuPtr 4
+      p35: Sequelize.STRING, // SleepManuPtr 5
+      p36: Sequelize.STRING, // SleepManuColor 0
+      p37: Sequelize.STRING, // SleepManuColor 1
+      p38: Sequelize.STRING, // SleepManuColor 2
+      p39: Sequelize.STRING, // SleepManuColor 3
+      p40: Sequelize.STRING, // SleepManuColor 4
+      p41: Sequelize.STRING, //  SleepManuColor 5
+      p42: Sequelize.STRING,
+      p43: Sequelize.STRING,
+      p44: Sequelize.STRING,
+      p45: Sequelize.STRING,
+      p46: Sequelize.STRING,
+      p47: Sequelize.STRING,
+      p48: Sequelize.STRING,
+      p49: Sequelize.STRING,
+      p50: Sequelize.STRING,
+      p51: Sequelize.STRING,
+      p52: Sequelize.STRING,
+      p53: Sequelize.STRING,
+      p54: Sequelize.STRING,
+      p55: Sequelize.STRING,
+      p56: Sequelize.STRING,
+      p57: Sequelize.STRING,
+      p58: Sequelize.STRING,
+      p59: Sequelize.STRING,
+      p60: Sequelize.STRING,
+      p61: Sequelize.STRING,
+      p62: Sequelize.STRING,
+      p63: Sequelize.STRING,
+      p64: Sequelize.STRING,
+      p65: Sequelize.STRING,
+      p66: Sequelize.STRING,
+      p67: Sequelize.STRING,
+      p68: Sequelize.STRING,
+      p69: Sequelize.STRING,
+      p70: Sequelize.STRING,
+      p71: Sequelize.STRING,
+      p72: Sequelize.STRING,
       p73: Sequelize.STRING,
       p74: Sequelize.STRING,
       p75: Sequelize.STRING,
@@ -114,6 +115,7 @@ module.exports = {
       p93: Sequelize.STRING,
       p94: Sequelize.STRING,
       p95: Sequelize.STRING,
+      p96: Sequelize.STRING,
       p97: Sequelize.STRING,
       p98: Sequelize.STRING,
       p99: Sequelize.STRING,
@@ -133,16 +135,28 @@ module.exports = {
       p113: Sequelize.STRING,
       p114: Sequelize.STRING,
       p115: Sequelize.STRING,
+      p116: Sequelize.STRING,
       p117: Sequelize.STRING,
       p118: Sequelize.STRING,
       p119: Sequelize.STRING,
       p120: Sequelize.STRING,
+      p121: Sequelize.STRING,
+      p122: Sequelize.STRING,
+      p123: Sequelize.STRING,
+      p124: Sequelize.STRING,
+      p125: Sequelize.STRING,
+      p126: Sequelize.STRING,
+      p127: Sequelize.STRING,
+      p128: Sequelize.STRING,
+      p129: Sequelize.STRING,
+      p127: Sequelize.STRING,
       p130: Sequelize.STRING,
       p131: Sequelize.STRING,
       p132: Sequelize.STRING,
       p133: Sequelize.STRING,
       p134: Sequelize.STRING,
       p135: Sequelize.STRING,
+      p136: Sequelize.STRING,
       p137: Sequelize.STRING,
       p138: Sequelize.STRING,
       p139: Sequelize.STRING,
@@ -152,10 +166,10 @@ module.exports = {
       p143: Sequelize.STRING,
       p144: Sequelize.STRING,
       p145: Sequelize.STRING,
+      p146: Sequelize.STRING,
       p147: Sequelize.STRING,
       p148: Sequelize.STRING,
       p149: Sequelize.STRING,
-      datatime: Sequelize.STRING,
       datatime: Sequelize.STRING,
       createdAt: {
         allowNull: false,
@@ -168,6 +182,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("ItemValues");
+    await queryInterface.dropTable("Item2Values");
   },
 };

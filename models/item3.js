@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Item extends Model {
+  class Item3 extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Item.init(
+  Item3.init(
     {
       p0: DataTypes.INTEGER, // device type
       access: DataTypes.BOOLEAN,
@@ -21,72 +21,73 @@ module.exports = (sequelize, DataTypes) => {
       p4: DataTypes.INTEGER, // RFID 2
       p5: DataTypes.INTEGER, // moikaID
       p6: DataTypes.INTEGER, // boxId
-      p7: DataTypes.STRING, // lang
-      p8: DataTypes.STRING, // work mode
-      p9: DataTypes.INTEGER, // freecard
-      p10: DataTypes.STRING, // coin nominal
-      p11: DataTypes.INTEGER, // nill nominal
-      p12: DataTypes.STRING, // cash less nominall
+      p7: DataTypes.STRING, // Act_Language
+      p8: DataTypes.STRING, // Hopper_Nomimnal
+      p9: DataTypes.INTEGER, // Hoppr_Timeout;
+      p10: DataTypes.STRING, // Coin_Nominal
+      p11: DataTypes.INTEGER, // Bill_Nominal
+      p12: DataTypes.STRING, // CashLess_Nominal
       p13: DataTypes.STRING, //coin count
       p14: DataTypes.STRING, // bill count
       p15: DataTypes.STRING, //cesh less count
       p16: DataTypes.STRING, // counin count total +
       p17: DataTypes.STRING, // bill count total +
       p18: DataTypes.STRING, //cash less count total +
-      p19: DataTypes.STRING, //rele off time
-      p20: DataTypes.STRING, // 1 rejimi tevoxutyun yst CoinNominal
-      p21: DataTypes.STRING, // 2 rejimi tevoxutyun yst CoinNominal
-      p22: DataTypes.STRING, // 3 rejimi tevoxutyun yst CoinNominal
-      p23: DataTypes.STRING, // 4 rejimi tevoxutyun yst CoinNominal
-      p24: DataTypes.STRING, // 5 rejimi tevoxutyun ystaccess CoinNominal
-      p25: DataTypes.STRING, // 6 rejimi tevoxutyun yst CoinNominal
-      p26: DataTypes.STRING, // Rejimi anvanum
-      p27: DataTypes.STRING, //  Rejimi anvanum
-      p28: DataTypes.STRING, // Rejimi anvanum
-      p29: DataTypes.STRING, // Rejimi anvanum
-      p30: DataTypes.STRING, // Rejimi anvanum
-      p31: DataTypes.STRING, // Rejimi anvanum
-      p32: DataTypes.STRING, // f1 goyn
-      p33: DataTypes.STRING, // f2 guyn
-      p34: DataTypes.STRING, // guyn
-      p35: DataTypes.STRING, // guyn
-      p36: DataTypes.STRING, // guyn
-      p37: DataTypes.STRING, // guyn
-      p38: DataTypes.STRING, // f count
-      p39: DataTypes.STRING, // f count
-      p40: DataTypes.STRING, // f count
-      p41: DataTypes.STRING, // f count
-      p42: DataTypes.STRING, // f count
-      p43: DataTypes.STRING, // f count
-      p44: DataTypes.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p45: DataTypes.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p46: DataTypes.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p47: DataTypes.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p48: DataTypes.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p49: DataTypes.STRING, // rejimi ogtagorcman jamanaky aranc 0 acman
-      p50: DataTypes.STRING, // Buttoni tuylatvutyan poxi chap
-      p51: DataTypes.STRING, // Buttoni tuylatvutyan poxi chap
-      p52: DataTypes.STRING, // Buttoni tuylatvutyan poxi chap
-      p53: DataTypes.STRING, // Buttoni tuylatvutyan poxi chap
-      p54: DataTypes.STRING, // Buttoni tuylatvutyan poxi chap
-      p55: DataTypes.STRING, // Buttoni tuylatvutyan poxi chap
-      p56: DataTypes.STRING, // Reklamneri qanak
-      p57: DataTypes.STRING, // inchqan jamanaky mek poxi reklamy
-      p58: DataTypes.STRING, // inch reklam tpi  0-8
-      p59: DataTypes.STRING, // inch reklam tpi  0-8
-      p60: DataTypes.STRING, // inch reklam tpi 0-8
-      p61: DataTypes.STRING, // inch reklam tpi 0-8
-      p62: DataTypes.STRING, // inch reklam tpi 0-8
-      p63: DataTypes.STRING, // inch reklam tpi 0-8
-      p64: DataTypes.STRING, // reklami guyn
-      p65: DataTypes.STRING, // reklami guyny 0-6
-      p66: DataTypes.STRING, // reklami guyny 0-6
-      p67: DataTypes.STRING, // reklami guyny 0-6
-      p68: DataTypes.STRING, // reklami guyny 0-6
-      p69: DataTypes.STRING, // reklami guyny 0-6
-      p70: DataTypes.STRING, // bonus size
-      p71: DataTypes.STRING, // bonus value
-      p72: DataTypes.STRING, // bonus type
+      p19: DataTypes.STRING, // Card_Value
+      p20: DataTypes.STRING, //Card_Count
+      p21: DataTypes.STRING, //Hopper_Count
+      p22: DataTypes.STRING, //Card_Recharge
+      p23: DataTypes.STRING, //Card_Total_Count
+      p24: DataTypes.STRING, //Hopper_Total_Count
+      p24: DataTypes.STRING, //Card_Total_Recharge
+      p25: DataTypes.STRING, // Hopper_Coin
+      p26: DataTypes.STRING, //Hopper_Limit
+      p27: DataTypes.STRING, //SleepManu_Count
+      p28: DataTypes.STRING, //Roll_Time
+      p29: DataTypes.STRING, //SleepManuPtr 0
+      p30: DataTypes.STRING, //SleepManuPtr 1
+      p31: DataTypes.STRING, //SleepManuPtr 2
+      p32: DataTypes.STRING, //SleepManuPtr 3
+      p33: DataTypes.STRING, //SleepManuPtr 4
+      p34: DataTypes.STRING, //SleepManuPtr 5
+      p35: DataTypes.STRING, //SleepManuColor 0
+      p36: DataTypes.STRING, //SleepManuColor 1
+      p37: DataTypes.STRING, //SleepManuColor 2
+      p38: DataTypes.STRING, //SleepManuColor 3
+      p39: DataTypes.STRING, //SleepManuColor 4
+      p40: DataTypes.STRING, //SleepManuColor 5
+      p41: DataTypes.STRING, //BonusSize
+      p42: DataTypes.STRING, //BonusValue
+      p43: DataTypes.STRING, //
+      p44: DataTypes.STRING, //
+      p45: DataTypes.STRING, //
+      p46: DataTypes.STRING, //
+      p47: DataTypes.STRING, //
+      p48: DataTypes.STRING, //
+      p49: DataTypes.STRING, //
+      p50: DataTypes.STRING, //
+      p51: DataTypes.STRING, //
+      p52: DataTypes.STRING, //
+      p53: DataTypes.STRING, //
+      p54: DataTypes.STRING, //
+      p55: DataTypes.STRING, //
+      p56: DataTypes.STRING, //
+      p57: DataTypes.STRING, //
+      p58: DataTypes.STRING, //
+      p59: DataTypes.STRING, //
+      p60: DataTypes.STRING, //
+      p61: DataTypes.STRING, //
+      p62: DataTypes.STRING, //
+      p63: DataTypes.STRING, //
+      p64: DataTypes.STRING, //
+      p65: DataTypes.STRING, //
+      p66: DataTypes.STRING, //
+      p67: DataTypes.STRING, //
+      p68: DataTypes.STRING, //
+      p69: DataTypes.STRING, //
+      p70: DataTypes.STRING, //
+      p71: DataTypes.STRING, //
+      p72: DataTypes.STRING, //
       p73: DataTypes.STRING,
       p74: DataTypes.STRING,
       p75: DataTypes.STRING,
@@ -178,15 +179,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Item",
+      modelName: "Item3",
     }
   );
-
-  let Box = sequelize.define("Box");
-  // let ItemValues = sequelize.define("ItemValues");
-
-  // Item.hasMany(Box, {
-  //   foreignKey: "id",
-  // });
-  return Item;
+  return Item3;
 };

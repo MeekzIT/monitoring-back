@@ -1,8 +1,27 @@
 const Item = require("../models").Item;
+const Item2 = require("../models").Item2;
+const Item3 = require("../models").Item3;
 const Info = require("../models").Info;
+const Info2 = require("../models").Info2;
 const ItemValues = require("../models").ItemValues;
+const Item2Values = require("../models").Item2Values;
+const Item3Values = require("../models").Item3Values;
 
 const axios = require("axios");
+
+const checkInfo = async (ownerID, devicesTytpe) => {
+  try {
+    if (devicesTytpe == 1) {
+      const info = await Info.findAll({ where: { ownerID } });
+      return Boolean(info);
+    } else if (devicesTytpe == 2) {
+      const info = await Info2.findAll({ where: { ownerID } });
+      return Boolean(info);
+    }
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
 
 const getAll = async () => {
   try {
@@ -14,13 +33,42 @@ const getAll = async () => {
           where: {},
           truncate: true,
         });
+        await Item2.destroy({
+          where: {},
+          truncate: true,
+        });
+        await Item3.destroy({
+          where: {},
+          truncate: true,
+        });
         await response.data.map(async (item) => {
-          await Item.create(item);
-          await ItemValues.create(item);
-          // const itemInfo = await Info.findOne({ where: { ownerId: item.p2 } });
-          // if (!itemInfo) {
-          //   await Info.create({ ownerId: item.p2 });
-          // }
+          if (item.p0 == 1) {
+            // const haveInfo = checkInfo(item.p2, item.p0);
+            // !haveInfo && (await Info.create({ ownerID: item.p2 }));
+            await Item.create(item);
+            await ItemValues.create(item);
+          } else if (item.p0 == 2) {
+            const haveInfo = await checkInfo(item.p2, 2);
+            console.log(
+              haveInfo,
+              "----------------------------------------------------------"
+            );
+            haveInfo &&
+              (await Info2.create({
+                ownerID: item.p2,
+                first: 0,
+                second: 0,
+                value1: 15,
+                value2: 15,
+                time1: 40,
+                time2: 40,
+              }));
+            await Item2.create(item);
+            await Item2Values.create(item);
+          } else if (item.p0 == 3) {
+            await Item3.create(item);
+            await Item3Values.create(item);
+          }
           console.log("--------------------- ready --------------------------");
         });
       })
@@ -33,7 +81,7 @@ const getAll = async () => {
   }
 };
 
-const getSingle = async (ownerId) => {
+const getSingle = async (ownerId, active) => {
   try {
     axios
       .get(`${process.env.SERVER_URL}/devices/`, {
@@ -42,11 +90,25 @@ const getSingle = async (ownerId) => {
         },
       })
       .then(async (response) => {
-        // handle success
-        const item = await Item.findOne({
-          where: { p2: ownerId },
-        });
-        await item.update(response.data[0]);
+        if (active == 1) {
+          const item = await Item.findOne({
+            where: { p2: String(ownerId) },
+          });
+
+          await item.update(response.data[0]);
+        } else if (active == 2) {
+          const item = await Item2.findOne({
+            where: { p2: String(ownerId) },
+          });
+
+          await item.update(response.data[0]);
+        } else if (active == 3) {
+          const item = await Item3.findOne({
+            where: { p2: String(ownerId) },
+          });
+
+          await item.update(response.data[0]);
+        }
         console.log("--------------------- updated --------------------------");
       })
       .catch((error) => {
@@ -65,9 +127,7 @@ const getOwnerItems = async (id) => {
           id: id.slice(0, id.length - 3),
         },
       })
-      .then(function (response) {
-        console.log(response.data, "!11111111111111111111111111111");
-      })
+      .then(function (response) {})
       .catch(function (error) {
         console.log(error);
       });

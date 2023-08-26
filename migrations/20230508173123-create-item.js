@@ -10,8 +10,9 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       p0: Sequelize.INTEGER, // 1-moyka, 2-cux
+      access: Sequelize.BOOLEAN,
       p1: Sequelize.INTEGER, // 1056,
-      p2: Sequelize.INTEGER, // ownerId
+      p2: Sequelize.STRING, // ownerId
       p3: Sequelize.BOOLEAN, // online te offline
       p4: Sequelize.INTEGER, // Moyki hamary
       p5: Sequelize.INTEGER, // M1-i hamari takaynelutyuny

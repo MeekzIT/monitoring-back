@@ -19,6 +19,7 @@ const categoryRouter = require("./routes/categories");
 const OwnerRouter = require("./routes/owner");
 const boxRouter = require("./routes/box");
 const { getAll } = require("./services/item");
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -38,19 +39,10 @@ app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/owner", OwnerRouter);
 app.use("/api/v1/box", boxRouter);
 
-// cron.schedule("0 * * * *", () => {
-//   console.log("running a task every minute");cron.schedule("0 * * * *", () => {
-//   console.log("running a task every minute");
-//   getAll();
-// });
-//   getAll();
-// });
-
-// cron.schedule("20 16 * * *", () => {
-//   // This code will run every day at 16:20
-//   console.log("Running a task every day at 16:20");
-//   getAll();
-// });
+cron.schedule("0 0 * * *", () => {
+  console.log("Running a task every day at 00:00");
+  getAll();
+});
 
 // getAll();
 

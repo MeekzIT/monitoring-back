@@ -1,8 +1,35 @@
 const Owner = require("../models").Owner;
 const Contry = require("../models").Country;
+const Items = require("../models").Item;
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
+function extractIds(inputArray, ownerId) {
+  return inputArray.map((item) => {
+    if (String(item.p2).length % 2 === 0) {
+      const numberStr = item.p2.toString();
+      console.log(numberStr);
+      if (numberStr.slice(0, -4) == ownerId) return item.p2;
+    } else return 0;
+  });
+}
+
+function findLargestNumber(numbers) {
+  if (numbers.length === 0) {
+    return null; // Return null if the array is empty
+  }
+
+  let largest = numbers[0]; // Assume the first number is the largest
+
+  for (let i = 1; i < numbers.length; i++) {
+    if (typeof numbers[i] === "number" && numbers[i] > largest) {
+      largest = numbers[i];
+    }
+  }
+
+  return largest + 1;
+}
 
 const create = async (req, res) => {
   try {
@@ -14,6 +41,7 @@ const create = async (req, res) => {
       phoneNumber,
       countryId,
       userId,
+      deviceOwner,
     } = req.body;
     const oldUser = await Owner.findOne({
       where: { email, role: "owner" },
@@ -34,6 +62,7 @@ const create = async (req, res) => {
         variant: "standart",
         role: "owner",
         userId,
+        deviceOwner,
       });
       const user = await Owner.findOne({
         where: { id: newUser.id },
@@ -155,6 +184,22 @@ const changePaymentStatus = async (req, res) => {
   }
 };
 
+const generateUnicue = async (req, res) => {
+  try {
+    const { ownerId } = req.body;
+    const user = await Owner.findOne({
+      where: { id: ownerId },
+    });
+    const items = await Items.findAll();
+    const result = await extractIds(items, ownerId);
+    const newId = findLargestNumber(result);
+
+    return res.json({ succes: true, newId });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   create,
   getAll,
@@ -162,4 +207,5 @@ module.exports = {
   delateAccount,
   changePaymentStatus,
   getAllOwnersOfUser,
+  generateUnicue,
 };

@@ -5,11 +5,19 @@ const Box = require("../models").Box;
 const ItemValues = require("../models/").ItemValues;
 const Item = require("../models").Item;
 const bcrypt = require("bcryptjs");
+const { Op } = require("sequelize");
 
 const create = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, phoneNumber, countryId } =
-      req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      countryId,
+      adminId,
+    } = req.body;
     const oldUser = await Users.findOne({
       where: { email, role: "user" },
     });
@@ -28,6 +36,7 @@ const create = async (req, res) => {
         countryId,
         variant: "standart",
         role: "user",
+        adminId,
       });
       const user = await Users.findOne({
         where: { id: newUser.id },
@@ -47,7 +56,7 @@ const create = async (req, res) => {
 //admin controllers
 
 const getAll = async (req, res) => {
-  const { search } = req.query;
+  const { search, adminId } = req.query;
   const offset = Number.parseInt(req.query.offset) || 0;
   const limit = Number.parseInt(req.query.limit) || 12;
   const count = await Users.findAll();
@@ -57,6 +66,13 @@ const getAll = async (req, res) => {
       [Op.like]: "%" + String(search) + "%",
     };
   }
+
+  if (adminId) {
+    queryObj["adminId"] = {
+      [Op.eq]: adminId,
+    };
+  }
+
   try {
     const allUsers = await Users.findAll({
       where: {
@@ -90,16 +106,11 @@ const getSingle = async (req, res) => {
             },
             {
               model: Box,
-              include: [
-                {
-                  model: Item,
-                  // include: [
-                  //   {
-                  //     model: ItemValues,
-                  //   },
-                  // ],
-                },
-              ],
+              // include: [
+              //   {
+              //     model: Item,
+              //   },
+              // ],
             },
           ],
         },

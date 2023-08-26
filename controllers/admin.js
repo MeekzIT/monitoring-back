@@ -275,7 +275,7 @@ const getMe = async (req, res) => {
     const { role, user_id } = req.user;
     if (role == "admin") {
       const user = await Admin.findOne({
-        where: { id: 1 },
+        where: { id: user_id },
       });
       return res.json({ data: user, super: "admin", succes: true });
     } else if (role == "superAdmin") {

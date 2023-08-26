@@ -2,8 +2,8 @@ const Category = require("../models").Category;
 
 const create = async (req, res) => {
   try {
-    const { nameHy, nameRu, nameEn, nameGe, nameAz } = req.body;
-    await Category.create({ nameHy, nameRu, nameEn, nameGe, nameAz });
+    const { nameHy } = req.body;
+    await Category.create({ name: nameHy });
     return res.json({ succes: true });
   } catch (e) {
     console.log("something went wrong", e);
@@ -12,14 +12,10 @@ const create = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
-    const { id, nameHy, nameRu, nameEn, nameGe, nameAz } = req.body;
+    const { id, nameHy } = req.body;
 
     const country = await Category.findOne({ where: { id } });
-    country.nameHy = nameHy;
-    country.nameRu = nameRu;
-    country.nameEn = nameEn;
-    country.nameGe = nameGe;
-    country.nameAz = nameAz;
+    country.name = nameHy;
     await country.save();
     return res.json({ succes: true });
   } catch (e) {

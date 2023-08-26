@@ -10,19 +10,30 @@ const {
 const { getModeName, getInfoItemValues } = require("../services/item");
 
 const Info = require("../models").Info;
+const Info2 = require("../models").Info2;
 const Items = require("../models").Item;
+const Items2 = require("../models").Item2;
 const ItemValues = require("../models").ItemValues;
 
 const edit = async (req, res) => {
   try {
     const { data } = req.body;
-    const item = await Info.findOne({
-      where: { ownerID: data.ownerID, functionId: data.functionId },
-    });
-    await item.update(data);
-    const allItem = await Info.findAll({ where: { ownerID: data.ownerID } });
 
-    return res.json({ succes: true, info: allItem });
+    if (data.active === 1) {
+      const item = await Info.findOne({
+        where: { ownerID: data.ownerID, functionId: data.functionId },
+      });
+      await item.update(data);
+      const allItem = await Info.findAll({ where: { ownerID: data.ownerID } });
+
+      return res.json({ succes: true, info: allItem });
+    } else if (data.active === 2) {
+      const item = await Info2.findOne({
+        where: { ownerID: data.ownerID },
+      });
+      await item.update(data);
+      return res.json({ succes: true, info: item });
+    }
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -30,9 +41,14 @@ const edit = async (req, res) => {
 
 const getInfo = async (req, res) => {
   try {
-    const { id } = req.query;
-    const item = await Info.findAll({ where: { ownerID: id } });
-    return res.json({ succes: true, info: item });
+    const { id, active } = req.query;
+    if (active == 1) {
+      const item = await Info.findAll({ where: { ownerID: id } });
+      return res.json({ succes: true, info: item });
+    } else if (active == 2) {
+      const item = await Info2.findAll({ where: { ownerID: id } });
+      return res.json({ succes: true, info: item });
+    }
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -144,6 +160,29 @@ const getBenefitsByModes = async (req, res) => {
   }
 };
 
+const clacData2 = async (req, res) => {
+  try {
+    const { ownerID } = req.query;
+    const info = await Info2.findOne({ where: { ownerID } });
+    const item = await Items2.findOne({ where: { p2: ownerID } });
+    const firstValue =
+      (Number(item.p22) * Number(info.value1)) / Number(info.time1);
+    const secondValue =
+      (Number(info.time2) * Number(info.value2)) / Number(info.time2);
+    const firstPrice = Number(info.first) / 1000;
+    const secondPrice = Number(info.second) / 1000;
+    return res.json({
+      succes: true,
+      data: {
+        firstValue: firstValue * item.p53 * firstPrice,
+        secondValue: secondValue * item.p54 * secondPrice,
+      },
+    });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   edit,
   getInfo,
@@ -151,4 +190,5 @@ module.exports = {
   expensesBenefitPrcent,
   getBenefitsByDate,
   getBenefitsByModes,
+  clacData2,
 };
