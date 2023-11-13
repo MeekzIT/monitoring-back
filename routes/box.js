@@ -4,6 +4,8 @@ const boxController = require("../controllers/box");
 const authMiddleWare = require("../middlewares/adminAuthMiddleware");
 
 router.post("/create", authMiddleWare, boxController.createExpense);
+router.post("/edit-box", authMiddleWare, boxController.edit);
+router.post("/edit", authMiddleWare, boxController.editExpense);
 router.post("/edit", authMiddleWare, boxController.editExpense);
 router.post("/del", authMiddleWare, boxController.destroy);
 router.get("/", authMiddleWare, boxController.getAllBoxExpenses);

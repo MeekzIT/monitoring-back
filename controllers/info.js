@@ -18,8 +18,7 @@ const ItemValues = require("../models").ItemValues;
 const edit = async (req, res) => {
   try {
     const { data } = req.body;
-
-    if (data.active === 1) {
+    if (data.active == 1) {
       const item = await Info.findOne({
         where: { ownerID: data.ownerID, functionId: data.functionId },
       });
@@ -27,7 +26,7 @@ const edit = async (req, res) => {
       const allItem = await Info.findAll({ where: { ownerID: data.ownerID } });
 
       return res.json({ succes: true, info: allItem });
-    } else if (data.active === 2) {
+    } else if (data.active == 2) {
       const item = await Info2.findOne({
         where: { ownerID: data.ownerID },
       });
