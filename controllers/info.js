@@ -72,6 +72,22 @@ const clacData = async (req, res) => {
       modeUsedTime5,
       modeUsedTime6,
     ];
+    console.log(allTimesers, "allTimesers");
+    const getModeTimer = (mode) => {
+      if (mode == 1) {
+        return modeUsedTime1;
+      } else if (mode == 2) {
+        return modeUsedTime2;
+      } else if (mode == 3) {
+        return modeUsedTime3;
+      } else if (mode == 4) {
+        return modeUsedTime4;
+      } else if (mode == 5) {
+        return modeUsedTime5;
+      } else if (mode == 6) {
+        return modeUsedTime6;
+      }
+    };
     const data = [];
     await info.map(async (i, idx) => {
       const itemValues = await getInfoItemValues(
@@ -83,13 +99,13 @@ const clacData = async (req, res) => {
         i.PrcentOfRegulator,
         i.PrcetOfModeValueFirst,
         i.PrcetOfModeValueSecond,
-        allTimesers[idx]
+        getModeTimer(i.mode)
       );
       data.push({
         ...itemValues,
         functionId: i.functionId,
         modeName: getModeName(i.functionId),
-        seconds: allTimesers[idx],
+        seconds: getModeTimer(i.mode),
       });
     });
     return res.json({ succes: true, data });

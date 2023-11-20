@@ -9,6 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      mode: Sequelize.INTEGER,
       ownerID: Sequelize.INTEGER,
       functionId: Sequelize.STRING, // voda, wax, ...
       enginePower: Sequelize.STRING,

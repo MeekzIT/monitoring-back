@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Info.init(
     {
       ownerID: DataTypes.INTEGER,
+      mode: DataTypes.INTEGER,
       functionId: DataTypes.STRING, // voda, wax, ...
       enginePower: DataTypes.STRING,
       electricPrice: DataTypes.STRING,
