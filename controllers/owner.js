@@ -7,11 +7,12 @@ const bcrypt = require("bcryptjs");
 
 function extractIds(inputArray, ownerId) {
   return inputArray.map((item) => {
-    if (String(item.p2).length % 2 === 0) {
+    if (String(item.p2)?.length % 2 === 0) {
       const numberStr = item.p2.toString();
       console.log(numberStr);
       if (numberStr.slice(0, -4) == ownerId) return item.p2;
-    } else return 0;
+    }
+    return null;
   });
 }
 
@@ -28,7 +29,7 @@ function findLargestNumber(numbers) {
     }
   }
 
-  return largest + 1;
+  return Number(largest) + 2;
 }
 
 const create = async (req, res) => {
@@ -192,7 +193,12 @@ const generateUnicue = async (req, res) => {
     });
     const items = await Items.findAll();
     const result = await extractIds(items, ownerId);
-    const newId = findLargestNumber(result);
+    const newResult = await result.filter((i) => i !== null);
+    const mapResult = await newResult.map((i) => Number(i));
+
+    console.log(mapResult, "--------------------------------");
+
+    const newId = findLargestNumber(newResult);
 
     return res.json({ succes: true, newId });
   } catch (e) {
