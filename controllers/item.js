@@ -326,29 +326,31 @@ const getBoxInfo = async (req, res) => {
     const item = await Items.findAll({
       where: {
         p2: {
-          [Op.like]: "%" + String(ownerId) + "%",
+          [Op.like]: String(ownerId) + "%",
         },
       },
     });
     const item2 = await Item2.findAll({
       where: {
         p2: {
-          [Op.like]: "%" + String(ownerId) + "%",
+          [Op.like]: String(ownerId) + "%",
         },
       },
     });
     const item3 = await Item3.findAll({
       where: {
         p2: {
-          [Op.like]: "%" + String(ownerId) + "%",
+          [Op.like]: String(ownerId) + "%",
         },
       },
     });
-    let result = {
-      result1: 0,
-      result2: 0,
-      result3: 0,
-    };
+    const allResult1 = [];
+    const allResult2 = [];
+    const allResult3 = [];
+    console.log(
+      item.length,
+      "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[["
+    );
     await item.map(async (i) => {
       const prevDay = await ItemValues.findOne({
         where: {
@@ -371,9 +373,22 @@ const getBoxInfo = async (req, res) => {
 
         result1 = result1 + +coin + cash + bill;
       }
-      console.log(result1, "1111111111111111111111111111111111111111111111111");
-      result.result1 = await result1;
+      console.log(
+        {
+          id: i.p2,
+          result: result1,
+        },
+        "1111111111111111111111111111111111111111111111111"
+      );
+      allResult1.push({
+        id: i.p2,
+        result: result1,
+      });
     });
+    console.log(
+      allResult1,
+      "pppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+    );
     await item3.map(async (i) => {
       const prevDay3 = await ItemValues3.findOne({
         where: {
@@ -388,10 +403,20 @@ const getBoxInfo = async (req, res) => {
         result3 =
           result3 + (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
       } else {
-        result.result2 = result.result2 + Number(i.p18) * Number(i.p12);
+        result3 = result3 + Number(i.p18) * Number(i.p12);
       }
-      console.log(result3, "1111111111111111111111111111111111111111111111111");
-      result.result3 = await result3;
+      console.log(
+        {
+          id: i.p2,
+          result: result3,
+        },
+        "33333333333333333333333333333333333333333333333333"
+      );
+
+      allResult3.push({
+        id: i.p2,
+        result: result3,
+      });
     });
     await item2.map(async (i) => {
       const prevDay2 = await ItemValues2.findOne({
@@ -409,8 +434,18 @@ const getBoxInfo = async (req, res) => {
       } else {
         result2 = result2 + Number(i.p18) * Number(i.p12);
       }
-      console.log(result2, "1111111111111111111111111111111111111111111111111");
-      result.result2 = await result2;
+      console.log(
+        {
+          id: i.p2,
+          result: result2,
+        },
+        "222222222222222222222222222222222222222222222222222222"
+      );
+
+      allResult2.push({
+        id: i.p2,
+        result: result2,
+      });
     });
     // const prevDay = await ItemValues.findOne({
     //   where: {
@@ -443,13 +478,17 @@ const getBoxInfo = async (req, res) => {
     //   },
     // });
     console.log(
-      result,
+      allResult1,
+      allResult2,
+      allResult3,
       "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
     );
     return res.json({
       succes: true,
       data: {
-        result,
+        allResult1,
+        allResult2,
+        allResult3,
       },
     });
   } catch (e) {
