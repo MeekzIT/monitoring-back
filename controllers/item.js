@@ -4,8 +4,8 @@ const Items = require("../models").Item;
 const Item2 = require("../models").Item2;
 const Item3 = require("../models").Item3;
 const ItemValues = require("../models").ItemValues;
-const ItemValues2 = require("../models").ItemValues2;
-const ItemValues3 = require("../models").ItemValues3;
+const ItemValues2 = require("../models").Item2Values;
+const ItemValues3 = require("../models").Item3Values;
 
 const edit = async (req, res) => {
   try {
@@ -254,6 +254,10 @@ const getCurrentDateMoney = async (req, res) => {
         let coin = Number(item.p16) * Number(item.p10);
         let cash = Number(item.p17) * Number(item.p11);
         let bill = Number(item.p18) * Number(item.p12);
+        console.log(
+          item.p16,
+          ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+        );
         result.MonetizationOnIcon = result.MonetizationOnIcon + coin;
         result.LocalAtmIcon = result.LocalAtmIcon + cash;
         result.CreditScoreIcon = result.CreditScoreIcon + bill;
@@ -286,10 +290,6 @@ const getCurrentDateMoney = async (req, res) => {
 
       return res.json({ succes: true, data: result });
     } else if (active == 2) {
-      console.log(
-        single,
-        "aaaaaaaaaaaaaaaaaaaaaaaa 1111111111111111111111111111111111111111111111111111111111111111111111111111"
-      );
       const item = await Item2.findOne({ where: { p2: single } });
       const prevDay = await ItemValues2.findOne({
         where: {
@@ -313,6 +313,150 @@ const getCurrentDateMoney = async (req, res) => {
   }
 };
 
+const getBoxInfo = async (req, res) => {
+  try {
+    const { ownerId, date } = req.query;
+    let queryObj = {};
+    if (date) {
+      queryObj["datatime"] = {
+        [Op.like]: "%" + date + "%",
+      };
+    }
+
+    const item = await Items.findAll({
+      where: {
+        p2: {
+          [Op.like]: "%" + String(ownerId) + "%",
+        },
+      },
+    });
+    const item2 = await Item2.findAll({
+      where: {
+        p2: {
+          [Op.like]: "%" + String(ownerId) + "%",
+        },
+      },
+    });
+    const item3 = await Item3.findAll({
+      where: {
+        p2: {
+          [Op.like]: "%" + String(ownerId) + "%",
+        },
+      },
+    });
+    let result = {
+      result1: 0,
+      result2: 0,
+      result3: 0,
+    };
+    await item.map(async (i) => {
+      const prevDay = await ItemValues.findOne({
+        where: {
+          p2: i.p2,
+          datatime: {
+            [Op.like]: getPreviousDayDate(i.datatime),
+          },
+        },
+      });
+      let result1 = 0;
+      if (prevDay) {
+        let coin = (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
+        let cash = (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
+        let bill = (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+        result1 = result1 + coin + cash + bill;
+      } else {
+        let coin = Number(i.p16) * Number(i.p10);
+        let cash = Number(i.p17) * Number(i.p11);
+        let bill = Number(i.p18) * Number(i.p12);
+
+        result1 = result1 + +coin + cash + bill;
+      }
+      console.log(result1, "1111111111111111111111111111111111111111111111111");
+      result.result1 = await result1;
+    });
+    await item3.map(async (i) => {
+      const prevDay3 = await ItemValues3.findOne({
+        where: {
+          p2: i.p2,
+          datatime: {
+            [Op.like]: getPreviousDayDate(i.datatime),
+          },
+        },
+      });
+      let result3 = 0;
+      if (prevDay3) {
+        result3 =
+          result3 + (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+      } else {
+        result.result2 = result.result2 + Number(i.p18) * Number(i.p12);
+      }
+      console.log(result3, "1111111111111111111111111111111111111111111111111");
+      result.result3 = await result3;
+    });
+    await item2.map(async (i) => {
+      const prevDay2 = await ItemValues2.findOne({
+        where: {
+          p2: i.p2,
+          datatime: {
+            [Op.like]: getPreviousDayDate(i.datatime),
+          },
+        },
+      });
+      let result2 = 0;
+      if (prevDay2) {
+        result2 =
+          result2 + (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+      } else {
+        result2 = result2 + Number(i.p18) * Number(i.p12);
+      }
+      console.log(result2, "1111111111111111111111111111111111111111111111111");
+      result.result2 = await result2;
+    });
+    // const prevDay = await ItemValues.findOne({
+    //   where: {
+    //     p2: {
+    //       [Op.like]: "%" + String(ownerId) + "%",
+    //     },
+    //     datatime: {
+    //       [Op.like]: getPreviousDayDate(item.datatime),
+    //     },
+    //   },
+    // });
+    // const prevDay3 = await ItemValues3.findOne({
+    //   where: {
+    //     p2: {
+    //       [Op.like]: "%" + String(ownerId) + "%",
+    //     },
+    //     datatime: {
+    //       [Op.like]: getPreviousDayDate(item3.datatime, 3),
+    //     },
+    //   },
+    // });
+    // const prevDay2 = await ItemValues2.findOne({
+    //   where: {
+    //     p2: {
+    //       [Op.like]: "%" + String(ownerId) + "%",
+    //     },
+    //     datatime: {
+    //       [Op.like]: getPreviousDayDate(item2.datatime, 2),
+    //     },
+    //   },
+    // });
+    console.log(
+      result,
+      "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+    );
+    return res.json({
+      succes: true,
+      data: {
+        result,
+      },
+    });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   edit,
   changeAccessability,
@@ -320,4 +464,5 @@ module.exports = {
   getItemMoney,
   getCurrentDateMoney,
   getSingle,
+  getBoxInfo,
 };
