@@ -553,7 +553,7 @@ const getBoxInfo = async (req, res) => {
 
     await allResult.map((i) => {
       result = result + i.result;
-      expense = expense + i?.caxs;
+      expense = expense + i.caxs;
     });
     let percentage = 0;
     if (expense === 0) {
@@ -571,7 +571,7 @@ const getBoxInfo = async (req, res) => {
         result,
         expense,
         benefit: result - expense,
-        ratio: percentage,
+        ratio: Math.round(percentage),
         allResult,
       },
     });
