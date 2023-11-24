@@ -347,10 +347,6 @@ const getBoxInfo = async (req, res) => {
     const allResult1 = [];
     const allResult2 = [];
     const allResult3 = [];
-    console.log(
-      item.length,
-      "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[["
-    );
     await item.map(async (i) => {
       const prevDay = await ItemValues.findOne({
         where: {
@@ -360,35 +356,28 @@ const getBoxInfo = async (req, res) => {
           },
         },
       });
-      let result1 = 0;
       if (prevDay) {
         let coin = (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
         let cash = (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
         let bill = (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-        result1 = result1 + coin + cash + bill;
+        let result1 = coin + cash + bill;
+        allResult1.push({
+          id: i.p2,
+          result: result1,
+        });
       } else {
         let coin = Number(i.p16) * Number(i.p10);
         let cash = Number(i.p17) * Number(i.p11);
         let bill = Number(i.p18) * Number(i.p12);
 
-        result1 = result1 + +coin + cash + bill;
-      }
-      console.log(
-        {
+        let result1 = coin + cash + bill;
+        allResult1.push({
           id: i.p2,
           result: result1,
-        },
-        "1111111111111111111111111111111111111111111111111"
-      );
-      allResult1.push({
-        id: i.p2,
-        result: result1,
-      });
+        });
+      }
     });
-    console.log(
-      allResult1,
-      "pppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-    );
+
     await item3.map(async (i) => {
       const prevDay3 = await ItemValues3.findOne({
         where: {
@@ -398,25 +387,20 @@ const getBoxInfo = async (req, res) => {
           },
         },
       });
-      let result3 = 0;
       if (prevDay3) {
-        result3 =
-          result3 + (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-      } else {
-        result3 = result3 + Number(i.p18) * Number(i.p12);
-      }
-      console.log(
-        {
+        let result3 =
+          (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+        allResult3.push({
           id: i.p2,
           result: result3,
-        },
-        "33333333333333333333333333333333333333333333333333"
-      );
-
-      allResult3.push({
-        id: i.p2,
-        result: result3,
-      });
+        });
+      } else {
+        let result3 = Number(i.p18) * Number(i.p12);
+        allResult3.push({
+          id: i.p2,
+          result: result3,
+        });
+      }
     });
     await item2.map(async (i) => {
       const prevDay2 = await ItemValues2.findOne({
@@ -427,56 +411,25 @@ const getBoxInfo = async (req, res) => {
           },
         },
       });
-      let result2 = 0;
       if (prevDay2) {
-        result2 =
-          result2 + (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-      } else {
-        result2 = result2 + Number(i.p18) * Number(i.p12);
-      }
-      console.log(
-        {
+        let result2 =
+          (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+        allResult2.push({
           id: i.p2,
           result: result2,
-        },
-        "222222222222222222222222222222222222222222222222222222"
-      );
-
-      allResult2.push({
-        id: i.p2,
-        result: result2,
-      });
+        });
+      } else {
+        let result2 = Number(i.p18) * Number(i.p12);
+        allResult2.push({
+          id: i.p2,
+          result: result2,
+        });
+      }
     });
-    // const prevDay = await ItemValues.findOne({
-    //   where: {
-    //     p2: {
-    //       [Op.like]: "%" + String(ownerId) + "%",
-    //     },
-    //     datatime: {
-    //       [Op.like]: getPreviousDayDate(item.datatime),
-    //     },
-    //   },
-    // });
-    // const prevDay3 = await ItemValues3.findOne({
-    //   where: {
-    //     p2: {
-    //       [Op.like]: "%" + String(ownerId) + "%",
-    //     },
-    //     datatime: {
-    //       [Op.like]: getPreviousDayDate(item3.datatime, 3),
-    //     },
-    //   },
-    // });
-    // const prevDay2 = await ItemValues2.findOne({
-    //   where: {
-    //     p2: {
-    //       [Op.like]: "%" + String(ownerId) + "%",
-    //     },
-    //     datatime: {
-    //       [Op.like]: getPreviousDayDate(item2.datatime, 2),
-    //     },
-    //   },
-    // });
+    console.log(
+      allResult1,
+      "pppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+    );
     console.log(
       allResult1,
       allResult2,

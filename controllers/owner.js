@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs");
 
 function extractIds(inputArray, ownerId) {
   return inputArray.map((item) => {
-    if (String(item.p2)?.length % 2 === 0) {
+    if (String(item.p2).length % 2 === 0) {
       const numberStr = item.p2.toString();
       console.log(numberStr);
       if (numberStr.slice(0, -4) == ownerId) return item.p2;

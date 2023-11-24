@@ -148,7 +148,6 @@ const editData = async (data) => {
         },
         {
           headers: {
-            // Overwrite Axios's automatically set Content-Type
             "Content-Type": "application/json",
           },
         }
@@ -227,9 +226,7 @@ const getInfoItemValues = (
     const caxsPerMinuteByWater =
       (Number(waterPrice) / 1000) * Number(waterPerMinute) || 0;
     const caxsPerMinuteByModeValue =
-      (Number(modeValuePerLitre) / 1000) *
-        Number(PrcentOfRegulator) *
-        50 *
+      (((Number(modeValuePerLitre) / 1000) * Number(PrcentOfRegulator)) / 50) *
         Number(prcetByModeByPrce) || 0;
     // prcent = 4
     //  prcetByModeByPrce = 1500 / 4
