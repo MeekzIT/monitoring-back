@@ -1,4 +1,8 @@
-const { editData } = require("../services/item");
+const {
+  editData,
+  getInfoItemValues,
+  getModeName,
+} = require("../services/item");
 const { Op } = require("sequelize");
 const Items = require("../models").Item;
 const Item2 = require("../models").Item2;
@@ -6,6 +10,8 @@ const Item3 = require("../models").Item3;
 const ItemValues = require("../models").ItemValues;
 const ItemValues2 = require("../models").Item2Values;
 const ItemValues3 = require("../models").Item3Values;
+const Info = require("../models").Info;
+const Info2 = require("../models").Info2;
 
 const edit = async (req, res) => {
   try {
@@ -254,10 +260,6 @@ const getCurrentDateMoney = async (req, res) => {
         let coin = Number(item.p16) * Number(item.p10);
         let cash = Number(item.p17) * Number(item.p11);
         let bill = Number(item.p18) * Number(item.p12);
-        console.log(
-          item.p16,
-          ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
-        );
         result.MonetizationOnIcon = result.MonetizationOnIcon + coin;
         result.LocalAtmIcon = result.LocalAtmIcon + cash;
         result.CreditScoreIcon = result.CreditScoreIcon + bill;
@@ -313,8 +315,94 @@ const getCurrentDateMoney = async (req, res) => {
   }
 };
 
+const clacData1 = async (ownerID) => {
+  try {
+    const info = await Info.findAll({ where: { ownerID } });
+    const item = await Items.findOne({ where: { p2: ownerID } });
+    const modeUsedTime1 = Number(item.p44);
+    const modeUsedTime2 = Number(item.p45);
+    const modeUsedTime3 = Number(item.p46);
+    const modeUsedTime4 = Number(item.p47);
+    const modeUsedTime5 = Number(item.p48);
+    const modeUsedTime6 = Number(item.p49);
+    const allTimesers = [
+      modeUsedTime1,
+      modeUsedTime2,
+      modeUsedTime3,
+      modeUsedTime4,
+      modeUsedTime5,
+      modeUsedTime6,
+    ];
+    const getModeTimer = (mode) => {
+      if (mode == 1) {
+        return modeUsedTime1;
+      } else if (mode == 2) {
+        return modeUsedTime2;
+      } else if (mode == 3) {
+        return modeUsedTime3;
+      } else if (mode == 4) {
+        return modeUsedTime4;
+      } else if (mode == 5) {
+        return modeUsedTime5;
+      } else if (mode == 6) {
+        return modeUsedTime6;
+      }
+    };
+    const data = [];
+    await info.map(async (i, idx) => {
+      const itemValues = await getInfoItemValues(
+        i.enginePower,
+        i.electricPrice,
+        i.waterPrice,
+        i.waterPerMinute,
+        i.modeValuePerLitre,
+        i.PrcentOfRegulator,
+        i.PrcetOfModeValueFirst,
+        i.PrcetOfModeValueSecond,
+        getModeTimer(i.mode)
+      );
+      data.push({
+        ...itemValues,
+        functionId: i.functionId,
+        modeName: getModeName(i.functionId),
+        seconds: getModeTimer(i.mode),
+      });
+    });
+    let caxs = 0;
+    await data.map((i) => (caxs = caxs + Number(i.total)));
+    return { data, caxs };
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const clacData2 = async (ownerID) => {
+  try {
+    const info = await Info2.findOne({ where: { ownerID } });
+    const item = await Item2.findOne({ where: { p2: ownerID } });
+    const firstValue =
+      (Number(item.p22) * Number(info.value1)) / Number(info.time1);
+    const secondValue =
+      (Number(info.time2) * Number(info.value2)) / Number(info.time2);
+    const firstPrice = Number(info.first) / 1000;
+    const secondPrice = Math.round(Number(info.second) / 1000);
+    const firstValue1 = Math.round(firstValue * item.p53 * firstPrice);
+    const secondValue1 = secondValue * item.p54 * secondPrice;
+    return {
+      total: firstValue1 + secondValue1,
+      firstValue1,
+      secondValue1,
+    };
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const getBoxInfo = async (req, res) => {
   try {
+    console.log(
+      "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+    );
     const { ownerId, date } = req.query;
     let queryObj = {};
     if (date) {
@@ -337,111 +425,154 @@ const getBoxInfo = async (req, res) => {
         },
       },
     });
-    const item3 = await Item3.findAll({
-      where: {
-        p2: {
-          [Op.like]: String(ownerId) + "%",
-        },
-      },
-    });
-    const allResult1 = [];
-    const allResult2 = [];
-    const allResult3 = [];
-    await item.map(async (i) => {
-      const prevDay = await ItemValues.findOne({
-        where: {
-          p2: i.p2,
-          datatime: {
-            [Op.like]: getPreviousDayDate(i.datatime),
-          },
-        },
-      });
-      if (prevDay) {
-        let coin = (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
-        let cash = (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
-        let bill = (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-        let result1 = coin + cash + bill;
-        allResult1.push({
-          id: i.p2,
-          result: result1,
-        });
-      } else {
-        let coin = Number(i.p16) * Number(i.p10);
-        let cash = Number(i.p17) * Number(i.p11);
-        let bill = Number(i.p18) * Number(i.p12);
+    // const item3 = await Item3.findAll({
+    //   where: {
+    //     p2: {
+    //       [Op.like]: String(ownerId) + "%",
+    //     },
+    //   },
+    // });
+    const allResult = [];
 
-        let result1 = coin + cash + bill;
-        allResult1.push({
-          id: i.p2,
-          result: result1,
+    await Promise.all(
+      await item.map(async (i) => {
+        const prevDay = await ItemValues.findOne({
+          where: {
+            p2: i.p2,
+            datatime: {
+              [Op.like]: getPreviousDayDate(i.datatime),
+            },
+          },
         });
-      }
-    });
+        if (prevDay) {
+          let coin =
+            (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
+          let cash =
+            (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
+          let bill =
+            (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+          let result1 = coin + cash + bill;
+          let caxs = await clacData1(i.p2);
+          allResult.push({
+            id: i.p2,
+            result: result1,
+            type: 1,
+            caxs: caxs.caxs,
+            ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
+            data: [...caxs.data],
+          });
+        } else {
+          let coin = Number(i.p16) * Number(i.p10);
+          let cash = Number(i.p17) * Number(i.p11);
+          let bill = Number(i.p18) * Number(i.p12);
+          let caxs = await clacData1(i.p2);
 
-    await item3.map(async (i) => {
-      const prevDay3 = await ItemValues3.findOne({
-        where: {
-          p2: i.p2,
-          datatime: {
-            [Op.like]: getPreviousDayDate(i.datatime),
-          },
-        },
-      });
-      if (prevDay3) {
-        let result3 =
-          (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-        allResult3.push({
-          id: i.p2,
-          result: result3,
-        });
-      } else {
-        let result3 = Number(i.p18) * Number(i.p12);
-        allResult3.push({
-          id: i.p2,
-          result: result3,
-        });
-      }
-    });
-    await item2.map(async (i) => {
-      const prevDay2 = await ItemValues2.findOne({
-        where: {
-          p2: i.p2,
-          datatime: {
-            [Op.like]: getPreviousDayDate(i.datatime),
-          },
-        },
-      });
-      if (prevDay2) {
-        let result2 =
-          (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-        allResult2.push({
-          id: i.p2,
-          result: result2,
-        });
-      } else {
-        let result2 = Number(i.p18) * Number(i.p12);
-        allResult2.push({
-          id: i.p2,
-          result: result2,
-        });
-      }
-    });
-    console.log(
-      allResult1,
-      "pppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+          let result1 = coin + cash + bill;
+          allResult.push({
+            id: i.p2,
+            result: result1,
+            caxs: caxs.caxs,
+            ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
+            type: 1,
+            data: [...caxs.data],
+          });
+        }
+      })
     );
-    console.log(
-      allResult1,
-      allResult2,
-      allResult3,
-      "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+    // await Promise.all(
+    //   await item3.map(async (i) => {
+    //     const prevDay3 = await ItemValues3.findOne({
+    //       where: {
+    //         p2: i.p2,
+    //         datatime: {
+    //           [Op.like]: getPreviousDayDate(i.datatime),
+    //         },
+    //       },
+    //     });
+    //     if (prevDay3) {
+    //       let result3 =
+    //         (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+    //       allResult.push({
+    //         id: i.p2,
+    //         caxs: 0,
+    //         result: result3,
+    //         type: 3,
+    //       });
+    //     } else {
+    //       let result3 = Number(i.p18) * Number(i.p12);
+    //       allResult.push({
+    //         id: i.p2,
+    //         result: result3,
+    //         caxs: 0,
+    //         type: 3,
+    //       });
+    //     }
+    //   })
+    // );
+    await Promise.all(
+      await item2.map(async (i) => {
+        const prevDay2 = await ItemValues2.findOne({
+          where: {
+            p2: i.p2,
+            datatime: {
+              [Op.like]: getPreviousDayDate(i.datatime),
+            },
+          },
+        });
+        if (prevDay2) {
+          let result2 =
+            (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+          const caxs = await clacData2(i.p2);
+          allResult.push({
+            id: i.p2,
+            result: result2,
+            caxs: caxs.total,
+            ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
+
+            type: 2,
+          });
+        } else {
+          let result2 = Number(i.p18) * Number(i.p12);
+          const caxs = await clacData2(i.p2);
+
+          allResult.push({
+            id: i.p2,
+            ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
+            result: result2,
+            caxs: caxs.total,
+            firstValue1: caxs.firstValue1,
+            secondValue1: caxs.secondValue1,
+            type: 2,
+          });
+        }
+      })
     );
+
+    let result = 0;
+    let expense = 0;
+
+    await allResult.map((i) => {
+      result = result + i.result;
+      expense = expense + i?.caxs;
+    });
+    let percentage = 0;
+    if (expense === 0) {
+      percentage = 100;
+    } else {
+      // Calculate the ratio
+      const ratio = expense / result;
+
+      // Convert the ratio to a percentage
+      percentage = ratio * 100;
+    }
     return res.json({
       succes: true,
       data: {
-        allResult1,
-        allResult2,
-        allResult3,
+        result,
+        expense,
+        benefit: result - expense,
+        ratio: percentage,
+        allResult,
       },
     });
   } catch (e) {
