@@ -59,13 +59,20 @@ const getAllBoxesOfOwners = async (req, res) => {
   const limit = Number.parseInt(req.query.limit) || 12;
   const count = await Boxes.findAll({ where: { ownerId: ownerId } });
   let queryObj = {};
+  let queryObj1 = {};
   if (search) {
     queryObj["phoneNumber"] = {
       [Op.like]: "%" + String(search) + "%",
     };
   }
+  if (boxId) {
+    queryObj1["p5"] = {
+      [Op.eq]: boxId,
+    };
+  }
   const allItems = await Items.findAll({
     where: {
+      ...queryObj1,
       p2: {
         [Op.like]: "%" + String(ownerId) + "%",
       },
@@ -73,6 +80,8 @@ const getAllBoxesOfOwners = async (req, res) => {
   });
   const allItems2 = await Items2.findAll({
     where: {
+      ...queryObj1,
+
       p2: {
         [Op.like]: "%" + String(ownerId) + "%",
       },
@@ -80,6 +89,8 @@ const getAllBoxesOfOwners = async (req, res) => {
   });
   const allItems3 = await Items3.findAll({
     where: {
+      ...queryObj1,
+
       p2: {
         [Op.like]: "%" + String(ownerId) + "%",
       },
@@ -93,6 +104,8 @@ const getAllBoxesOfOwners = async (req, res) => {
 
     const boxItems1 = await Items.findAll({
       where: {
+        ...queryObj1,
+
         p2: {
           [Op.like]: "%" + String(ownerId) + "%",
         },
@@ -100,6 +113,8 @@ const getAllBoxesOfOwners = async (req, res) => {
     });
     const boxItems2 = await Items2.findAll({
       where: {
+        ...queryObj1,
+
         p2: {
           [Op.like]: "%" + String(ownerId) + "%",
         },
@@ -107,6 +122,8 @@ const getAllBoxesOfOwners = async (req, res) => {
     });
     const boxItems3 = await Items3.findAll({
       where: {
+        ...queryObj1,
+
         p2: {
           [Op.like]: "%" + String(ownerId) + "%",
         },

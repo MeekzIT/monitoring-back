@@ -12,6 +12,7 @@ const ItemValues2 = require("../models").Item2Values;
 const ItemValues3 = require("../models").Item3Values;
 const Info = require("../models").Info;
 const Info2 = require("../models").Info2;
+const Boxes = require("../models").Box;
 
 const edit = async (req, res) => {
   try {
@@ -398,21 +399,22 @@ const clacData2 = async (ownerID) => {
   }
 };
 
-const getBoxInfo = async (req, res) => {
+const getBoxInfoService = async (ownerId, date, moikaId) => {
   try {
-    console.log(
-      "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-    );
-    const { ownerId, date } = req.query;
     let queryObj = {};
     if (date) {
       queryObj["datatime"] = {
         [Op.like]: "%" + date + "%",
       };
     }
-
+    if (moikaId) {
+      queryObj["p5"] = {
+        [Op.eq]: moikaId,
+      };
+    }
     const item = await Items.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
@@ -420,24 +422,21 @@ const getBoxInfo = async (req, res) => {
     });
     const item2 = await Item2.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
       },
     });
-    // const item3 = await Item3.findAll({
-    //   where: {
-    //     p2: {
-    //       [Op.like]: String(ownerId) + "%",
-    //     },
-    //   },
-    // });
+    const box = await Boxes.findOne({ where: { ownerId } });
+
     const allResult = [];
 
     await Promise.all(
       await item.map(async (i) => {
         const prevDay = await ItemValues.findOne({
           where: {
+            ...queryObj,
             p2: i.p2,
             datatime: {
               [Op.like]: getPreviousDayDate(i.datatime),
@@ -460,13 +459,13 @@ const getBoxInfo = async (req, res) => {
             caxs: caxs.caxs,
             ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
             data: [...caxs.data],
+            // box,
           });
         } else {
           let coin = Number(i.p16) * Number(i.p10);
           let cash = Number(i.p17) * Number(i.p11);
           let bill = Number(i.p18) * Number(i.p12);
           let caxs = await clacData1(i.p2);
-
           let result1 = coin + cash + bill;
           allResult.push({
             id: i.p2,
@@ -475,44 +474,16 @@ const getBoxInfo = async (req, res) => {
             ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
             type: 1,
             data: [...caxs.data],
+            // box,
           });
         }
       })
     );
-    // await Promise.all(
-    //   await item3.map(async (i) => {
-    //     const prevDay3 = await ItemValues3.findOne({
-    //       where: {
-    //         p2: i.p2,
-    //         datatime: {
-    //           [Op.like]: getPreviousDayDate(i.datatime),
-    //         },
-    //       },
-    //     });
-    //     if (prevDay3) {
-    //       let result3 =
-    //         (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-    //       allResult.push({
-    //         id: i.p2,
-    //         caxs: 0,
-    //         result: result3,
-    //         type: 3,
-    //       });
-    //     } else {
-    //       let result3 = Number(i.p18) * Number(i.p12);
-    //       allResult.push({
-    //         id: i.p2,
-    //         result: result3,
-    //         caxs: 0,
-    //         type: 3,
-    //       });
-    //     }
-    //   })
-    // );
     await Promise.all(
       await item2.map(async (i) => {
         const prevDay2 = await ItemValues2.findOne({
           where: {
+            ...queryObj,
             p2: i.p2,
             datatime: {
               [Op.like]: getPreviousDayDate(i.datatime),
@@ -523,18 +494,19 @@ const getBoxInfo = async (req, res) => {
           let result2 =
             (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
           const caxs = await clacData2(i.p2);
+          // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
           allResult.push({
             id: i.p2,
             result: result2,
             caxs: caxs.total,
             ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
-
+            // box,
             type: 2,
           });
         } else {
           let result2 = Number(i.p18) * Number(i.p12);
           const caxs = await clacData2(i.p2);
-
+          // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
           allResult.push({
             id: i.p2,
             ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
@@ -543,6 +515,7 @@ const getBoxInfo = async (req, res) => {
             firstValue1: caxs.firstValue1,
             secondValue1: caxs.secondValue1,
             type: 2,
+            // box,
           });
         }
       })
@@ -565,7 +538,7 @@ const getBoxInfo = async (req, res) => {
       // Convert the ratio to a percentage
       percentage = ratio * 100;
     }
-    return res.json({
+    return {
       succes: true,
       data: {
         result,
@@ -573,8 +546,36 @@ const getBoxInfo = async (req, res) => {
         benefit: result - expense,
         ratio: Math.round(percentage),
         allResult,
+        box,
       },
-    });
+    };
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+const getOwnerInfo = async (req, res) => {
+  try {
+    const { ownerId, date } = req.query;
+    const data = await getBoxInfoService(ownerId, date);
+    return res.json(data);
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const getBoxesInfo = async (req, res) => {
+  try {
+    const { ownerId, date } = req.query;
+
+    const box = await Boxes.findAll({ where: { ownerId } });
+    const result = [];
+    await Promise.all(
+      await box.map(async (i) => {
+        const data = await getBoxInfoService(ownerId, date, i.id);
+        result.push(data.data);
+      })
+    );
+    return res.json(result);
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -587,5 +588,6 @@ module.exports = {
   getItemMoney,
   getCurrentDateMoney,
   getSingle,
-  getBoxInfo,
+  getOwnerInfo,
+  getBoxesInfo,
 };

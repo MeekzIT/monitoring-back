@@ -49,5 +49,7 @@ router.get(
 router.get("/item-calc-dates", authMiddleWare, itemController.getItemDays);
 router.get("/item-calc-money", authMiddleWare, itemController.getItemMoney);
 router.get("/item-calc-current", itemController.getCurrentDateMoney);
-router.get("/get-info", itemController.getBoxInfo);
+router.get("/get-info", itemController.getOwnerInfo);
+router.get("/get-boxes-info", itemController.getBoxesInfo);
+
 module.exports = router;
