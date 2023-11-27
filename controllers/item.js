@@ -581,6 +581,17 @@ const getBoxesInfo = async (req, res) => {
   }
 };
 
+const getItemInfo = async (req, res) => {
+  try {
+    const { ownerId, date } = req.query;
+
+    const data = await getBoxInfoService(ownerId, date);
+    return res.json(data);
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   edit,
   changeAccessability,
@@ -590,4 +601,5 @@ module.exports = {
   getSingle,
   getOwnerInfo,
   getBoxesInfo,
+  getItemInfo,
 };
