@@ -13,6 +13,7 @@ const ItemValues3 = require("../models").Item3Values;
 const Info = require("../models").Info;
 const Info2 = require("../models").Info2;
 const Boxes = require("../models").Box;
+const BoxExpenses = require("../models").BoxExpenses;
 
 const edit = async (req, res) => {
   try {
@@ -556,8 +557,20 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
 const getOwnerInfo = async (req, res) => {
   try {
     const { ownerId, date } = req.query;
+    const expenses = await BoxExpenses.findAll({
+      where: {
+        boxId: ownerId,
+      },
+    });
+
+    let allExpense = 0;
+    await Promise.all(
+      await expenses.map(async (i) => {
+        allExpense = allExpense + Number(i.dataValues.price);
+      })
+    );
     const data = await getBoxInfoService(ownerId, date);
-    return res.json(data);
+    return res.json({ ...data, difExpense: Math.round(allExpense / 30) });
   } catch (e) {
     console.log("something went wrong", e);
   }
