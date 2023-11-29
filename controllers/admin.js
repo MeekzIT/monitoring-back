@@ -270,6 +270,44 @@ const changePassword = async (req, res) => {
   }
 };
 
+const resetPassword = async (req, res) => {
+  try {
+    const { id, role } = req.body;
+    let encryptedPassword = await bcrypt.hash("test1234", 10);
+    if (role == "admin") {
+      const user = await Admin.findOne({
+        where: { id },
+      });
+      user.password = encryptedPassword;
+      await user.save();
+      return res.json({ succes: true });
+    } else if (role == "superAdmin") {
+      const user = await SuperAdmin.findOne({
+        where: { id },
+      });
+      user.password = encryptedPassword;
+      await user.save();
+      return res.json({ succes: true });
+    } else if (role == "user") {
+      const user = await Users.findOne({
+        where: { id },
+      });
+      user.password = encryptedPassword;
+      await user.save();
+      return res.json({ succes: true });
+    } else if (role == "owner") {
+      const user = await Owner.findOne({
+        where: { id },
+      });
+      user.password = encryptedPassword;
+      await user.save();
+      return res.json({ succes: true });
+    }
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const getMe = async (req, res) => {
   try {
     const { role, user_id } = req.user;
@@ -314,4 +352,5 @@ module.exports = {
   adminActivity,
   destroyAdmin,
   getAdmins,
+  resetPassword,
 };
