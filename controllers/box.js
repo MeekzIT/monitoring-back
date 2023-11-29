@@ -155,12 +155,13 @@ const getAllBoxesOfOwners = async (req, res) => {
 // ------------------------------------  box expenses
 
 const createExpense = async (req, res) => {
-  const { boxId, name, price } = req.body;
+  const { boxId, name, price, ownerId } = req.body;
   try {
     const boxExpense = await BoxExpenses.create({
       boxId,
       name,
       price,
+      ownerId,
     });
     const allUsers = await BoxExpenses.findAll({
       where: {
@@ -208,12 +209,13 @@ const destroy = async (req, res) => {
 };
 
 const getAllBoxExpenses = async (req, res) => {
-  const { boxId } = req.query;
+  const { boxId, ownerId } = req.query;
 
   try {
     const allUsers = await BoxExpenses.findAll({
       where: {
         boxId,
+        ownerId,
       },
     });
     return res.json({ data: allUsers });

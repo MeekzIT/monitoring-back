@@ -400,7 +400,7 @@ const clacData2 = async (ownerID) => {
   }
 };
 
-const getBoxInfoService = async (ownerId, date, moikaId) => {
+const getBoxInfoService = async (ownerId, date, moikaId, dayExspanse) => {
   try {
     let queryObj = {};
     if (date) {
@@ -559,18 +559,25 @@ const getOwnerInfo = async (req, res) => {
     const { ownerId, date } = req.query;
     const expenses = await BoxExpenses.findAll({
       where: {
-        boxId: ownerId,
+        ownerId,
       },
     });
-
-    let allExpense = 0;
+    let expenseValueMonth = 0;
     await Promise.all(
       await expenses.map(async (i) => {
-        allExpense = allExpense + Number(i.dataValues.price);
+        expenseValueMonth = expenseValueMonth + Number(i.dataValues.price);
       })
     );
-    const data = await getBoxInfoService(ownerId, date);
-    return res.json({ ...data, difExpense: Math.round(allExpense / 30) });
+    const dayExspanse = Math.round(expenseValueMonth / 30);
+    const result = await getBoxInfoService(ownerId, date, false);
+    return res.json({
+      ...result,
+      data: {
+        ...result.data,
+        expense: result.data.expense + dayExspanse,
+        ratio: ((result.data.expense + dayExspanse) / result.data.result) * 100,
+      },
+    });
   } catch (e) {
     console.log("something went wrong", e);
   }
