@@ -3,7 +3,7 @@ const data = [
     firstName: "Owner",
     lastName: "1",
     deviceOwner: 4444,
-    email: "owner@mail.com",
+    email: "stand@mail.com",
     subscribe: false,
     lastPay: "",
     variant: "standart",

@@ -616,10 +616,6 @@ const getBoxesInfo = async (req, res) => {
         expenseValueMonth = expenseValueMonth + Number(i.dataValues.price);
       })
     );
-    console.log(
-      result[0],
-      "-------------------------------------------------------"
-    );
     const dayExspanse = Math.round(expenseValueMonth / 30);
 
     return res.json(
