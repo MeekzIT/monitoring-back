@@ -585,17 +585,55 @@ const getOwnerInfo = async (req, res) => {
 
 const getBoxesInfo = async (req, res) => {
   try {
-    const { ownerId, date } = req.query;
-
+    const { ownerId, date, boxId } = req.query;
+    let queryObj = {};
+    let queryObj1 = {};
+    if (boxId) {
+      queryObj["boxId"] = {
+        [Op.eq]: boxId,
+      };
+      queryObj1["id"] = {
+        [Op.eq]: boxId,
+      };
+    }
     const box = await Boxes.findAll({ where: { ownerId } });
     const result = [];
+    const expenses = await BoxExpenses.findAll({
+      where: {
+        ...queryObj,
+        ownerId,
+      },
+    });
     await Promise.all(
       await box.map(async (i) => {
         const data = await getBoxInfoService(ownerId, date, i.id);
         result.push(data.data);
       })
     );
-    return res.json(result);
+    let expenseValueMonth = 0;
+    await Promise.all(
+      await expenses.map(async (i) => {
+        expenseValueMonth = expenseValueMonth + Number(i.dataValues.price);
+      })
+    );
+    console.log(
+      result[0],
+      "-------------------------------------------------------"
+    );
+    const dayExspanse = Math.round(expenseValueMonth / 30);
+
+    return res.json(
+      boxId
+        ? [
+            {
+              ...result[0],
+              expense: result[0].expense + dayExspanse,
+              ratio:
+                ((result[0].expense + dayExspanse) / result[0].result) * 100,
+            },
+          ]
+        : result
+    );
   } catch (e) {
     console.log("something went wrong", e);
   }
