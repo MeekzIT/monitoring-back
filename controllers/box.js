@@ -142,9 +142,9 @@ const getAllBoxesOfOwners = async (req, res) => {
     return res.json({
       paginateData: allUsers,
       items: boxItems1
-        .map((i) => ({ ...i.dataValues, active: 1 }))
-        .concat(boxItems3.map((i) => ({ ...i.dataValues, active: 3 })))
-        .concat(boxItems2.map((i) => ({ ...i.dataValues, active: 2 }))),
+        .map((i) => ({ ...i.dataValues }))
+        .concat(boxItems3.map((i) => ({ ...i.dataValues })))
+        .concat(boxItems2.map((i) => ({ ...i.dataValues }))),
       count: count.length,
     });
   } catch (e) {

@@ -400,7 +400,7 @@ const clacData2 = async (ownerID) => {
   }
 };
 
-const getBoxInfoService = async (ownerId, date, moikaId, dayExspanse) => {
+const getBoxInfoService = async (ownerId, date, moikaId) => {
   try {
     let queryObj = {};
     if (date) {
@@ -539,6 +539,10 @@ const getBoxInfoService = async (ownerId, date, moikaId, dayExspanse) => {
       // Convert the ratio to a percentage
       percentage = ratio * 100;
     }
+    console.log(
+      allResult,
+      "allResultallResultallResultallResultallResultallResultallResultallResultallResultallResultallResultallResultallResult"
+    );
     return {
       succes: true,
       data: {
@@ -607,6 +611,7 @@ const getBoxesInfo = async (req, res) => {
     await Promise.all(
       await box.map(async (i) => {
         const data = await getBoxInfoService(ownerId, date, i.id);
+        console.log(data.data, "lllllllllllllllllllllllllllll");
         result.push(data.data);
       })
     );

@@ -1,8 +1,8 @@
 const data = [
   {
     firstName: "JS",
-    lastName: "Inovations",
-    email: "jsoffice@mail.com",
+    lastName: "Holding",
+    email: "jsxmachines@gmail.com",
     subscribe: false,
     lastPay: "",
     variant: "standart",
