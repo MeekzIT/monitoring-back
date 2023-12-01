@@ -45,7 +45,7 @@ const getAll = async () => {
           if (item.p0 == 1) {
             // const haveInfo = checkInfo(item.p2, item.p0);
             // !haveInfo && (await Info.create({ ownerID: item.p2 }));
-            await Item.create(item);
+            await Item.create({ ...item, access: true });
             await ItemValues.create(item);
           } else if (item.p0 == 2) {
             const haveInfo = await checkInfo(item.p2, 2);
@@ -64,10 +64,10 @@ const getAll = async () => {
                 time2: 40,
               }));
             await Item2.create(item);
-            await Item2Values.create(item);
+            await Item2Values.create({ ...item, access: true });
           } else if (item.p0 == 3) {
             await Item3.create(item);
-            await Item3Values.create(item);
+            await Item3Values.create({ ...item, access: true });
           }
           console.log("--------------------- ready --------------------------");
         });
@@ -95,19 +95,19 @@ const getSingle = async (ownerId, active) => {
             where: { p2: String(ownerId) },
           });
 
-          await item.update(response.data[0]);
+          await item.update({ ...response.data[0], access: item.access });
         } else if (active == 2) {
           const item = await Item2.findOne({
             where: { p2: String(ownerId) },
           });
 
-          await item.update(response.data[0]);
+          await item.update({ ...response.data[0], access: item.access });
         } else if (active == 3) {
           const item = await Item3.findOne({
             where: { p2: String(ownerId) },
           });
 
-          await item.update(response.data[0]);
+          await item.update({ ...response.data[0], access: item.access });
         }
         console.log("--------------------- updated --------------------------");
       })
