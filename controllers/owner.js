@@ -201,7 +201,7 @@ const generateUnicue = async (req, res) => {
 
     let newId;
     if (!mapResult.length) {
-      newId = ownerId + ownerId;
+      newId = String(ownerId) + String(ownerId);
     } else {
       newId = findLargestNumber(mapResult);
     }
