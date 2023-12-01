@@ -1,7 +1,8 @@
 const Owner = require("../models").Owner;
 const Contry = require("../models").Country;
 const Items = require("../models").Item;
-
+const Items2 = require("../models").Item2;
+const Items3 = require("../models").Item3;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -188,18 +189,22 @@ const changePaymentStatus = async (req, res) => {
 const generateUnicue = async (req, res) => {
   try {
     const { ownerId } = req.body;
-    const user = await Owner.findOne({
-      where: { id: ownerId },
-    });
     const items = await Items.findAll();
-    const result = await extractIds(items, ownerId);
+    const items2 = await Items2.findAll();
+    const items3 = await Items3.findAll();
+    const result = await extractIds(
+      items.concat(items2).concat(items3),
+      ownerId
+    );
     const newResult = await result.filter((i) => i !== null);
     const mapResult = await newResult.map((i) => Number(i));
 
-    console.log(mapResult, "--------------------------------");
-
-    const newId = findLargestNumber(newResult);
-
+    let newId;
+    if (!mapResult.length) {
+      newId = ownerId + ownerId;
+    } else {
+      newId = findLargestNumber(mapResult);
+    }
     return res.json({ succes: true, newId });
   } catch (e) {
     console.log("something went wrong", e);
