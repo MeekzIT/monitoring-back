@@ -175,7 +175,7 @@ const getItemMoney = async (req, res) => {
           where: {
             p2: i.p2,
             datatime: {
-              [Op.like]: getPreviousDayDate(i.datatime),
+              [Op.like]: getPreviousDayDate(i.datatime) + "%",
             },
           },
         });
@@ -207,7 +207,7 @@ const getItemMoney = async (req, res) => {
           where: {
             p2: i.p2,
             datatime: {
-              [Op.like]: getPreviousDayDate(i.datatime),
+              [Op.like]: getPreviousDayDate(i.datatime) + "%",
             },
           },
         });
@@ -237,7 +237,7 @@ const getCurrentDateMoney = async (req, res) => {
         where: {
           p2: single,
           datatime: {
-            [Op.like]: getPreviousDayDate(item.datatime),
+            [Op.like]: getPreviousDayDate(item.datatime) + "%",
           },
         },
       });
@@ -274,7 +274,7 @@ const getCurrentDateMoney = async (req, res) => {
         where: {
           p2: single,
           datatime: {
-            [Op.like]: getPreviousDayDate(item.datatime, active),
+            [Op.like]: getPreviousDayDate(item.datatime, active) + "%",
           },
         },
       });
@@ -299,7 +299,7 @@ const getCurrentDateMoney = async (req, res) => {
         where: {
           p2: single,
           datatime: {
-            [Op.like]: getPreviousDayDate(item.datatime, active),
+            [Op.like]: getPreviousDayDate(item.datatime, active) + "%",
           },
         },
       });
@@ -440,7 +440,7 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
             ...queryObj,
             p2: i.p2,
             datatime: {
-              [Op.like]: getPreviousDayDate(i.datatime),
+              [Op.like]: getPreviousDayDate(i.datatime) + "%",
             },
           },
         });
@@ -487,7 +487,7 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
             ...queryObj,
             p2: i.p2,
             datatime: {
-              [Op.like]: getPreviousDayDate(i.datatime),
+              [Op.like]: getPreviousDayDate(i.datatime) + "%",
             },
           },
         });
@@ -646,13 +646,66 @@ const getItemInfo = async (req, res) => {
     console.log("something went wrong", e);
   }
 };
+function getDaysInCurrentMonth(ownerId) {
+  // Get current date
+  const currentDate = new Date();
+
+  // Get the year and month
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1; // Months are zero-based, so we add 1
+
+  // Get the first day of the month
+  const firstDayOfMonth = new Date(year, month - 1, 1);
+
+  // Get the last day of the month
+  const lastDayOfMonth = new Date(year, month, 0);
+
+  // Generate an array of dates for each day in the month
+  const daysArray = [];
+  for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
+    const formattedDay = `${year.toString().slice(2)}-${
+      (month < 10 ? "0" : "") + month.toString()
+    }-${(day < 10 ? "0" : "") + day.toString()}`;
+    daysArray.push({
+      formattedDay,
+      id: ownerId,
+      result: 0,
+      caxs: 0,
+      all: 0,
+      date: formattedDay,
+    });
+  }
+
+  return daysArray;
+}
 
 const getItemDaysService = async (ownerId, date) => {
   try {
+    const currentDate = new Date();
+    const startOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const endOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
     const item = await ItemValues.findAll({
       where: {
         p2: {
           [Op.like]: String(ownerId),
+        },
+      },
+    });
+    const itemCurrent = await Items.findAll({
+      where: {
+        p2: {
+          [Op.like]: String(ownerId),
+        },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
         },
       },
     });
@@ -661,15 +714,39 @@ const getItemDaysService = async (ownerId, date) => {
         p2: {
           [Op.like]: String(ownerId),
         },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        },
+      },
+    });
+    const item2Current = await Item2.findAll({
+      where: {
+        p2: {
+          [Op.like]: String(ownerId),
+        },
       },
     });
 
-    const allResult = [];
+    // let gagas = getDaysInCurrentMonth(ownerId);
+    // const editedData = gagas?.map((y) => {
+    //   y["formattedDay"] == i.datatime.slice(2, 10)
+    //     ? {
+    //         id: i.p2,
+    //         result: result1,
+    //         caxs: caxs.caxs,
+    //         all: result1 + caxs.caxs,
+    //         date: i.datatime.slice(0, 10),
+    //       }
+    //     : null;
+    // });
+    gagas = editedData;
+    let allResult = [];
+
     await Promise.all(
-      await item.map(async (i) => {
+      await item.concat(itemCurrent).map(async (i) => {
         const prevDay = await ItemValues.findOne({
           where: {
-            p2: i.p2,
+            p2: ownerId,
             datatime: {
               [Op.like]: getPreviousDayDate(i.datatime) + "%",
             },
@@ -677,18 +754,6 @@ const getItemDaysService = async (ownerId, date) => {
         });
 
         if (prevDay) {
-          console.log(
-            prevDay.p16,
-            prevDay.p17,
-            prevDay.p18,
-            "aaaaaaaaa",
-            i.p16,
-            i.p17,
-            i.p18,
-            i.datatime,
-            getPreviousDayDate(i.datatime),
-            "-----------------------------------------------------------------------------------------------------------------"
-          );
           let coin =
             (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
           let cash =
@@ -697,6 +762,18 @@ const getItemDaysService = async (ownerId, date) => {
             (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
           let result1 = coin + cash + bill;
           let caxs = await clacData1(i.p2);
+          // const editedData = allResult?.map((y) => {
+          //   y["formattedDay"] == i.datatime.slice(2, 10)
+          //     ? {
+          //         id: i.p2,
+          //         result: result1,
+          //         caxs: caxs.caxs,
+          //         all: result1 + caxs.caxs,
+          //         date: i.datatime.slice(0, 10),
+          //       }
+          //     : null;
+          // });
+          // allResult = editedData;
           allResult.push({
             id: i.p2,
             result: result1,
@@ -717,16 +794,28 @@ const getItemDaysService = async (ownerId, date) => {
             all: result1 + caxs.caxs,
             date: i.datatime.slice(0, 10),
           });
+          // const editedData = allResult?.map((y) => {
+          //   y["formattedDay"] == i.datatime.slice(2, 10)
+          //     ? {
+          //         id: i.p2,
+          //         result: result1,
+          //         caxs: caxs.caxs,
+          //         all: result1 + caxs.caxs,
+          //         date: i.datatime.slice(0, 10),
+          //       }
+          //     : null;
+          // });
+          // allResult = editedData;
         }
       })
     );
     await Promise.all(
-      await item2.map(async (i) => {
+      await item2.concat(item2Current).map(async (i) => {
         const prevDay2 = await ItemValues2.findOne({
           where: {
             p2: i.p2,
             datatime: {
-              [Op.like]: getPreviousDayDate(i.datatime),
+              [Op.like]: getPreviousDayDate(i.datatime) + "%",
             },
           },
         });
@@ -766,7 +855,7 @@ const getItemDaysLinear = async (req, res) => {
   try {
     const { ownerId, date } = req.query;
     const data = await getItemDaysService(ownerId);
-    return res.json(data);
+    return res.json({ succes: true, data });
   } catch (e) {
     console.log("something went wrong", e);
   }
