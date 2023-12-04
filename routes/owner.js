@@ -53,5 +53,6 @@ router.get("/get-info", itemController.getOwnerInfo);
 router.get("/get-boxes-info", itemController.getBoxesInfo);
 router.get("/get-item-info", itemController.getItemInfo);
 router.get("/get-item-days", itemController.getItemDaysLinear);
+router.get("/get-box-days", itemController.getBoxesInfoLinear);
 
 module.exports = router;

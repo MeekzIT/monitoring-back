@@ -646,18 +646,11 @@ const getItemInfo = async (req, res) => {
     console.log("something went wrong", e);
   }
 };
-function getDaysInCurrentMonth(ownerId) {
-  // Get current date
+function getDaysInCurrentMonth() {
   const currentDate = new Date();
 
-  // Get the year and month
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1; // Months are zero-based, so we add 1
-
-  // Get the first day of the month
-  const firstDayOfMonth = new Date(year, month - 1, 1);
-
-  // Get the last day of the month
+  const month = currentDate.getMonth() + 1;
   const lastDayOfMonth = new Date(year, month, 0);
 
   // Generate an array of dates for each day in the month
@@ -666,17 +659,54 @@ function getDaysInCurrentMonth(ownerId) {
     const formattedDay = `${year.toString().slice(2)}-${
       (month < 10 ? "0" : "") + month.toString()
     }-${(day < 10 ? "0" : "") + day.toString()}`;
-    daysArray.push({
-      formattedDay,
+    daysArray.push(formattedDay);
+  }
+
+  return daysArray;
+}
+
+function findDifferencesBetweenArrays(array1, array2) {
+  // Remove duplicates from each array
+  const uniqueArray1 = Array.from(new Set(array1));
+  const uniqueArray2 = Array.from(new Set(array2));
+
+  // Find differences between the arrays
+  const differences = [];
+
+  uniqueArray1.forEach((item) => {
+    if (!uniqueArray2.includes(item)) {
+      differences.push(item);
+    }
+  });
+
+  uniqueArray2.forEach((item) => {
+    if (!uniqueArray1.includes(item)) {
+      differences.push(item);
+    }
+  });
+
+  return differences;
+}
+
+function addOrUpdateEntry(data, ownerId) {
+  const days = getDaysInCurrentMonth();
+
+  const newDays = data.map((i) => i.date.slice(2, 10));
+
+  const dfindDifferencesBetweenArrays = findDifferencesBetweenArrays(
+    newDays,
+    days
+  );
+  [...new Set(dfindDifferencesBetweenArrays)].map((i) => {
+    data.push({
       id: ownerId,
       result: 0,
       caxs: 0,
       all: 0,
-      date: formattedDay,
+      date: i,
     });
-  }
-
-  return daysArray;
+  });
+  return data;
 }
 
 const getItemDaysService = async (ownerId, date) => {
@@ -727,19 +757,6 @@ const getItemDaysService = async (ownerId, date) => {
       },
     });
 
-    // let gagas = getDaysInCurrentMonth(ownerId);
-    // const editedData = gagas?.map((y) => {
-    //   y["formattedDay"] == i.datatime.slice(2, 10)
-    //     ? {
-    //         id: i.p2,
-    //         result: result1,
-    //         caxs: caxs.caxs,
-    //         all: result1 + caxs.caxs,
-    //         date: i.datatime.slice(0, 10),
-    //       }
-    //     : null;
-    // });
-    gagas = editedData;
     let allResult = [];
 
     await Promise.all(
@@ -762,18 +779,6 @@ const getItemDaysService = async (ownerId, date) => {
             (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
           let result1 = coin + cash + bill;
           let caxs = await clacData1(i.p2);
-          // const editedData = allResult?.map((y) => {
-          //   y["formattedDay"] == i.datatime.slice(2, 10)
-          //     ? {
-          //         id: i.p2,
-          //         result: result1,
-          //         caxs: caxs.caxs,
-          //         all: result1 + caxs.caxs,
-          //         date: i.datatime.slice(0, 10),
-          //       }
-          //     : null;
-          // });
-          // allResult = editedData;
           allResult.push({
             id: i.p2,
             result: result1,
@@ -794,18 +799,6 @@ const getItemDaysService = async (ownerId, date) => {
             all: result1 + caxs.caxs,
             date: i.datatime.slice(0, 10),
           });
-          // const editedData = allResult?.map((y) => {
-          //   y["formattedDay"] == i.datatime.slice(2, 10)
-          //     ? {
-          //         id: i.p2,
-          //         result: result1,
-          //         caxs: caxs.caxs,
-          //         all: result1 + caxs.caxs,
-          //         date: i.datatime.slice(0, 10),
-          //       }
-          //     : null;
-          // });
-          // allResult = editedData;
         }
       })
     );
@@ -834,7 +827,6 @@ const getItemDaysService = async (ownerId, date) => {
         } else {
           let result2 = Number(i.p18) * Number(i.p12);
           const caxs = await clacData2(i.p2);
-          // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
           allResult.push({
             id: i.p2,
             result: result2,
@@ -845,7 +837,7 @@ const getItemDaysService = async (ownerId, date) => {
         }
       })
     );
-    return allResult;
+    return addOrUpdateEntry(allResult, ownerId);
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -856,6 +848,116 @@ const getItemDaysLinear = async (req, res) => {
     const { ownerId, date } = req.query;
     const data = await getItemDaysService(ownerId);
     return res.json({ succes: true, data });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+function mergeData(inputData) {
+  const mergedData = {};
+
+  // Iterate through each nested array
+  inputData.forEach((nestedArray) => {
+    // Iterate through each object in the nested array
+    nestedArray.forEach((obj) => {
+      const key = obj.id + obj.date;
+
+      // If the key doesn't exist in mergedData, add the object
+      if (!mergedData[key]) {
+        mergedData[key] = obj;
+      } else {
+        // If the key exists, update the fields
+        mergedData[key].result += obj.result;
+        mergedData[key].caxs += obj.caxs;
+        mergedData[key].all += obj.all;
+        // You can add more fields if needed
+      }
+    });
+  });
+
+  // Convert the values of the mergedData object into an array
+  const resultArray = Object.values(mergedData);
+
+  return resultArray;
+}
+
+const getBoxesInfoLinear = async (req, res) => {
+  try {
+    const { ownerId, date, boxId } = req.query;
+    let queryObj = {};
+    if (boxId) {
+      queryObj["p5"] = {
+        [Op.eq]: boxId,
+      };
+    }
+    const currentDate = new Date();
+    const startOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const endOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
+    const item = await ItemValues.findAll({
+      where: {
+        ...queryObj,
+        p2: {
+          [Op.like]: String(ownerId) + "%",
+        },
+      },
+    });
+    const item2 = await ItemValues2.findAll({
+      where: {
+        ...queryObj,
+        p2: {
+          [Op.like]: String(ownerId) + "%",
+        },
+      },
+    });
+    const itemCurrent = await Items.findAll({
+      where: {
+        ...queryObj,
+        p2: {
+          [Op.like]: String(ownerId),
+        },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        },
+      },
+    });
+    const itemCurrent2 = await Item2.findAll({
+      where: {
+        ...queryObj,
+        p2: {
+          [Op.like]: String(ownerId),
+        },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        },
+      },
+    });
+    const result = [];
+    let boxIdis = [];
+
+    await Promise.all(
+      await item
+        .concat(itemCurrent)
+        .concat(item2)
+        .concat(itemCurrent2)
+        .map(async (i) => {
+          boxIdis.push(i.p2);
+        })
+    );
+    await Promise.all(
+      await [...new Set(boxIdis)].map(async (entery) => {
+        const itemData = await getItemDaysService(entery);
+        result.push(itemData);
+      })
+    );
+    return res.json(mergeData(result));
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -872,4 +974,5 @@ module.exports = {
   getBoxesInfo,
   getItemInfo,
   getItemDaysLinear,
+  getBoxesInfoLinear,
 };
