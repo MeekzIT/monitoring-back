@@ -539,10 +539,7 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
       // Convert the ratio to a percentage
       percentage = ratio * 100;
     }
-    console.log(
-      allResult,
-      "allResultallResultallResultallResultallResultallResultallResultallResultallResultallResultallResultallResultallResult"
-    );
+
     return {
       succes: true,
       data: {
@@ -611,7 +608,6 @@ const getBoxesInfo = async (req, res) => {
     await Promise.all(
       await box.map(async (i) => {
         const data = await getBoxInfoService(ownerId, date, i.id);
-        console.log(data.data, "lllllllllllllllllllllllllllll");
         result.push(data.data);
       })
     );
@@ -651,6 +647,131 @@ const getItemInfo = async (req, res) => {
   }
 };
 
+const getItemDaysService = async (ownerId, date) => {
+  try {
+    const item = await ItemValues.findAll({
+      where: {
+        p2: {
+          [Op.like]: String(ownerId),
+        },
+      },
+    });
+    const item2 = await ItemValues2.findAll({
+      where: {
+        p2: {
+          [Op.like]: String(ownerId),
+        },
+      },
+    });
+
+    const allResult = [];
+    await Promise.all(
+      await item.map(async (i) => {
+        const prevDay = await ItemValues.findOne({
+          where: {
+            p2: i.p2,
+            datatime: {
+              [Op.like]: getPreviousDayDate(i.datatime) + "%",
+            },
+          },
+        });
+
+        if (prevDay) {
+          console.log(
+            prevDay.p16,
+            prevDay.p17,
+            prevDay.p18,
+            "aaaaaaaaa",
+            i.p16,
+            i.p17,
+            i.p18,
+            i.datatime,
+            getPreviousDayDate(i.datatime),
+            "-----------------------------------------------------------------------------------------------------------------"
+          );
+          let coin =
+            (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
+          let cash =
+            (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
+          let bill =
+            (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+          let result1 = coin + cash + bill;
+          let caxs = await clacData1(i.p2);
+          allResult.push({
+            id: i.p2,
+            result: result1,
+            caxs: caxs.caxs,
+            all: result1 + caxs.caxs,
+            date: i.datatime.slice(0, 10),
+          });
+        } else {
+          let coin = Number(i.p16) * Number(i.p10);
+          let cash = Number(i.p17) * Number(i.p11);
+          let bill = Number(i.p18) * Number(i.p12);
+          let caxs = await clacData1(i.p2);
+          let result1 = coin + cash + bill;
+          allResult.push({
+            id: i.p2,
+            result: result1,
+            caxs: caxs.caxs,
+            all: result1 + caxs.caxs,
+            date: i.datatime.slice(0, 10),
+          });
+        }
+      })
+    );
+    await Promise.all(
+      await item2.map(async (i) => {
+        const prevDay2 = await ItemValues2.findOne({
+          where: {
+            p2: i.p2,
+            datatime: {
+              [Op.like]: getPreviousDayDate(i.datatime),
+            },
+          },
+        });
+        if (prevDay2) {
+          let result2 =
+            (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+          const caxs = await clacData2(i.p2);
+          // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
+          allResult.push({
+            id: i.p2,
+            result: result2,
+            caxs: caxs.caxs,
+            all: result1 + caxs.caxs,
+            date: i.datatime.slice(0, 10),
+          });
+        } else {
+          let result2 = Number(i.p18) * Number(i.p12);
+          const caxs = await clacData2(i.p2);
+          // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
+          allResult.push({
+            id: i.p2,
+            result: result2,
+            caxs: caxs.caxs,
+            all: result1 + caxs.caxs,
+            date: i.datatime.slice(0, 10),
+          });
+        }
+      })
+    );
+    return allResult;
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const getItemDaysLinear = async (req, res) => {
+  try {
+    const { ownerId, date } = req.query;
+    const data = await getItemDaysService(ownerId);
+    return res.json(data);
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   edit,
   changeAccessability,
@@ -661,4 +782,5 @@ module.exports = {
   getOwnerInfo,
   getBoxesInfo,
   getItemInfo,
+  getItemDaysLinear,
 };
