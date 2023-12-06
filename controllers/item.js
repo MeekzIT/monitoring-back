@@ -402,10 +402,15 @@ const clacData2 = async (ownerID) => {
 
 const getBoxInfoService = async (ownerId, date, moikaId) => {
   try {
+    const currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    var day = currentDate.getDate().toString().padStart(2, "0");
     let queryObj = {};
+    let queryObjDate = {};
     if (date) {
-      queryObj["datatime"] = {
-        [Op.like]: "%" + date + "%",
+      queryObjDate["datatime"] = {
+        [Op.like]: date + "%",
       };
     }
     if (moikaId) {
@@ -413,22 +418,40 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
         [Op.eq]: moikaId,
       };
     }
-    const item = await Items.findAll({
-      where: {
-        ...queryObj,
-        p2: {
-          [Op.like]: String(ownerId) + "%",
-        },
-      },
-    });
-    const item2 = await Item2.findAll({
-      where: {
-        ...queryObj,
-        p2: {
-          [Op.like]: String(ownerId) + "%",
-        },
-      },
-    });
+    const item = Boolean(date)
+      ? await Items.findAll({
+          where: {
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+          },
+        })
+      : await ItemValues.findAll({
+          where: {
+            ...queryObjDate,
+            ...queryObj,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+          },
+        });
+    const item2 = Boolean(date)
+      ? await Item2.findAll({
+          where: {
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+          },
+        })
+      : await ItemValues2.findAll({
+          where: {
+            ...queryObj,
+            ...queryObjDate,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+          },
+        });
     const box = await Boxes.findOne({ where: { ownerId } });
 
     const allResult = [];
@@ -539,7 +562,16 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
       // Convert the ratio to a percentage
       percentage = ratio * 100;
     }
-
+    console.log(
+      moikaId,
+      Boolean(date),
+      item.concat(item2).map((i) => i.datatime),
+      item.concat(item2).map((i) => i.p5),
+      date,
+      year + "-" + month + "-" + day,
+      queryObjDate,
+      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+    );
     return {
       succes: true,
       data: {
@@ -571,6 +603,7 @@ const getOwnerInfo = async (req, res) => {
     );
     const dayExspanse = Math.round(expenseValueMonth / 30);
     const result = await getBoxInfoService(ownerId, date, false);
+
     return res.json({
       ...result,
       data: {
@@ -712,68 +745,74 @@ function addOrUpdateEntry(data, ownerId) {
 const getItemDaysService = async (ownerId, date) => {
   try {
     const currentDate = new Date();
-    const startOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    );
-    const endOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0
-    );
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
+
+    let queryObj = {};
+    if (date) {
+      queryObj["datatime"] = {
+        [Op.like]: date + "%",
+      };
+    } else {
+      queryObj["datatime"] = {
+        [Op.like]: year + "-" + month + "%",
+      };
+    }
+
     const item = await ItemValues.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId),
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
     const itemCurrent = await Items.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId),
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
     const item2 = await ItemValues2.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId),
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
     const item2Current = await Item2.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId),
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
 
@@ -866,7 +905,7 @@ const getItemDaysService = async (ownerId, date) => {
 const getItemDaysLinear = async (req, res) => {
   try {
     const { ownerId, date } = req.query;
-    const data = await getItemDaysService(ownerId);
+    const data = await getItemDaysService(ownerId, date);
     return res.json({ succes: true, data });
   } catch (e) {
     console.log("something went wrong", e);
@@ -904,12 +943,6 @@ function mergeData(inputData) {
 const getBoxesInfoLinear = async (req, res) => {
   try {
     const { ownerId, date, boxId } = req.query;
-    let queryObj = {};
-    if (boxId) {
-      queryObj["p5"] = {
-        [Op.eq]: boxId,
-      };
-    }
     const currentDate = new Date();
     const startOfMonth = new Date(
       currentDate.getFullYear(),
@@ -921,13 +954,24 @@ const getBoxesInfoLinear = async (req, res) => {
       currentDate.getMonth() + 1,
       0
     );
-    const startOfMonthDataTime = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    );
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
+
+    let queryObj = {};
+    if (boxId) {
+      queryObj["p5"] = {
+        [Op.eq]: boxId,
+      };
+    }
+    if (date) {
+      queryObj["datatime"] = {
+        [Op.like]: date + "%",
+      };
+    } else {
+      queryObj["datatime"] = {
+        [Op.like]: year + "-" + month + "%",
+      };
+    }
 
     const item = await ItemValues.findAll({
       where: {
@@ -935,12 +979,12 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
     const item2 = await ItemValues2.findAll({
@@ -949,12 +993,12 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
     const itemCurrent = await Items.findAll({
@@ -963,12 +1007,12 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
     const itemCurrent2 = await Item2.findAll({
@@ -977,12 +1021,12 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        createdAt: {
-          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        },
-        datatime: {
-          [Op.like]: year + "-" + month + "%",
-        },
+        // createdAt: {
+        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        // },
+        // datatime: {
+        //   [Op.like]: year + "-" + month + "%",
+        // },
       },
     });
 
@@ -1000,7 +1044,7 @@ const getBoxesInfoLinear = async (req, res) => {
     );
     await Promise.all(
       await [...new Set(boxIdis)].map(async (entery) => {
-        const itemData = await getItemDaysService(entery);
+        const itemData = await getItemDaysService(entery, date);
         result.push(itemData);
       })
     );
@@ -1017,9 +1061,9 @@ const getBoxesInfoLinear = async (req, res) => {
       mergedExpenses[date].all += expense.all;
     });
     console.log(
+      // queryObj,
+      date,
       year + "-" + month,
-      month,
-      startOfMonthDataTime,
       "startOfMonth, endOfMonthstartOfMonth, endOfMonthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     );
     const resultArray = Object.values(mergedExpenses);
