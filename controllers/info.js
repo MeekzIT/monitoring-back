@@ -88,6 +88,21 @@ const clacData = async (req, res) => {
         return modeUsedTime6;
       }
     };
+    const getModeNominal = (mode) => {
+      if (mode == 1) {
+        return item.p20;
+      } else if (mode == 2) {
+        return item.p21;
+      } else if (mode == 3) {
+        return item.p22;
+      } else if (mode == 4) {
+        return item.p23;
+      } else if (mode == 5) {
+        return item.p24;
+      } else if (mode == 6) {
+        return item.p25;
+      }
+    };
     const data = [];
     await info.map(async (i, idx) => {
       const itemValues = await getInfoItemValues(
@@ -106,6 +121,8 @@ const clacData = async (req, res) => {
         functionId: i.functionId,
         modeName: getModeName(i.functionId),
         seconds: getModeTimer(i.mode),
+        used:
+          Math.round(getModeTimer(i.mode) / getModeNominal(i.mode)) * item.p10,
       });
     });
     return res.json({ succes: true, data });
@@ -191,6 +208,8 @@ const clacData2 = async (req, res) => {
       data: {
         firstValue: firstValue * item.p53 * firstPrice,
         secondValue: secondValue * item.p54 * secondPrice,
+        firstUsed: Math.round(item.p53 * item.p26),
+        secondUsed: Math.round(item.p54 * item.p27),
       },
     });
   } catch (e) {
