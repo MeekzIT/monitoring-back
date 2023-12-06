@@ -656,7 +656,7 @@ function getDaysInCurrentMonth() {
   // Generate an array of dates for each day in the month
   const daysArray = [];
   for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
-    const formattedDay = `${year.toString().slice(2)}-${
+    const formattedDay = `${year.toString()}-${
       (month < 10 ? "0" : "") + month.toString()
     }-${(day < 10 ? "0" : "") + day.toString()}`;
     daysArray.push(formattedDay);
@@ -691,7 +691,7 @@ function findDifferencesBetweenArrays(array1, array2) {
 function addOrUpdateEntry(data, ownerId) {
   const days = getDaysInCurrentMonth();
 
-  const newDays = data.map((i) => i.date.slice(2, 10));
+  const newDays = data.map((i) => i.date);
 
   const dfindDifferencesBetweenArrays = findDifferencesBetweenArrays(
     newDays,
@@ -722,10 +722,18 @@ const getItemDaysService = async (ownerId, date) => {
       currentDate.getMonth() + 1,
       0
     );
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
     const item = await ItemValues.findAll({
       where: {
         p2: {
           [Op.like]: String(ownerId),
+        },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
         },
       },
     });
@@ -737,6 +745,9 @@ const getItemDaysService = async (ownerId, date) => {
         createdAt: {
           [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
         },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
+        },
       },
     });
     const item2 = await ItemValues2.findAll({
@@ -747,12 +758,21 @@ const getItemDaysService = async (ownerId, date) => {
         createdAt: {
           [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
         },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
+        },
       },
     });
     const item2Current = await Item2.findAll({
       where: {
         p2: {
           [Op.like]: String(ownerId),
+        },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
         },
       },
     });
@@ -901,11 +921,25 @@ const getBoxesInfoLinear = async (req, res) => {
       currentDate.getMonth() + 1,
       0
     );
+    const startOfMonthDataTime = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+
     const item = await ItemValues.findAll({
       where: {
         ...queryObj,
         p2: {
           [Op.like]: String(ownerId) + "%",
+        },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
         },
       },
     });
@@ -914,6 +948,12 @@ const getBoxesInfoLinear = async (req, res) => {
         ...queryObj,
         p2: {
           [Op.like]: String(ownerId) + "%",
+        },
+        createdAt: {
+          [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
+        },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
         },
       },
     });
@@ -926,6 +966,9 @@ const getBoxesInfoLinear = async (req, res) => {
         createdAt: {
           [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
         },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
+        },
       },
     });
     const itemCurrent2 = await Item2.findAll({
@@ -937,8 +980,12 @@ const getBoxesInfoLinear = async (req, res) => {
         createdAt: {
           [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
         },
+        datatime: {
+          [Op.like]: year + "-" + month + "%",
+        },
       },
     });
+
     const result = [];
     let boxIdis = [];
 
@@ -957,7 +1004,26 @@ const getBoxesInfoLinear = async (req, res) => {
         result.push(itemData);
       })
     );
-    return res.json(mergeData(result));
+    const mergedExpenses = {};
+    mergeData(result).forEach((expense) => {
+      const date = expense.date;
+
+      if (!mergedExpenses[date]) {
+        mergedExpenses[date] = { result: 0, caxs: 0, all: 0, date: date };
+      }
+
+      mergedExpenses[date].result += expense.result;
+      mergedExpenses[date].caxs += expense.caxs;
+      mergedExpenses[date].all += expense.all;
+    });
+    console.log(
+      year + "-" + month,
+      month,
+      startOfMonthDataTime,
+      "startOfMonth, endOfMonthstartOfMonth, endOfMonthaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    );
+    const resultArray = Object.values(mergedExpenses);
+    return res.json({ succes: true, data: resultArray });
   } catch (e) {
     console.log("something went wrong", e);
   }
