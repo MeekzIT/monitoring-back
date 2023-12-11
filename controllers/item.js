@@ -399,16 +399,30 @@ const clacData2 = async (ownerID) => {
     console.log("something went wrong", e);
   }
 };
+function getDatesInRange(startDate, endDate) {
+  const dateArray = [];
+  let currentDate = new Date(startDate);
 
-const getBoxInfoService = async (ownerId, date, moikaId) => {
+  // If endDate is not provided, set it to the current date
+  const finalDate = endDate ? new Date(endDate) : new Date();
+
+  while (currentDate <= finalDate) {
+    dateArray.push(currentDate.toISOString().slice(0, 10));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dateArray;
+}
+const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
   try {
     const currentDate = new Date();
     var year = currentDate.getFullYear();
     var month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
     var day = currentDate.getDate().toString().padStart(2, "0");
     let queryObj = {};
+
     let queryObjDate = {};
-    if (date) {
+    if (date && endDate) {
       queryObjDate["datatime"] = {
         [Op.like]: date + "%",
       };
@@ -418,7 +432,7 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
         [Op.eq]: moikaId,
       };
     }
-    const item = Boolean(date)
+    const item = !Boolean(date)
       ? await Items.findAll({
           where: {
             p2: {
@@ -435,7 +449,7 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
             },
           },
         });
-    const item2 = Boolean(date)
+    const item2 = !Boolean(date)
       ? await Item2.findAll({
           where: {
             p2: {
@@ -547,7 +561,6 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
 
     let result = 0;
     let expense = 0;
-
     await allResult.map((i) => {
       result = result + i.result;
       expense = expense + i.caxs;
@@ -562,16 +575,6 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
       // Convert the ratio to a percentage
       percentage = ratio * 100;
     }
-    console.log(
-      moikaId,
-      Boolean(date),
-      item.concat(item2).map((i) => i.datatime),
-      item.concat(item2).map((i) => i.p5),
-      date,
-      year + "-" + month + "-" + day,
-      queryObjDate,
-      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-    );
     return {
       succes: true,
       data: {
@@ -589,7 +592,7 @@ const getBoxInfoService = async (ownerId, date, moikaId) => {
 };
 const getOwnerInfo = async (req, res) => {
   try {
-    const { ownerId, date } = req.query;
+    const { ownerId, date, endDate } = req.query;
     const expenses = await BoxExpenses.findAll({
       where: {
         ownerId,
@@ -602,7 +605,7 @@ const getOwnerInfo = async (req, res) => {
       })
     );
     const dayExspanse = Math.round(expenseValueMonth / 30);
-    const result = await getBoxInfoService(ownerId, date, false);
+    const result = await getBoxInfoService(ownerId, date, endDate, false);
 
     return res.json({
       ...result,
@@ -619,7 +622,7 @@ const getOwnerInfo = async (req, res) => {
 
 const getBoxesInfo = async (req, res) => {
   try {
-    const { ownerId, date, boxId } = req.query;
+    const { ownerId, date, endDate, boxId } = req.query;
     let queryObj = {};
     let queryObj1 = {};
     if (boxId) {
@@ -640,7 +643,7 @@ const getBoxesInfo = async (req, res) => {
     });
     await Promise.all(
       await box.map(async (i) => {
-        const data = await getBoxInfoService(ownerId, date, i.id);
+        const data = await getBoxInfoService(ownerId, date, endDate, i.id);
         result.push(data.data);
       })
     );
@@ -671,14 +674,16 @@ const getBoxesInfo = async (req, res) => {
 
 const getItemInfo = async (req, res) => {
   try {
-    const { ownerId, date } = req.query;
+    const { ownerId, date, endDate } = req.query;
 
-    const data = await getBoxInfoService(ownerId, date);
+    const data = await getBoxInfoService(ownerId, date, endDate);
+    console.log(data, "datadatadatadatadatadatadatadatadata");
     return res.json(data);
   } catch (e) {
     console.log("something went wrong", e);
   }
 };
+
 function getDaysInCurrentMonth() {
   const currentDate = new Date();
 
