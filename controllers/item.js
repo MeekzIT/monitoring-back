@@ -416,15 +416,14 @@ function getDatesInRange(startDate, endDate) {
 
 const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
   try {
-    const currentDate = new Date();
-    var year = currentDate.getFullYear();
-    var month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    var day = currentDate.getDate().toString().padStart(2, "0");
     let queryObj = {};
     const days = getDatesInRange(date, endDate);
     const items1 = [];
     const items2 = [];
-
+    console.log(
+      days,
+      "daysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdays"
+    );
     if (moikaId) {
       queryObj["p5"] = {
         [Op.eq]: moikaId,
@@ -618,7 +617,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               });
             }
           })
-        : item2.map(async (i) => {
+        : items2.map(async (i) => {
             const prevDay2 = await ItemValues2.findOne({
               where: {
                 ...queryObj,
@@ -846,22 +845,53 @@ function addOrUpdateEntry(data, ownerId) {
   return data;
 }
 
-const getItemDaysService = async (ownerId, date) => {
+const getItemDaysService = async (ownerId, date, endDate) => {
   try {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
-
+    const days = getDatesInRange(date, endDate);
     let queryObj = {};
-    if (date) {
-      queryObj["datatime"] = {
-        [Op.like]: date + "%",
-      };
-    } else {
+    if (!date) {
       queryObj["datatime"] = {
         [Op.like]: year + "-" + month + "%",
       };
     }
+    const items1 = [];
+    const items2 = [];
+    await Promise.all(
+      days.map(async (entery) => {
+        const point = await ItemValues.findOne({
+          where: {
+            ...queryObj,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+
+        point && items1.push(point.dataValues);
+      })
+    );
+    await Promise.all(
+      days.map(async (entery) => {
+        const point = await ItemValues2.findOne({
+          where: {
+            ...queryObj,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+        point && items2.push(point.dataValues);
+      })
+    );
 
     const item = await ItemValues.findAll({
       where: {
@@ -869,12 +899,6 @@ const getItemDaysService = async (ownerId, date) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
     const itemCurrent = await Items.findAll({
@@ -883,12 +907,6 @@ const getItemDaysService = async (ownerId, date) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
     const item2 = await ItemValues2.findAll({
@@ -897,12 +915,6 @@ const getItemDaysService = async (ownerId, date) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
     const item2Current = await Item2.findAll({
@@ -911,94 +923,197 @@ const getItemDaysService = async (ownerId, date) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
+    await Promise.all(
+      days.map(async (entery) => {
+        const point = await ItemValues.findOne({
+          where: {
+            ...queryObj,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+
+        point && items1.push(point.dataValues);
+      })
+    );
+    await Promise.all(
+      days.map(async (entery) => {
+        const point = await ItemValues2.findOne({
+          where: {
+            ...queryObj,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+        point && items2.push(point.dataValues);
+      })
+    );
 
     let allResult = [];
 
     await Promise.all(
-      await item.concat(itemCurrent).map(async (i) => {
-        const prevDay = await ItemValues.findOne({
-          where: {
-            p2: ownerId,
-            datatime: {
-              [Op.like]: getPreviousDayDate(i.datatime) + "%",
-            },
-          },
-        });
+      !date
+        ? await item.concat(itemCurrent).map(async (i) => {
+            const prevDay = await ItemValues.findOne({
+              where: {
+                p2: ownerId,
+                datatime: {
+                  [Op.like]: getPreviousDayDate(i.datatime) + "%",
+                },
+              },
+            });
 
-        if (prevDay) {
-          let coin =
-            (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
-          let cash =
-            (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
-          let bill =
-            (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-          let result1 = coin + cash + bill;
-          let caxs = await clacData1(i.p2);
-          allResult.push({
-            id: i.p2,
-            result: result1,
-            caxs: caxs.caxs,
-            all: result1 + caxs.caxs,
-            date: i.datatime.slice(0, 10),
-          });
-        } else {
-          let coin = Number(i.p16) * Number(i.p10);
-          let cash = Number(i.p17) * Number(i.p11);
-          let bill = Number(i.p18) * Number(i.p12);
-          let caxs = await clacData1(i.p2);
-          let result1 = coin + cash + bill;
-          allResult.push({
-            id: i.p2,
-            result: result1,
-            caxs: caxs.caxs,
-            all: result1 + caxs.caxs,
-            date: i.datatime.slice(0, 10),
-          });
-        }
-      })
+            if (prevDay) {
+              let coin =
+                (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
+              let cash =
+                (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
+              let bill =
+                (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+              let result1 = coin + cash + bill;
+              let caxs = await clacData1(i.p2);
+              allResult.push({
+                id: i.p2,
+                result: result1,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            } else {
+              let coin = Number(i.p16) * Number(i.p10);
+              let cash = Number(i.p17) * Number(i.p11);
+              let bill = Number(i.p18) * Number(i.p12);
+              let caxs = await clacData1(i.p2);
+              let result1 = coin + cash + bill;
+              allResult.push({
+                id: i.p2,
+                result: result1,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            }
+          })
+        : await items1.map(async (i) => {
+            const prevDay = await ItemValues.findOne({
+              where: {
+                p2: ownerId,
+                datatime: {
+                  [Op.like]: getPreviousDayDate(i.datatime) + "%",
+                },
+              },
+            });
+
+            if (prevDay) {
+              let coin =
+                (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
+              let cash =
+                (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
+              let bill =
+                (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+              let result1 = coin + cash + bill;
+              let caxs = await clacData1(i.p2);
+              allResult.push({
+                id: i.p2,
+                result: result1,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            } else {
+              let coin = Number(i.p16) * Number(i.p10);
+              let cash = Number(i.p17) * Number(i.p11);
+              let bill = Number(i.p18) * Number(i.p12);
+              let caxs = await clacData1(i.p2);
+              let result1 = coin + cash + bill;
+              allResult.push({
+                id: i.p2,
+                result: result1,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            }
+          })
     );
     await Promise.all(
-      await item2.concat(item2Current).map(async (i) => {
-        const prevDay2 = await ItemValues2.findOne({
-          where: {
-            p2: i.p2,
-            datatime: {
-              [Op.like]: getPreviousDayDate(i.datatime) + "%",
-            },
-          },
-        });
-        if (prevDay2) {
-          let result2 =
-            (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
-          const caxs = await clacData2(i.p2);
-          // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
-          allResult.push({
-            id: i.p2,
-            result: result2,
-            caxs: caxs.caxs,
-            all: result1 + caxs.caxs,
-            date: i.datatime.slice(0, 10),
-          });
-        } else {
-          let result2 = Number(i.p18) * Number(i.p12);
-          const caxs = await clacData2(i.p2);
-          allResult.push({
-            id: i.p2,
-            result: result2,
-            caxs: caxs.caxs,
-            all: result1 + caxs.caxs,
-            date: i.datatime.slice(0, 10),
-          });
-        }
-      })
+      !date
+        ? await item2.concat(item2Current).map(async (i) => {
+            const prevDay2 = await ItemValues2.findOne({
+              where: {
+                p2: i.p2,
+                datatime: {
+                  [Op.like]: getPreviousDayDate(i.datatime) + "%",
+                },
+              },
+            });
+            if (prevDay2) {
+              let result2 =
+                (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+              const caxs = await clacData2(i.p2);
+              // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
+              allResult.push({
+                id: i.p2,
+                result: result2,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            } else {
+              let result2 = Number(i.p18) * Number(i.p12);
+              const caxs = await clacData2(i.p2);
+              allResult.push({
+                id: i.p2,
+                result: result2,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            }
+          })
+        : items2.map(async (i) => {
+            const prevDay2 = await ItemValues2.findOne({
+              where: {
+                p2: i.p2,
+                datatime: {
+                  [Op.like]: getPreviousDayDate(i.datatime) + "%",
+                },
+              },
+            });
+            if (prevDay2) {
+              let result2 =
+                (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+              const caxs = await clacData2(i.p2);
+              // const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
+              allResult.push({
+                id: i.p2,
+                result: result2,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            } else {
+              let result2 = Number(i.p18) * Number(i.p12);
+              const caxs = await clacData2(i.p2);
+              allResult.push({
+                id: i.p2,
+                result: result2,
+                caxs: caxs.caxs,
+                all: result1 + caxs.caxs,
+                date: i.datatime.slice(0, 10),
+              });
+            }
+          })
     );
     return addOrUpdateEntry(allResult, ownerId);
   } catch (e) {
@@ -1008,8 +1123,8 @@ const getItemDaysService = async (ownerId, date) => {
 
 const getItemDaysLinear = async (req, res) => {
   try {
-    const { ownerId, date } = req.query;
-    const data = await getItemDaysService(ownerId, date);
+    const { ownerId, date, endDate } = req.query;
+    const data = await getItemDaysService(ownerId, date, endDate);
     return res.json({ succes: true, data });
   } catch (e) {
     console.log("something went wrong", e);
@@ -1046,7 +1161,7 @@ function mergeData(inputData) {
 
 const getBoxesInfoLinear = async (req, res) => {
   try {
-    const { ownerId, date, boxId } = req.query;
+    const { ownerId, date, endDate, boxId } = req.query;
     const currentDate = new Date();
     const startOfMonth = new Date(
       currentDate.getFullYear(),
@@ -1058,6 +1173,9 @@ const getBoxesInfoLinear = async (req, res) => {
       currentDate.getMonth() + 1,
       0
     );
+    const items1 = [];
+    const items2 = [];
+    const days = getDatesInRange(date, endDate);
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
 
@@ -1067,11 +1185,7 @@ const getBoxesInfoLinear = async (req, res) => {
         [Op.eq]: boxId,
       };
     }
-    if (date) {
-      queryObj["datatime"] = {
-        [Op.like]: date + "%",
-      };
-    } else {
+    if (!date || !endDate) {
       queryObj["datatime"] = {
         [Op.like]: year + "-" + month + "%",
       };
@@ -1083,12 +1197,6 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
     const item2 = await ItemValues2.findAll({
@@ -1097,12 +1205,6 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
     const itemCurrent = await Items.findAll({
@@ -1111,12 +1213,6 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
     const itemCurrent2 = await Item2.findAll({
@@ -1125,30 +1221,69 @@ const getBoxesInfoLinear = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId),
         },
-        // createdAt: {
-        //   [Op.and]: [{ [Op.gte]: startOfMonth }, { [Op.lte]: endOfMonth }],
-        // },
-        // datatime: {
-        //   [Op.like]: year + "-" + month + "%",
-        // },
       },
     });
+
+    await Promise.all(
+      days.map(async (entery) => {
+        const point = await ItemValues.findOne({
+          where: {
+            ...queryObj,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+
+        point && items1.push(point.dataValues);
+      })
+    );
+    await Promise.all(
+      days.map(async (entery) => {
+        const point = await ItemValues2.findOne({
+          where: {
+            ...queryObj,
+            p2: {
+              [Op.like]: String(ownerId) + "%",
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+        point && items2.push(point.dataValues);
+      })
+    );
 
     const result = [];
     let boxIdis = [];
 
     await Promise.all(
-      await item
-        .concat(itemCurrent)
-        .concat(item2)
-        .concat(itemCurrent2)
-        .map(async (i) => {
-          boxIdis.push(i.p2);
-        })
+      endDate
+        ? await items1.concat(items2).map(async (i) => {
+            boxIdis.push(i.p2);
+          })
+        : await item
+            .concat(itemCurrent)
+            .concat(item2)
+            .concat(itemCurrent2)
+            .map(async (i) => {
+              boxIdis.push(i.p2);
+            })
+    );
+    console.log(
+      boxIdis,
+      items1.map(
+        (i) => i.p2,
+        "------------------------------------------------------------------------------------------------------------------------------"
+      )
     );
     await Promise.all(
       await [...new Set(boxIdis)].map(async (entery) => {
-        const itemData = await getItemDaysService(entery, date);
+        const itemData = await getItemDaysService(entery, date, endDate);
         result.push(itemData);
       })
     );
