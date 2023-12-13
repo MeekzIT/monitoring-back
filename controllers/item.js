@@ -661,8 +661,8 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
     let result = 0;
     let expense = 0;
     await allResult.map((i) => {
-      result = result + i.result;
-      expense = expense + i.caxs;
+      result = result + Math.abs(i.result);
+      expense = expense + Math.abs(i.caxs);
     });
     let percentage = 0;
     if (expense === 0) {
