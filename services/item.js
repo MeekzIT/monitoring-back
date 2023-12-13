@@ -84,11 +84,7 @@ const getAll = async () => {
 const getSingle = async (ownerId, active) => {
   try {
     axios
-      .get(`${process.env.SERVER_URL}/devices/`, {
-        params: {
-          id: ownerId,
-        },
-      })
+      .get(`${process.env.SERVER_URL}/devices/?id=${ownerId}`)
       .then(async (response) => {
         if (active == 1) {
           const item = await Item.findOne({

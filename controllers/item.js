@@ -824,6 +824,36 @@ function findDifferencesBetweenArrays(array1, array2) {
   return differences;
 }
 
+function fillAbsentDays(data, startDate, endDate, ownerId) {
+  const startTimestamp = new Date(startDate).getTime();
+  const endTimestamp = new Date(endDate).getTime();
+  const filledArray = [];
+
+  for (
+    let timestamp = startTimestamp;
+    timestamp <= endTimestamp;
+    timestamp += 24 * 60 * 60 * 1000
+  ) {
+    const currentDate = new Date(timestamp).toISOString().split("T")[0];
+
+    const existingData = data.find((item) => item.date === currentDate);
+
+    if (existingData) {
+      filledArray.push(existingData);
+    } else {
+      filledArray.push({
+        id: ownerId,
+        result: 0,
+        caxs: 0,
+        all: 0,
+        date: currentDate,
+      });
+    }
+  }
+
+  return filledArray;
+}
+
 function addOrUpdateEntry(data, ownerId) {
   const days = getDaysInCurrentMonth();
 
@@ -859,39 +889,39 @@ const getItemDaysService = async (ownerId, date, endDate) => {
     }
     const items1 = [];
     const items2 = [];
-    await Promise.all(
-      days.map(async (entery) => {
-        const point = await ItemValues.findOne({
-          where: {
-            ...queryObj,
-            p2: {
-              [Op.like]: String(ownerId) + "%",
-            },
-            datatime: {
-              [Op.like]: entery + "%",
-            },
-          },
-        });
+    // await Promise.all(
+    //   days.map(async (entery) => {
+    //     const point = await ItemValues.findOne({
+    //       where: {
+    //         ...queryObj,
+    //         p2: {
+    //           [Op.like]: String(ownerId) + "%",
+    //         },
+    //         datatime: {
+    //           [Op.like]: entery + "%",
+    //         },
+    //       },
+    //     });
 
-        point && items1.push(point.dataValues);
-      })
-    );
-    await Promise.all(
-      days.map(async (entery) => {
-        const point = await ItemValues2.findOne({
-          where: {
-            ...queryObj,
-            p2: {
-              [Op.like]: String(ownerId) + "%",
-            },
-            datatime: {
-              [Op.like]: entery + "%",
-            },
-          },
-        });
-        point && items2.push(point.dataValues);
-      })
-    );
+    //     point && items1.push(point.dataValues);
+    //   })
+    // );
+    // await Promise.all(
+    //   days.map(async (entery) => {
+    //     const point = await ItemValues2.findOne({
+    //       where: {
+    //         ...queryObj,
+    //         p2: {
+    //           [Op.like]: String(ownerId) + "%",
+    //         },
+    //         datatime: {
+    //           [Op.like]: entery + "%",
+    //         },
+    //       },
+    //     });
+    //     point && items2.push(point.dataValues);
+    //   })
+    // );
 
     const item = await ItemValues.findAll({
       where: {
@@ -938,7 +968,6 @@ const getItemDaysService = async (ownerId, date, endDate) => {
             },
           },
         });
-
         point && items1.push(point.dataValues);
       })
     );
@@ -1005,6 +1034,12 @@ const getItemDaysService = async (ownerId, date, endDate) => {
             }
           })
         : await items1.map(async (i) => {
+            // console.log(
+            //   {
+            //     date: i.datatime.slice(0, 10),
+            //   },
+            //   "-----------------------------------"
+            // );
             const prevDay = await ItemValues.findOne({
               where: {
                 p2: ownerId,
@@ -1023,6 +1058,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
                 (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
               let caxs = await clacData1(i.p2);
+
               allResult.push({
                 id: i.p2,
                 result: result1,
@@ -1115,7 +1151,14 @@ const getItemDaysService = async (ownerId, date, endDate) => {
             }
           })
     );
-    return addOrUpdateEntry(allResult, ownerId);
+    console.log(
+      items1.map((i) => i.datatime),
+      allResult,
+      "---------------daysdaysdaysdaysdaysdays--------------------"
+    );
+    return !date
+      ? addOrUpdateEntry(allResult, ownerId)
+      : fillAbsentDays(allResult, date, endDate, ownerId);
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -1163,16 +1206,6 @@ const getBoxesInfoLinear = async (req, res) => {
   try {
     const { ownerId, date, endDate, boxId } = req.query;
     const currentDate = new Date();
-    const startOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    );
-    const endOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0
-    );
     const items1 = [];
     const items2 = [];
     const days = getDatesInRange(date, endDate);
