@@ -509,7 +509,10 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
                 result: result1,
                 type: 1,
                 caxs: caxs.caxs,
-                ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
+                ratio:
+                  caxs.caxs !== 0
+                    ? (Math.abs(caxs.caxs) / Math.abs(result1)) * 100
+                    : 100,
                 data: [...caxs.data],
                 // box,
               });
@@ -523,7 +526,10 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
                 id: i.p2,
                 result: result1,
                 caxs: caxs.caxs,
-                ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
+                ratio:
+                  caxs.caxs !== 0
+                    ? (Math.abs(caxs.caxs) / Math.abs(result1)) * 100
+                    : 100,
                 type: 1,
                 data: [...caxs.data],
                 // box,
@@ -568,7 +574,10 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
                 id: i.p2,
                 result: result1,
                 caxs: caxs.caxs,
-                ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
+                ratio:
+                  caxs.caxs !== 0
+                    ? (Math.abs(caxs.caxs) / Math.abs(result1)) * 100
+                    : 100,
                 type: 1,
                 data: [...caxs.data],
                 // box,
