@@ -521,6 +521,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               let cash = Number(i.p17) * Number(i.p11);
               let bill = Number(i.p18) * Number(i.p12);
               let caxs = await clacData1(i.p2);
+              console.log(coin, cash, bill, "coin,cash,bill");
               let result1 = coin + cash + bill;
               allResult.push({
                 id: i.p2,
