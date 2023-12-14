@@ -695,7 +695,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
       const ratio = expense / result;
 
       // Convert the ratio to a percentage
-      percentage = ratio * 100;
+      percentage = ratio * 100 || 0;
     }
     return {
       succes: true,
