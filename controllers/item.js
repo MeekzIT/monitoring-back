@@ -964,7 +964,11 @@ const getItemDaysService = async (ownerId, date, endDate) => {
     );
 
     let allResult = [];
-    console.log(item.concat(itemCurrent).map((i) => i.datatime));
+    console.log(
+      item.concat(itemCurrent).map((i) => {
+        return { id: i.id, datatime: i.datatime };
+      })
+    );
     await Promise.all(
       !date
         ? await item.concat(itemCurrent).map(async (i) => {
