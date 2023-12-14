@@ -692,7 +692,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
       percentage = 100;
     }
     if (result == 0) {
-      percentage = 100;
+      percentage = 0;
     } else {
       // Calculate the ratio
       const ratio = expense / result;
