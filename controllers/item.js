@@ -669,16 +669,20 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 
     let result = 0;
     let expense = 0;
+    console.log(
+      allResult,
+      "allResultallResultallResultallResultallResultallResultallResultallResult"
+    );
     await allResult.map((i) => {
-      result = result + Math.abs(i.result);
-      expense = expense + Math.abs(i.caxs);
+      result = result + i.result;
+      expense = expense + i.caxs;
     });
     let percentage = 0;
     if (expense === 0) {
       percentage = 100;
     } else {
       // Calculate the ratio
-      const ratio = Math.abs(expense) / Math.abs(result);
+      const ratio = expense / result;
 
       // Convert the ratio to a percentage
       percentage = ratio * 100;
