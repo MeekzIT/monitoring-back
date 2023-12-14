@@ -908,7 +908,6 @@ const getItemDaysService = async (ownerId, date, endDate) => {
     });
     const itemCurrent = await Items.findAll({
       where: {
-        ...queryObj,
         p2: {
           [Op.like]: String(ownerId),
         },
@@ -924,7 +923,6 @@ const getItemDaysService = async (ownerId, date, endDate) => {
     });
     const item2Current = await Item2.findAll({
       where: {
-        ...queryObj,
         p2: {
           [Op.like]: String(ownerId),
         },
