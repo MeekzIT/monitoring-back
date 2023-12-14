@@ -420,10 +420,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
     const days = getDatesInRange(date, endDate);
     const items1 = [];
     const items2 = [];
-    console.log(
-      days,
-      "daysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdaysdays"
-    );
     if (moikaId) {
       queryObj["p5"] = {
         [Op.eq]: moikaId,
@@ -503,15 +499,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               let bill =
                 (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
-              console.log(
-                i.p16,
-                prevDay.p16,
-                prevDay.p10,
-                coin,
-                cash,
-                bill,
-                "coin,cash,bill"
-              );
               let caxs = await clacData1(i.p2);
               allResult.push({
                 id: i.p2,
@@ -530,7 +517,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               let cash = Number(i.p17) * Number(i.p11);
               let bill = Number(i.p18) * Number(i.p12);
               let caxs = await clacData1(i.p2);
-              console.log(coin, cash, bill, "coin,cash,bill");
               let result1 = coin + cash + bill;
               allResult.push({
                 id: i.p2,
@@ -679,10 +665,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 
     let result = 0;
     let expense = 0;
-    console.log(
-      allResult,
-      "allResultallResultallResultallResultallResultallResultallResultallResult"
-    );
     await allResult.map((i) => {
       result = result + i.result;
       expense = expense + i.caxs;
@@ -915,39 +897,6 @@ const getItemDaysService = async (ownerId, date, endDate) => {
     }
     const items1 = [];
     const items2 = [];
-    // await Promise.all(
-    //   days.map(async (entery) => {
-    //     const point = await ItemValues.findOne({
-    //       where: {
-    //         ...queryObj,
-    //         p2: {
-    //           [Op.like]: String(ownerId) + "%",
-    //         },
-    //         datatime: {
-    //           [Op.like]: entery + "%",
-    //         },
-    //       },
-    //     });
-
-    //     point && items1.push(point.dataValues);
-    //   })
-    // );
-    // await Promise.all(
-    //   days.map(async (entery) => {
-    //     const point = await ItemValues2.findOne({
-    //       where: {
-    //         ...queryObj,
-    //         p2: {
-    //           [Op.like]: String(ownerId) + "%",
-    //         },
-    //         datatime: {
-    //           [Op.like]: entery + "%",
-    //         },
-    //       },
-    //     });
-    //     point && items2.push(point.dataValues);
-    //   })
-    // );
 
     const item = await ItemValues.findAll({
       where: {
@@ -1015,7 +964,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
     );
 
     let allResult = [];
-
+    console.log(item.concat(itemCurrent).map((i) => i.datatime));
     await Promise.all(
       !date
         ? await item.concat(itemCurrent).map(async (i) => {
@@ -1060,12 +1009,6 @@ const getItemDaysService = async (ownerId, date, endDate) => {
             }
           })
         : await items1.map(async (i) => {
-            // console.log(
-            //   {
-            //     date: i.datatime.slice(0, 10),
-            //   },
-            //   "-----------------------------------"
-            // );
             const prevDay = await ItemValues.findOne({
               where: {
                 p2: ownerId,
@@ -1176,11 +1119,6 @@ const getItemDaysService = async (ownerId, date, endDate) => {
               });
             }
           })
-    );
-    console.log(
-      items1.map((i) => i.datatime),
-      allResult,
-      "---------------daysdaysdaysdaysdaysdays--------------------"
     );
     return !date
       ? addOrUpdateEntry(allResult, ownerId)
@@ -1332,13 +1270,6 @@ const getBoxesInfoLinear = async (req, res) => {
             .map(async (i) => {
               boxIdis.push(i.p2);
             })
-    );
-    console.log(
-      boxIdis,
-      items1.map(
-        (i) => i.p2,
-        "------------------------------------------------------------------------------------------------------------------------------"
-      )
     );
     await Promise.all(
       await [...new Set(boxIdis)].map(async (entery) => {
