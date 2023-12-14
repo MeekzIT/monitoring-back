@@ -505,8 +505,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               let result1 = coin + cash + bill;
               console.log(
                 i.p16,
-                prevDay.p16coin,
+                prevDay.p16,
                 prevDay.p10,
+                coin,
                 cash,
                 bill,
                 "coin,cash,bill"
