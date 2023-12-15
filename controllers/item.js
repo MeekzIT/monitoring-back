@@ -454,8 +454,18 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
             },
           },
         });
-
         point && items1.push(point.dataValues);
+        const itemCurrent = await Items.findOne({
+          where: {
+            p2: {
+              [Op.like]: String(ownerId),
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+        itemCurrent && items1.push(itemCurrent.dataValues);
       })
     );
     await Promise.all(
@@ -472,6 +482,17 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
           },
         });
         point && items2.push(point.dataValues);
+        const item2Current = await Item2.findOne({
+          where: {
+            p2: {
+              [Op.like]: String(ownerId),
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+        item2Current && items2.push(item2Current.dataValues);
       })
     );
 
@@ -942,6 +963,17 @@ const getItemDaysService = async (ownerId, date, endDate) => {
           },
         });
         point && items1.push(point.dataValues);
+        const itemCurrent = await Items.findOne({
+          where: {
+            p2: {
+              [Op.like]: String(ownerId),
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+        itemCurrent && items1.push(itemCurrent.dataValues);
       })
     );
     await Promise.all(
@@ -958,15 +990,21 @@ const getItemDaysService = async (ownerId, date, endDate) => {
           },
         });
         point && items2.push(point.dataValues);
+        const item2Current = await Item2.findOne({
+          where: {
+            p2: {
+              [Op.like]: String(ownerId),
+            },
+            datatime: {
+              [Op.like]: entery + "%",
+            },
+          },
+        });
+        item2Current && items2.push(item2Current.dataValues);
       })
     );
 
     let allResult = [];
-    console.log(
-      item.concat(itemCurrent).map((i) => {
-        return { id: i.id, datatime: i.datatime };
-      })
-    );
     await Promise.all(
       !date
         ? await item.concat(itemCurrent).map(async (i) => {
