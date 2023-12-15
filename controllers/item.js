@@ -524,6 +524,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               allResult.push({
                 id: i.p2,
                 result: result1,
+                coin,
+                cash,
+                bill,
                 type: 1,
                 caxs: caxs.caxs,
                 ratio:
@@ -542,6 +545,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               allResult.push({
                 id: i.p2,
                 result: result1,
+                coin,
+                cash,
+                bill,
                 caxs: caxs.caxs,
                 ratio:
                   caxs.caxs !== 0
@@ -575,6 +581,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               allResult.push({
                 id: i.p2,
                 result: result1,
+                coin,
+                cash,
+                bill,
                 type: 1,
                 caxs: caxs.caxs,
                 ratio: caxs.caxs !== 0 ? (caxs.caxs / result1) * 100 : 100,
@@ -590,6 +599,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               allResult.push({
                 id: i.p2,
                 result: result1,
+                coin,
+                cash,
+                bill,
                 caxs: caxs.caxs,
                 ratio:
                   caxs.caxs !== 0
@@ -622,6 +634,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               allResult.push({
                 id: i.p2,
                 result: result2,
+                coin,
+                cash,
+                bill,
                 caxs: caxs.total,
                 ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
                 // box,
@@ -674,6 +689,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
                 id: i.p2,
                 ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
                 result: result2,
+                coin,
+                cash,
+                bill,
                 caxs: caxs.total,
                 firstValue1: caxs.firstValue1,
                 secondValue1: caxs.secondValue1,
@@ -686,9 +704,17 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 
     let result = 0;
     let expense = 0;
+
+    let coin = 0;
+    let cash = 0;
+    let bill = 0;
     await allResult.map((i) => {
       result = result + i.result;
       expense = expense + i.caxs;
+
+      coin = coin + i.coin;
+      cash = cash + i.cash;
+      bill = bill + i.bill;
     });
     let percentage = 0;
     if (expense === 0) {
@@ -710,6 +736,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
         expense,
         benefit: result - expense,
         ratio: Math.round(percentage),
+        coin,
+        cash,
+        bill,
         allResult,
         box,
       },
