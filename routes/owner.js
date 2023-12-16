@@ -47,6 +47,7 @@ router.get(
   infoControllers.expensesBenefitPrcent
 );
 router.post("/info-destroy", infoControllers.destroy);
+router.post("/info-create", infoControllers.createInfo);
 router.get("/item-calc-dates", authMiddleWare, itemController.getItemDays);
 router.get("/item-calc-money", authMiddleWare, itemController.getItemMoney);
 router.get("/item-calc-current", itemController.getCurrentDateMoney);

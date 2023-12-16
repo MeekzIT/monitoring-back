@@ -46,7 +46,7 @@ const getAll = async () => {
             // const haveInfo = checkInfo(item.p2, item.p0);
             // !haveInfo && (await Info.create({ ownerID: item.p2 }));
             await Item.create({ ...item, access: true });
-            // await ItemValues.create(item);
+            await ItemValues.create(item);
           } else if (item.p0 == 2) {
             const haveInfo = await checkInfo(item.p2, 2);
             console.log(
@@ -64,10 +64,10 @@ const getAll = async () => {
                 time2: 40,
               }));
             await Item2.create(item);
-            // await Item2Values.create({ ...item, access: true });
+            await Item2Values.create({ ...item, access: true });
           } else if (item.p0 == 3) {
             await Item3.create(item);
-            // await Item3Values.create({ ...item, access: true });
+            await Item3Values.create({ ...item, access: true });
           }
           console.log("--------------------- ready --------------------------");
         });
@@ -84,7 +84,7 @@ const getAll = async () => {
 const getSingle = async (ownerId, active) => {
   try {
     axios
-      .get(`${process.env.SERVER_URL}/devices/?id=${ownerId}`)
+      .get(`${process.env.SERVER_URL}/devices/?ID=${ownerId}`)
       .then(async (response) => {
         if (active == 1) {
           const item = await Item.findOne({

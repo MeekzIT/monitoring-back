@@ -48,6 +48,16 @@ const destroy = async (req, res) => {
   }
 };
 
+const createInfo = async (req, res) => {
+  try {
+    const data = req.body;
+    await ItemValues.create(data);
+    return res.json({ succes: true });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const getInfo = async (req, res) => {
   try {
     const { id, active } = req.query;
@@ -235,5 +245,6 @@ module.exports = {
   getBenefitsByDate,
   getBenefitsByModes,
   clacData2,
-  destroy
+  destroy,
+  createInfo,
 };
