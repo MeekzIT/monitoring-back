@@ -7,6 +7,7 @@ const {
   getExpensesByModes,
   transformData,
 } = require("../services/graphics");
+const { Op } = require("sequelize");
 const { getModeName, getInfoItemValues } = require("../services/item");
 
 const Info = require("../models").Info;
@@ -105,12 +106,6 @@ const clacData = async (req, res) => {
     const { ownerID } = req.query;
     const info = await Info.findAll({ where: { ownerID } });
     const item = await Items.findOne({ where: { p2: ownerID } });
-    // const modeUsedTime1 = Number(item.p44);
-    // const modeUsedTime2 = Number(item.p45);
-    // const modeUsedTime3 = Number(item.p46);
-    // const modeUsedTime4 = Number(item.p47);
-    // const modeUsedTime5 = Number(item.p48);
-    // const modeUsedTime6 = Number(item.p49);
     const prevDay = await ItemValues.findOne({
       where: {
         p2: ownerID,
@@ -174,7 +169,7 @@ const clacData = async (req, res) => {
         modeName: getModeName(i.functionId),
         seconds: getModeTimer(i.mode),
         used:
-          Math.round(getModeTimer(i.mode) / getModeNominal(i.mode)) * item.p10 * 60,
+          Math.round(getModeTimer(i.mode)  * 60 / getModeNominal(i.mode)) * item.p10,
       });
     });
     return res.json({ succes: true, data });
