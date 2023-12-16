@@ -327,6 +327,15 @@ const clacData1 = async (ownerID,item,prevItem) => {
     const modeUsedTime4 = prevItem ? Number(item.p47) -  Number(prevItem.p47) : Number(item.p47);
     const modeUsedTime5 = prevItem ? Number(item.p48) -  Number(prevItem.p48) : Number(item.p48);
     const modeUsedTime6 = prevItem ? Number(item.p49) -  Number(prevItem.p49) : Number(item.p49); 
+    const allTimesers = [
+      modeUsedTime1,
+      modeUsedTime2,
+      modeUsedTime3,
+      modeUsedTime4,
+      modeUsedTime5,
+      modeUsedTime6,
+    ];
+    console.log(allTimesers,"allTimesersallTimesersallTimesersallTimesersallTimesersallTimesers");
     const getModeTimer = (mode) => {
       if (mode == 1) {
         return modeUsedTime1;
