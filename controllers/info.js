@@ -163,13 +163,14 @@ const clacData = async (req, res) => {
         i.PrcetOfModeValueSecond,
         getModeTimer(i.mode)
       );
+      console.log( getModeTimer(i.mode) ,getModeNominal(i.mode) , item.p10,"---------------------------------");
       data.push({
         ...itemValues,
         functionId: i.functionId,
         modeName: getModeName(i.functionId),
         seconds: getModeTimer(i.mode),
         used:
-          Math.round(getModeTimer(i.mode)  * 60 / getModeNominal(i.mode)) * item.p10,
+          Math.round((getModeTimer(i.mode)  * 60) / getModeNominal(i.mode)) * item.p10,
       });
     });
     return res.json({ succes: true, data });
