@@ -344,17 +344,7 @@ const clacData1 = async (ownerID,item,prevItem) => {
     };
     const data = [];
     await info.map(async (i, idx) => {
-      const itemValues =prevItem ?await getInfoItemValues(
-        Number(i.enginePower) - Number(prevDay.enginePower),
-        Number(i.electricPrice) - Number(prevDay.electricPrice),
-        Number(i.waterPrice) - Number(prevDay.waterPrice),
-        Number(i.waterPerMinute) - Number(prevDay.waterPerMinute),
-        Number(i.modeValuePerLitre) - Number(prevDay.modeValuePerLitre),
-        Number(i.PrcentOfRegulator) - Number(prevDay.PrcentOfRegulator),
-        Number(i.PrcetOfModeValueFirst) - Number(prevDay.PrcetOfModeValueFirst),
-        Number(i.PrcetOfModeValueSecond) - Number(prevDay.PrcetOfModeValueSecond),
-        getModeTimer(i.mode)
-      ) :  await getInfoItemValues(
+      const itemValues =  await getInfoItemValues(
         i.enginePower,
         i.electricPrice,
         i.waterPrice,
