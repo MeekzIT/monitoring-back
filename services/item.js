@@ -230,12 +230,10 @@ const getInfoItemValues = (
     const caxsByModeValue = time * caxsPerMinuteByModeValue;
 
     return {
-      electric: Math.round(caxsPerDayByElectricy),
-      water: Math.round(caxsPerDayByWater),
-      modeValue: Math.round(caxsByModeValue),
-      total: Math.round(
-        caxsPerDayByElectricy + caxsPerDayByWater + caxsByModeValue
-      ),
+      electric: caxsPerDayByElectricy,
+      water: caxsPerDayByWater,
+      modeValue: caxsByModeValue,
+      total: caxsPerDayByElectricy + caxsPerDayByWater + caxsByModeValue,
     };
   } catch (error) {
     console.log(error);
