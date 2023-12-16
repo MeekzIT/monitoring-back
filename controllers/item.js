@@ -335,7 +335,6 @@ const clacData1 = async (ownerID,item,prevItem) => {
       modeUsedTime5,
       modeUsedTime6,
     ];
-    console.log(item,prevItem, allTimesers,"allTimesersallTimesersallTimesersallTimesersallTimesersallTimesers");
     const getModeTimer = (mode) => {
       if (mode == 1) {
         return modeUsedTime1;
@@ -353,7 +352,6 @@ const clacData1 = async (ownerID,item,prevItem) => {
     };
     const data = [];
     await info.map(async (i, idx) => {
-      console.log(i, getModeTimer(i.mode)," getModeTimer(i.mode)");
       const itemValues =  await getInfoItemValues(
         i.enginePower,
         i.electricPrice,
@@ -373,7 +371,6 @@ const clacData1 = async (ownerID,item,prevItem) => {
       });
     });
     let caxs = 0;
-    console.log(data, "datadata");
     await data.map((i) => (caxs = caxs + Number(i.total)));
     return { data, caxs };
   } catch (e) {
