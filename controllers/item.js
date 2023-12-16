@@ -931,7 +931,7 @@ function addOrUpdateEntry(data, ownerId) {
       date: i,
     });
   });
-  return data;
+  return data.sort((a, b) => a.date.localeCompare(b.date, undefined, { numeric: true }));
 }
 
 const getItemDaysService = async (ownerId, date, endDate) => {
