@@ -245,12 +245,20 @@ const getInfoItemValues = (
 const getInfoItemValuesGraph = async (item, ownerID) => {
   try {
     const info = await Info.findAll({ where: { ownerID } });
-    const modeUsedTime1 = Number(item.p44);
-    const modeUsedTime2 = Number(item.p45);
-    const modeUsedTime3 = Number(item.p46);
-    const modeUsedTime4 = Number(item.p47);
-    const modeUsedTime5 = Number(item.p48);
-    const modeUsedTime6 = Number(item.p49);
+    const prevDay = await ItemValues.findOne({
+      where: {
+        p2: ownerID,
+        datatime: {
+          [Op.like]: getPreviousDayDate(item.datatime) + "%",
+        },
+      },
+    });
+    const modeUsedTime1 =prevDay ? Number(prevDay.p44) - Number(item.p44) : Number(item.p44);
+    const modeUsedTime2 =prevDay ? Number(prevDay.p45) - Number(item.p45) : Number(item.p45);
+    const modeUsedTime3 =prevDay ? Number(prevDay.p46) - Number(item.p46) : Number(item.p46);
+    const modeUsedTime4 =prevDay ? Number(prevDay.p47) - Number(item.p47) : Number(item.p47);
+    const modeUsedTime5 =prevDay ? Number(prevDay.p48) - Number(item.p48) : Number(item.p48);
+    const modeUsedTime6 =prevDay ? Number(prevDay.p49) - Number(item.p49) : Number(item.p49);
     const allTimesers = [
       modeUsedTime1,
       modeUsedTime2,
@@ -259,6 +267,21 @@ const getInfoItemValuesGraph = async (item, ownerID) => {
       modeUsedTime5,
       modeUsedTime6,
     ];
+    const getModeTimer = (mode) => {
+      if (mode == 1) {
+        return modeUsedTime1;
+      } else if (mode == 2) {
+        return modeUsedTime2;
+      } else if (mode == 3) {
+        return modeUsedTime3;
+      } else if (mode == 4) {
+        return modeUsedTime4;
+      } else if (mode == 5) {
+        return modeUsedTime5;
+      } else if (mode == 6) {
+        return modeUsedTime6;
+      }
+    };
     const data = [];
     await info.map(async (i, idx) => {
       const itemValues = getInfoItemValues(
@@ -270,7 +293,7 @@ const getInfoItemValuesGraph = async (item, ownerID) => {
         i.PrcentOfRegulator,
         i.PrcetOfModeValueFirst,
         i.PrcetOfModeValueSecond,
-        allTimesers[idx]
+        getModeTimer(i.mode)
       );
       data.push(itemValues);
     });
