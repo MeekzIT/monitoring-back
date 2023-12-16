@@ -29,7 +29,7 @@ router.post(
   itemController.changeAccessability
 );
 router.get("/item-info", authMiddleWare, infoControllers.getInfo);
-router.get("/item-info-calc", authMiddleWare, infoControllers.clacData);
+router.get("/item-info-calc", infoControllers.clacData);
 router.get("/item-info-calc2", authMiddleWare, infoControllers.clacData2);
 router.get(
   "/item-info-getBenefitsByDate",
