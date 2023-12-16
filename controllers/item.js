@@ -353,6 +353,7 @@ const clacData1 = async (ownerID,item,prevItem) => {
     };
     const data = [];
     await info.map(async (i, idx) => {
+      console.log(i, getModeTimer(i.mode)," getModeTimer(i.mode)");
       const itemValues =  await getInfoItemValues(
         i.enginePower,
         i.electricPrice,
