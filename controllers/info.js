@@ -73,17 +73,58 @@ const getInfo = async (req, res) => {
   }
 };
 
+function getPreviousDayDate(inputDate) {
+  try {
+    // Parse the input date string into a Date object
+    const date = new Date(inputDate);
+
+    // Check if the inputDate is a valid date
+    if (isNaN(date.getTime())) {
+      return "Invalid input. Please provide a valid date in the format 'YYYY-MM-DD'.";
+    }
+
+    // Subtract one day from the date
+    date.setDate(date.getDate() - 1);
+
+    // Get the year, month, and day components of the previous day
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+    const day = String(date.getDate()).padStart(2, "0");
+
+    // Assemble the previous day date string in 'YYYY-MM-DD' format
+    const previousDayDate = `${year}-${month}-${day}`;
+
+    return previousDayDate;
+  } catch (error) {
+    return "An error occurred. Please try again with a valid date in the format 'YYYY-MM-DD'.";
+  }
+}
+
 const clacData = async (req, res) => {
   try {
     const { ownerID } = req.query;
     const info = await Info.findAll({ where: { ownerID } });
     const item = await Items.findOne({ where: { p2: ownerID } });
-    const modeUsedTime1 = Number(item.p44);
-    const modeUsedTime2 = Number(item.p45);
-    const modeUsedTime3 = Number(item.p46);
-    const modeUsedTime4 = Number(item.p47);
-    const modeUsedTime5 = Number(item.p48);
-    const modeUsedTime6 = Number(item.p49);
+    // const modeUsedTime1 = Number(item.p44);
+    // const modeUsedTime2 = Number(item.p45);
+    // const modeUsedTime3 = Number(item.p46);
+    // const modeUsedTime4 = Number(item.p47);
+    // const modeUsedTime5 = Number(item.p48);
+    // const modeUsedTime6 = Number(item.p49);
+    const prevDay = await ItemValues.findOne({
+      where: {
+        p2: ownerID,
+        datatime: {
+          [Op.like]: getPreviousDayDate(item.datatime) + "%",
+        },
+      },
+    });
+    const modeUsedTime1 =prevDay ? Number(prevDay.p44) - Number(item.p44) : Number(item.p44);
+    const modeUsedTime2 =prevDay ? Number(prevDay.p45) - Number(item.p45) : Number(item.p45);
+    const modeUsedTime3 =prevDay ? Number(prevDay.p46) - Number(item.p46) : Number(item.p46);
+    const modeUsedTime4 =prevDay ? Number(prevDay.p47) - Number(item.p47) : Number(item.p47);
+    const modeUsedTime5 =prevDay ? Number(prevDay.p48) - Number(item.p48) : Number(item.p48);
+    const modeUsedTime6 =prevDay ? Number(prevDay.p49) - Number(item.p49) : Number(item.p49);
     const getModeTimer = (mode) => {
       if (mode == 1) {
         return modeUsedTime1;

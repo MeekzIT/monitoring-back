@@ -242,6 +242,33 @@ const getInfoItemValues = (
   }
 };
 
+function getPreviousDayDate(inputDate) {
+  try {
+    // Parse the input date string into a Date object
+    const date = new Date(inputDate);
+
+    // Check if the inputDate is a valid date
+    if (isNaN(date.getTime())) {
+      return "Invalid input. Please provide a valid date in the format 'YYYY-MM-DD'.";
+    }
+
+    // Subtract one day from the date
+    date.setDate(date.getDate() - 1);
+
+    // Get the year, month, and day components of the previous day
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+    const day = String(date.getDate()).padStart(2, "0");
+
+    // Assemble the previous day date string in 'YYYY-MM-DD' format
+    const previousDayDate = `${year}-${month}-${day}`;
+
+    return previousDayDate;
+  } catch (error) {
+    return "An error occurred. Please try again with a valid date in the format 'YYYY-MM-DD'.";
+  }
+}
+
 const getInfoItemValuesGraph = async (item, ownerID) => {
   try {
     const info = await Info.findAll({ where: { ownerID } });
