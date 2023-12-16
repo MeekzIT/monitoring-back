@@ -114,12 +114,12 @@ const clacData = async (req, res) => {
         },
       },
     });
-    const modeUsedTime1 =prevDay ? Number(prevDay.p44) - Number(item.p44) : Number(item.p44);
-    const modeUsedTime2 =prevDay ? Number(prevDay.p45) - Number(item.p45) : Number(item.p45);
-    const modeUsedTime3 =prevDay ? Number(prevDay.p46) - Number(item.p46) : Number(item.p46);
-    const modeUsedTime4 =prevDay ? Number(prevDay.p47) - Number(item.p47) : Number(item.p47);
-    const modeUsedTime5 =prevDay ? Number(prevDay.p48) - Number(item.p48) : Number(item.p48);
-    const modeUsedTime6 =prevDay ? Number(prevDay.p49) - Number(item.p49) : Number(item.p49);
+    const modeUsedTime1 =prevDay ? Number(item.p44) - Number(prevDay.p44) : Number(item.p44);
+    const modeUsedTime2 =prevDay ? Number(item.p45) - Number(prevDay.p45) : Number(item.p45);
+    const modeUsedTime3 =prevDay ? Number(item.p46) - Number(prevDay.p46) : Number(item.p46);
+    const modeUsedTime4 =prevDay ? Number(item.p47) - Number(prevDay.p47) : Number(item.p47);
+    const modeUsedTime5 =prevDay ? Number(item.p48) - Number(prevDay.p48) : Number(item.p48);
+    const modeUsedTime6 =prevDay ? Number(item.p49) - Number(prevDay.p49) : Number(item.p49);
     const getModeTimer = (mode) => {
       if (mode == 1) {
         return modeUsedTime1;
