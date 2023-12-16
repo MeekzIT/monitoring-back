@@ -454,6 +454,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
             },
           },
         });
+
         point && items1.push(point.dataValues);
         const itemCurrent = await Items.findOne({
           where: {
@@ -499,7 +500,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
     const box = await Boxes.findOne({ where: { ownerId } });
 
     const allResult = [];
-
+    console.log(items1, "items1items1items1items1items1items1items1");
     await Promise.all(
       !date
         ? await item.map(async (i) => {
