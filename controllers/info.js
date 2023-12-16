@@ -84,15 +84,6 @@ const clacData = async (req, res) => {
     const modeUsedTime4 = Number(item.p47);
     const modeUsedTime5 = Number(item.p48);
     const modeUsedTime6 = Number(item.p49);
-    const allTimesers = [
-      modeUsedTime1,
-      modeUsedTime2,
-      modeUsedTime3,
-      modeUsedTime4,
-      modeUsedTime5,
-      modeUsedTime6,
-    ];
-    console.log(allTimesers, "allTimesers");
     const getModeTimer = (mode) => {
       if (mode == 1) {
         return modeUsedTime1;
@@ -142,7 +133,7 @@ const clacData = async (req, res) => {
         modeName: getModeName(i.functionId),
         seconds: getModeTimer(i.mode),
         used:
-          Math.round(getModeTimer(i.mode) / getModeNominal(i.mode)) * item.p10,
+          Math.round(getModeTimer(i.mode) / getModeNominal(i.mode)) * item.p10 * 60,
       });
     });
     return res.json({ succes: true, data });
