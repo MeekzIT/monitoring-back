@@ -113,9 +113,18 @@ function getPreviousDayDate(inputDate) {
 
 const clacData = async (req, res) => {
   try {
-    const { ownerID } = req.query;
+    const { ownerID, date } = req.query;
     const info = await Info.findAll({ where: { ownerID } });
-    const item = await Items.findOne({ where: { p2: ownerID } });
+    const day = await ItemValues.findOne({
+      where: {
+        p2: ownerID,
+        datatime: {
+          [Op.like]: date + "%",
+        },
+      },
+    });
+    const item = !date ? await Items.findOne({ where: { p2: ownerID } }) : day;
+
     const prevDay = await ItemValues.findOne({
       where: {
         p2: ownerID,
@@ -124,6 +133,7 @@ const clacData = async (req, res) => {
         },
       },
     });
+
     const modeUsedTime1 = prevDay
       ? Number(item.p44) - Number(prevDay.p44)
       : Number(item.p44);
