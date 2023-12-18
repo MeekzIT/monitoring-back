@@ -59,6 +59,16 @@ const createInfo = async (req, res) => {
   }
 };
 
+const getValues = async (req, res) => {
+  try {
+    const { ownerId } = req.query;
+    const all = await ItemValues.findAll({ where: { p2: ownerId } });
+    return res.json({ succes: true, data: all });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const getInfo = async (req, res) => {
   try {
     const { id, active } = req.query;
@@ -114,12 +124,24 @@ const clacData = async (req, res) => {
         },
       },
     });
-    const modeUsedTime1 =prevDay ? Number(item.p44) - Number(prevDay.p44) : Number(item.p44);
-    const modeUsedTime2 =prevDay ? Number(item.p45) - Number(prevDay.p45) : Number(item.p45);
-    const modeUsedTime3 =prevDay ? Number(item.p46) - Number(prevDay.p46) : Number(item.p46);
-    const modeUsedTime4 =prevDay ? Number(item.p47) - Number(prevDay.p47) : Number(item.p47);
-    const modeUsedTime5 =prevDay ? Number(item.p48) - Number(prevDay.p48) : Number(item.p48);
-    const modeUsedTime6 =prevDay ? Number(item.p49) - Number(prevDay.p49) : Number(item.p49);
+    const modeUsedTime1 = prevDay
+      ? Number(item.p44) - Number(prevDay.p44)
+      : Number(item.p44);
+    const modeUsedTime2 = prevDay
+      ? Number(item.p45) - Number(prevDay.p45)
+      : Number(item.p45);
+    const modeUsedTime3 = prevDay
+      ? Number(item.p46) - Number(prevDay.p46)
+      : Number(item.p46);
+    const modeUsedTime4 = prevDay
+      ? Number(item.p47) - Number(prevDay.p47)
+      : Number(item.p47);
+    const modeUsedTime5 = prevDay
+      ? Number(item.p48) - Number(prevDay.p48)
+      : Number(item.p48);
+    const modeUsedTime6 = prevDay
+      ? Number(item.p49) - Number(prevDay.p49)
+      : Number(item.p49);
     const getModeTimer = (mode) => {
       if (mode == 1) {
         return modeUsedTime1;
@@ -163,14 +185,15 @@ const clacData = async (req, res) => {
         i.PrcetOfModeValueSecond,
         getModeTimer(i.mode)
       );
-      console.log( i,"---------------------------------");
+      console.log(i, "---------------------------------");
       data.push({
         ...itemValues,
         functionId: i.functionId,
         modeName: getModeName(i.functionId),
         seconds: getModeTimer(i.mode),
         used:
-          Math.round((getModeTimer(i.mode)  * 60) / getModeNominal(i.mode)) * item.p10,
+          Math.round((getModeTimer(i.mode) * 60) / getModeNominal(i.mode)) *
+          item.p10,
       });
     });
     return res.json({ succes: true, data });
@@ -275,4 +298,5 @@ module.exports = {
   clacData2,
   destroy,
   createInfo,
+  getValues,
 };
