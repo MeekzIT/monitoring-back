@@ -11,6 +11,7 @@ module.exports = {
       },
       p0: Sequelize.INTEGER, // 1-moyka, 2-cux
       access: Sequelize.BOOLEAN,
+      name: Sequelize.STRING,
       p1: Sequelize.INTEGER, // 1056,
       p2: Sequelize.STRING, // ownerId
       p3: Sequelize.BOOLEAN, // online te offline

@@ -19,6 +19,7 @@ router.post("/delete-owner", authMiddleWare, ownerController.delateAccount);
 router.get("/boxes-owners", boxController.getAllBoxesOfOwners);
 router.post("/edit-item", authMiddleWare, itemController.edit);
 router.get("/item-single", authMiddleWare, itemController.getSingle);
+router.post('/item-edit-name',authMiddleWare,itemController.editName)
 
 // info
 

@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       p0: DataTypes.INTEGER, // device type
       access: DataTypes.BOOLEAN,
+      name: DataTypes.STRING,
       p1: DataTypes.INTEGER, // version
       p2: DataTypes.STRING, // ownerId
       p3: DataTypes.BOOLEAN, // RFID 1

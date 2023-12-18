@@ -43,7 +43,7 @@ const edit = async (req, res) => {
           fieldValue: data[i],
         })
       );
-      return res.json({ succes: true, data: item });
+      return res.json({ succes: true, data: item2 });
     } else if (item3) {
       await item3.update(data);
       allFields.map((i) =>
@@ -53,7 +53,32 @@ const edit = async (req, res) => {
           fieldValue: data[i],
         })
       );
+      return res.json({ succes: true, data: item3 });
+    }
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const editName = async (req, res) => {
+  try {
+    const { name, ownerId } = req.body;
+    const item = await Items.findOne({ where: { p2: ownerId } });
+    const item2 = await Item2.findOne({ where: { p2: ownerId } });
+    const item3 = await Item3.findOne({ where: { p2: ownerId } });
+
+    if (item) {
+     item.name = name
+     await item.save()
       return res.json({ succes: true, data: item });
+    } else if (item2) {
+      item2.name = name
+      await item2.save()
+      return res.json({ succes: true, data: item2 });
+    } else if (item3) {
+      item3.name = name
+      await item3.save()
+      return res.json({ succes: true, data: item3 });
     }
   } catch (e) {
     console.log("something went wrong", e);
@@ -1378,4 +1403,5 @@ module.exports = {
   getItemInfo,
   getItemDaysLinear,
   getBoxesInfoLinear,
+  editName
 };

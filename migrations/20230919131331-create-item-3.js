@@ -11,6 +11,7 @@ module.exports = {
       },
       p0: Sequelize.INTEGER, // device type
       access: Sequelize.BOOLEAN,
+      name: Sequelize.STRING,
       p1: Sequelize.INTEGER, // version
       p2: Sequelize.STRING, // ownerId
       p3: Sequelize.BOOLEAN, // RFID 1

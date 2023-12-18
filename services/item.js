@@ -91,19 +91,19 @@ const getSingle = async (ownerId, active) => {
             where: { p2: String(ownerId) },
           });
 
-          await item.update({ ...response.data[0], access: item.access });
+          await item.update({ ...response.data[0], access: item.access,name:item.name });
         } else if (active == 2) {
           const item = await Item2.findOne({
             where: { p2: String(ownerId) },
           });
 
-          await item.update({ ...response.data[0], access: item.access });
+          await item.update({ ...response.data[0], access: item.access,name:item.name });
         } else if (active == 3) {
           const item = await Item3.findOne({
             where: { p2: String(ownerId) },
           });
 
-          await item.update({ ...response.data[0], access: item.access });
+          await item.update({ ...response.data[0], access: item.access,name:item.name });
         }
         console.log("--------------------- updated --------------------------");
       })
