@@ -46,7 +46,7 @@ const getAll = async () => {
             // const haveInfo = checkInfo(item.p2, item.p0);
             // !haveInfo && (await Info.create({ ownerID: item.p2 }));
             await Item.create({ ...item, access: true });
-            await ItemValues.create(item);
+            // await ItemValues.create(item);
           } else if (item.p0 == 2) {
             const haveInfo = await checkInfo(item.p2, 2);
             console.log(
@@ -63,11 +63,11 @@ const getAll = async () => {
                 time1: 40,
                 time2: 40,
               }));
-            await Item2.create(item);
+            // await Item2.create(item);
             await Item2Values.create({ ...item, access: true });
           } else if (item.p0 == 3) {
             await Item3.create(item);
-            await Item3Values.create({ ...item, access: true });
+            // await Item3Values.create({ ...item, access: true });
           }
           console.log("--------------------- ready --------------------------");
         });
