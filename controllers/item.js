@@ -68,16 +68,16 @@ const editName = async (req, res) => {
     const item3 = await Item3.findOne({ where: { p2: ownerId } });
 
     if (item) {
-     item.name = name
-     await item.save()
+      item.name = name;
+      await item.save();
       return res.json({ succes: true, data: item });
     } else if (item2) {
-      item2.name = name
-      await item2.save()
+      item2.name = name;
+      await item2.save();
       return res.json({ succes: true, data: item2 });
     } else if (item3) {
-      item3.name = name
-      await item3.save()
+      item3.name = name;
+      await item3.save();
       return res.json({ succes: true, data: item3 });
     }
   } catch (e) {
@@ -342,16 +342,28 @@ const getCurrentDateMoney = async (req, res) => {
   }
 };
 
-const clacData1 = async (ownerID,item,prevItem) => {
+const clacData1 = async (ownerID, item, prevItem) => {
   try {
     const info = await Info.findAll({ where: { ownerID } });
     // const item = await Items.findOne({ where: { p2: ownerID } });
-    const modeUsedTime1 = prevItem ? Number(item.p44) -  Number(prevItem.p44) : Number(item.p44);
-    const modeUsedTime2 = prevItem ? Number(item.p45) -  Number(prevItem.p45) : Number(item.p45);
-    const modeUsedTime3 = prevItem ? Number(item.p46) -  Number(prevItem.p46) : Number(item.p46);
-    const modeUsedTime4 = prevItem ? Number(item.p47) -  Number(prevItem.p47) : Number(item.p47);
-    const modeUsedTime5 = prevItem ? Number(item.p48) -  Number(prevItem.p48) : Number(item.p48);
-    const modeUsedTime6 = prevItem ? Number(item.p49) -  Number(prevItem.p49) : Number(item.p49); 
+    const modeUsedTime1 = prevItem
+      ? Number(item.p44) - Number(prevItem.p44)
+      : Number(item.p44);
+    const modeUsedTime2 = prevItem
+      ? Number(item.p45) - Number(prevItem.p45)
+      : Number(item.p45);
+    const modeUsedTime3 = prevItem
+      ? Number(item.p46) - Number(prevItem.p46)
+      : Number(item.p46);
+    const modeUsedTime4 = prevItem
+      ? Number(item.p47) - Number(prevItem.p47)
+      : Number(item.p47);
+    const modeUsedTime5 = prevItem
+      ? Number(item.p48) - Number(prevItem.p48)
+      : Number(item.p48);
+    const modeUsedTime6 = prevItem
+      ? Number(item.p49) - Number(prevItem.p49)
+      : Number(item.p49);
     const allTimesers = [
       modeUsedTime1,
       modeUsedTime2,
@@ -377,7 +389,7 @@ const clacData1 = async (ownerID,item,prevItem) => {
     };
     const data = [];
     await info.map(async (i, idx) => {
-      const itemValues =  await getInfoItemValues(
+      const itemValues = await getInfoItemValues(
         i.enginePower,
         i.electricPrice,
         i.waterPrice,
@@ -452,6 +464,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
     }
     const item = await Items.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
@@ -460,6 +473,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 
     const item2 = await Item2.findAll({
       where: {
+        ...queryObj,
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
@@ -483,6 +497,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
         point && items1.push(point.dataValues);
         const itemCurrent = await Items.findOne({
           where: {
+            ...queryObj,
             p2: {
               [Op.like]: String(ownerId),
             },
@@ -510,6 +525,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
         point && items2.push(point.dataValues);
         const item2Current = await Item2.findOne({
           where: {
+            ...queryObj,
             p2: {
               [Op.like]: String(ownerId),
             },
@@ -545,7 +561,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               let bill =
                 (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
-              let caxs = await clacData1(i.p2, i ,prevDay);
+              let caxs = await clacData1(i.p2, i, prevDay);
               allResult.push({
                 id: i.p2,
                 result: result1,
@@ -619,7 +635,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
               let coin = Number(i.p16) * Number(i.p10);
               let cash = Number(i.p17) * Number(i.p11);
               let bill = Number(i.p18) * Number(i.p12);
-              let caxs = await clacData1(i.p2,i);
+              let caxs = await clacData1(i.p2, i);
               let result1 = coin + cash + bill;
               allResult.push({
                 id: i.p2,
@@ -945,7 +961,7 @@ function addOrUpdateEntry(data, ownerId) {
   const dfindDifferencesBetweenArrays = findDifferencesBetweenArrays(
     newDays,
     days
-  ); 
+  );
   [...new Set(dfindDifferencesBetweenArrays)].map((i) => {
     data.push({
       id: ownerId,
@@ -955,8 +971,10 @@ function addOrUpdateEntry(data, ownerId) {
       date: i,
     });
   });
-  
-  return data.sort((a, b) => a.date.localeCompare(b.date, undefined, { numeric: true }));
+
+  return data.sort((a, b) =>
+    a.date.localeCompare(b.date, undefined, { numeric: true })
+  );
 }
 
 const getItemDaysService = async (ownerId, date, endDate) => {
@@ -1080,7 +1098,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
               let bill =
                 (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
-              let caxs = await clacData1(i.p2,i, prevDay);
+              let caxs = await clacData1(i.p2, i, prevDay);
               allResult.push({
                 id: i.p2,
                 result: result1,
@@ -1092,7 +1110,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
               let coin = Number(i.p16) * Number(i.p10);
               let cash = Number(i.p17) * Number(i.p11);
               let bill = Number(i.p18) * Number(i.p12);
-              let caxs = await clacData1(i.p2,i);
+              let caxs = await clacData1(i.p2, i);
               let result1 = coin + cash + bill;
               allResult.push({
                 id: i.p2,
@@ -1121,7 +1139,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
               let bill =
                 (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
-              let caxs = await clacData1(i.p2,i, prevDay);
+              let caxs = await clacData1(i.p2, i, prevDay);
 
               allResult.push({
                 id: i.p2,
@@ -1134,7 +1152,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
               let coin = Number(i.p16) * Number(i.p10);
               let cash = Number(i.p17) * Number(i.p11);
               let bill = Number(i.p18) * Number(i.p12);
-              let caxs = await clacData1(i.p2,i);
+              let caxs = await clacData1(i.p2, i);
               let result1 = coin + cash + bill;
               allResult.push({
                 id: i.p2,
@@ -1403,5 +1421,5 @@ module.exports = {
   getItemInfo,
   getItemDaysLinear,
   getBoxesInfoLinear,
-  editName
+  editName,
 };
