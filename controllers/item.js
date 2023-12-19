@@ -825,7 +825,7 @@ const getBoxesInfo = async (req, res) => {
     });
     await Promise.all(
       await box.map(async (i) => {
-        const data = await getBoxInfoService(ownerId, date, endDate, i.id);
+        const data = await getBoxInfoService(ownerId, date, endDate, boxId);
         result.push(data.data);
       })
     );
