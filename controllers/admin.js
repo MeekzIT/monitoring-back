@@ -159,7 +159,7 @@ const logout = async (req, res) => {
     const { user_id, role } = req.user;
 
     if (role == "admin") {
-      const user = await Admin.findOne({ where: { id: 1 } });
+      const user = await Admin.findOne({ where: { id: user_id } });
       user.token = null;
       await user.save();
       return res.json({ succes: true });
