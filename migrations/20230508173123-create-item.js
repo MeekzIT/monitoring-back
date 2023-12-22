@@ -14,7 +14,7 @@ module.exports = {
       name: Sequelize.STRING,
       p1: Sequelize.INTEGER, // 1056,
       p2: Sequelize.STRING, // ownerId
-      p3: Sequelize.BOOLEAN, // online te offline
+      p3: Sequelize.STRING, // online te offline
       p4: Sequelize.INTEGER, // Moyki hamary
       p5: Sequelize.INTEGER, // M1-i hamari takaynelutyuny
       p6: Sequelize.INTEGER, // hayastan 3001 (kartoshki id owneri hamar #1)
