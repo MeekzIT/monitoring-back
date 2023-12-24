@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       p0: DataTypes.INTEGER, // device type
       p1: DataTypes.INTEGER, // version
       p2: DataTypes.STRING, // ownerId
-      p3: DataTypes.BOOLEAN, // RFID 1
+      p3: DataTypes.STRING, // RFID 1
       p4: DataTypes.INTEGER, // RFID 2
       p5: DataTypes.INTEGER, // moikaID
       p6: DataTypes.STRING, // boxId

@@ -12,7 +12,7 @@ module.exports = {
       p0: Sequelize.INTEGER, // device type
       p1: Sequelize.INTEGER, // version
       p2: Sequelize.STRING, // ownerId
-      p3: Sequelize.BOOLEAN, // RFID 1
+      p3: Sequelize.STRING, // RFID 1
       p4: Sequelize.INTEGER, // RFID 2
       p5: Sequelize.INTEGER, // moikaID
       p6: Sequelize.STRING, // boxId

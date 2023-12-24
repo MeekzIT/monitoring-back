@@ -1,19 +1,18 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Item3Values', {
+    await queryInterface.createTable("Item3Values", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       p0: Sequelize.INTEGER, // device type
-      access: Sequelize.BOOLEAN,
       p1: Sequelize.INTEGER, // version
       p2: Sequelize.STRING, // ownerId
-      p3: Sequelize.BOOLEAN, // RFID 1
+      p3: Sequelize.STRING, // RFID 1
       p4: Sequelize.INTEGER, // RFID 2
       p5: Sequelize.INTEGER, // moikaID
       p6: Sequelize.INTEGER, // boxId
@@ -174,15 +173,15 @@ module.exports = {
       datatime: Sequelize.STRING,
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Item3Values');
-  }
+    await queryInterface.dropTable("Item3Values");
+  },
 };
