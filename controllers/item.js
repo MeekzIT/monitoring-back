@@ -538,7 +538,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
       })
     );
 
-    const box = await Boxes.findOne({ where: { ownerId } });
+    const box = await Boxes.findOne({ where: { id: moikaId } });
 
     const allResult = [];
     await Promise.all(
@@ -841,7 +841,8 @@ const getBoxesInfo = async (req, res) => {
     });
     await Promise.all(
       await box.map(async (i) => {
-        const data = await getBoxInfoService(ownerId, date, endDate, boxId);
+       
+        const data = await getBoxInfoService(ownerId, date, endDate,i.id);
         result.push(data.data);
       })
     );
