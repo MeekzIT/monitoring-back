@@ -538,7 +538,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
       })
     );
 
-    const box = await Boxes.findOne({ where: { id: moikaId } });
+    const box = moikaId
+      ? await Boxes.findOne({ where: { id: moikaId } })
+      : null;
 
     const allResult = [];
     await Promise.all(
@@ -841,8 +843,7 @@ const getBoxesInfo = async (req, res) => {
     });
     await Promise.all(
       await box.map(async (i) => {
-       
-        const data = await getBoxInfoService(ownerId, date, endDate,i.id);
+        const data = await getBoxInfoService(ownerId, date, endDate, i.id);
         result.push(data.data);
       })
     );
@@ -875,7 +876,7 @@ const getItemInfo = async (req, res) => {
   try {
     const { ownerId, date, endDate } = req.query;
 
-    const data = await getBoxInfoService(ownerId, date, endDate);
+    const data = await getBoxInfoService(ownerId, date, endDate, null);
     return res.json(data);
   } catch (e) {
     console.log("something went wrong", e);
