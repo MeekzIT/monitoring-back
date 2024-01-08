@@ -25,6 +25,13 @@ const checkInfo = async (ownerID, devicesTytpe) => {
 
 const getAll = async () => {
   try {
+    let currentDate = new Date();
+
+    let year = currentDate.getFullYear();
+    let month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    let day = currentDate.getDate().toString().padStart(2, "0");
+    let formattedDate = `${year}-${month}-${day}`;
+
     axios
       .get(`${process.env.SERVER_URL}/devices`)
       .then(async function (response) {
@@ -46,13 +53,13 @@ const getAll = async () => {
             // const haveInfo = checkInfo(item.p2, item.p0);
             // !haveInfo && (await Info.create({ ownerID: item.p2 }));
             await Item.create({ ...item, access: true });
-            await ItemValues.create(item);
+            console.log(
+              formattedDate,
+              "111111111111111111111---------------------------------------------------------------------------------"
+            );
+            await ItemValues.create({ ...item, datatime: formattedDate });
           } else if (item.p0 == 2) {
             const haveInfo = await checkInfo(item.p2, 2);
-            console.log(
-              haveInfo,
-              "----------------------------------------------------------"
-            );
             haveInfo &&
               (await Info2.create({
                 ownerID: item.p2,
@@ -64,10 +71,10 @@ const getAll = async () => {
                 time2: 40,
               }));
             await Item2.create(item);
-            await Item2Values.create({ ...item, access: true });
+            await Item2Values.create({ ...item, datatime: formattedDate });
           } else if (item.p0 == 3) {
             await Item3.create(item);
-            await Item3Values.create({ ...item, access: true });
+            await Item3Values.create({ ...item, datatime: formattedDate });
           }
           console.log("--------------------- ready --------------------------");
         });
@@ -91,19 +98,31 @@ const getSingle = async (ownerId, active) => {
             where: { p2: String(ownerId) },
           });
 
-          await item.update({ ...response.data[0], access: item.access,name:item.name });
+          await item.update({
+            ...response.data[0],
+            access: item.access,
+            name: item.name,
+          });
         } else if (active == 2) {
           const item = await Item2.findOne({
             where: { p2: String(ownerId) },
           });
 
-          await item.update({ ...response.data[0], access: item.access,name:item.name });
+          await item.update({
+            ...response.data[0],
+            access: item.access,
+            name: item.name,
+          });
         } else if (active == 3) {
           const item = await Item3.findOne({
             where: { p2: String(ownerId) },
           });
 
-          await item.update({ ...response.data[0], access: item.access,name:item.name });
+          await item.update({
+            ...response.data[0],
+            access: item.access,
+            name: item.name,
+          });
         }
         console.log("--------------------- updated --------------------------");
       })
@@ -280,12 +299,24 @@ const getInfoItemValuesGraph = async (item, ownerID) => {
         },
       },
     });
-    const modeUsedTime1 =prevDay ? Number(prevDay.p44) - Number(item.p44) : Number(item.p44);
-    const modeUsedTime2 =prevDay ? Number(prevDay.p45) - Number(item.p45) : Number(item.p45);
-    const modeUsedTime3 =prevDay ? Number(prevDay.p46) - Number(item.p46) : Number(item.p46);
-    const modeUsedTime4 =prevDay ? Number(prevDay.p47) - Number(item.p47) : Number(item.p47);
-    const modeUsedTime5 =prevDay ? Number(prevDay.p48) - Number(item.p48) : Number(item.p48);
-    const modeUsedTime6 =prevDay ? Number(prevDay.p49) - Number(item.p49) : Number(item.p49);
+    const modeUsedTime1 = prevDay
+      ? Number(prevDay.p44) - Number(item.p44)
+      : Number(item.p44);
+    const modeUsedTime2 = prevDay
+      ? Number(prevDay.p45) - Number(item.p45)
+      : Number(item.p45);
+    const modeUsedTime3 = prevDay
+      ? Number(prevDay.p46) - Number(item.p46)
+      : Number(item.p46);
+    const modeUsedTime4 = prevDay
+      ? Number(prevDay.p47) - Number(item.p47)
+      : Number(item.p47);
+    const modeUsedTime5 = prevDay
+      ? Number(prevDay.p48) - Number(item.p48)
+      : Number(item.p48);
+    const modeUsedTime6 = prevDay
+      ? Number(prevDay.p49) - Number(item.p49)
+      : Number(item.p49);
     const allTimesers = [
       modeUsedTime1,
       modeUsedTime2,
