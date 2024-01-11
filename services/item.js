@@ -50,13 +50,12 @@ const getAll = async () => {
         });
         await response.data.map(async (item) => {
           if (item.p0 == 1) {
-            // const haveInfo = checkInfo(item.p2, item.p0);
-            // !haveInfo && (await Info.create({ ownerID: item.p2 }));
+            const haveInfo = checkInfo(item.p2, item.p0);
+             !haveInfo &&
+              Array(6).map(
+                async (i) => await Info.create({ ownerID: item.p2 })
+              );
             await Item.create({ ...item, access: true });
-            console.log(
-              formattedDate,
-              "111111111111111111111---------------------------------------------------------------------------------"
-            );
             await ItemValues.create({ ...item, datatime: formattedDate });
           } else if (item.p0 == 2) {
             const haveInfo = await checkInfo(item.p2, 2);
