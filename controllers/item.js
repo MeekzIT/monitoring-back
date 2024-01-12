@@ -887,7 +887,7 @@ function getDaysInCurrentMonth() {
   const currentDate = new Date();
 
   const year = currentDate.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
   const lastDayOfMonth = new Date(year, month, 0);
 
   // Generate an array of dates for each day in the month
