@@ -887,7 +887,7 @@ function getDaysInCurrentMonth() {
   const currentDate = new Date();
 
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   const lastDayOfMonth = new Date(year, month, 0);
 
   // Generate an array of dates for each day in the month
@@ -983,7 +983,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
   try {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
+    const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
     const days = getDatesInRange(date, endDate);
     let queryObj = {};
     if (!date) {
@@ -1289,7 +1289,7 @@ const getBoxesInfoLinear = async (req, res) => {
     const items2 = [];
     const days = getDatesInRange(date, endDate);
     const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
+    const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
 
     let queryObj = {};
     if (boxId) {
@@ -1336,11 +1336,13 @@ const getBoxesInfoLinear = async (req, res) => {
       },
     });
 
+    // days.length
+    //   ?
     await Promise.all(
       days.map(async (entery) => {
         const point = await ItemValues.findOne({
           where: {
-            ...queryObj,
+            // ...queryObj,
             p2: {
               [Op.like]: String(ownerId) + "%",
             },
@@ -1353,6 +1355,18 @@ const getBoxesInfoLinear = async (req, res) => {
         point && items1.push(point.dataValues);
       })
     );
+    // : await Promise.all(
+    //     await item.map(async (entery) => {
+    //       console.log(
+    //         entery.dataValues.datatime,
+    //         "----------------------------------------------"
+    //       );
+
+    //       items1.push(entery.dataValues);
+    //     })
+    //   );
+    // days.length
+    //   ?
     await Promise.all(
       days.map(async (entery) => {
         const point = await ItemValues2.findOne({
@@ -1369,12 +1383,17 @@ const getBoxesInfoLinear = async (req, res) => {
         point && items2.push(point.dataValues);
       })
     );
+    // : await Promise.all(
+    //     await item2.map(async (entery) => {
+    //       items2.push(entery.dataValues);
+    //     })
+    //   );
 
     const result = [];
     let boxIdis = [];
 
     await Promise.all(
-      endDate
+      days.length
         ? await items1.concat(items2).map(async (i) => {
             boxIdis.push(i.p2);
           })

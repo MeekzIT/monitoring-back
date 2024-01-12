@@ -51,9 +51,10 @@ const getAll = async () => {
         await response.data.map(async (item) => {
           if (item.p0 == 1) {
             const haveInfo = checkInfo(item.p2, item.p0);
-             !haveInfo &&
+            !haveInfo &&
               Array(6).map(
-                async (i) => await Info.create({ ownerID: item.p2 })
+                async (i, index) =>
+                  await Info.create({ ownerID: item.p2, mode: index + 1 })
               );
             await Item.create({ ...item, access: true });
             await ItemValues.create({ ...item, datatime: formattedDate });
