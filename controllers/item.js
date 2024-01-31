@@ -201,16 +201,16 @@ const getItemMoney = async (req, res) => {
         });
         if (prevDay) {
           let coin =
-            Number(prevDay.p16) >= Number(i.p16)
-              ? (Number(i.p16) + Number(prevDay.p16)) * Number(prevDay.p10)
+            Number(prevDay.p16) > Number(i.p16)
+              ? Number(i.p16) * Number(prevDay.p10)
               : (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
           let cash =
-            Number(prevDay.p17) >= Number(i.p17)
-              ? (Number(i.p17) + Number(prevDay.p17)) * Number(prevDay.p11)
+            Number(prevDay.p17) > Number(i.p17)
+              ? Number(i.p17) * Number(prevDay.p11)
               : (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
           let bill =
-            Number(prevDay.p18) >= Number(i.p18)
-              ? (Number(i.p18) + Number(prevDay.p18)) * Number(prevDay.p12)
+            Number(prevDay.p18) > Number(i.p18)
+              ? Number(i.p18) * Number(prevDay.p12)
               : (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
           result.MonetizationOnIcon = result.MonetizationOnIcon + coin;
           result.LocalAtmIcon = result.LocalAtmIcon + cash;
@@ -279,17 +279,17 @@ const getCurrentDateMoney = async (req, res) => {
 
       if (prevDay) {
         let coin =
-          Number(prevDay.p16) >= Number(i.p16)
-            ? (Number(i.p16) + Number(prevDay.p16)) * Number(prevDay.p10)
-            : (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
+          Number(prevDay.p16) > Number(item.p16)
+            ? Number(item.p16) * Number(prevDay.p10)
+            : (Number(item.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
         let cash =
-          Number(prevDay.p17) >= Number(i.p17)
-            ? (Number(i.p17) + Number(prevDay.p17)) * Number(prevDay.p11)
+          Number(prevDay.p17) > Number(i.p17)
+            ? Number(item.p17) * Number(prevDay.p11)
             : (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
         let bill =
-          Number(prevDay.p18) >= Number(i.p18)
-            ? (Number(i.p18) + Number(prevDay.p18)) * Number(prevDay.p12)
-            : (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
+          Number(prevDay.p18) > Number(item.p18)
+            ? Number(item.p18) * Number(prevDay.p12)
+            : (Number(item.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
         result.MonetizationOnIcon = result.MonetizationOnIcon + coin;
         result.LocalAtmIcon = result.LocalAtmIcon + cash;
         result.CreditScoreIcon = result.CreditScoreIcon + bill;
@@ -434,7 +434,6 @@ const clacData1 = async (ownerID, item, prevItem) => {
     });
     let caxs = 0;
     await data.map((i) => (caxs = caxs + Number(i.total)));
-    console.log(caxs, "caxscaxscaxscaxscaxscaxscaxscaxscaxscaxscaxscaxs");
     return { data, caxs };
   } catch (e) {
     console.log("something went wrong", e);
@@ -583,16 +582,16 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
             });
             if (prevDay) {
               let coin =
-                Number(prevDay.p16) >= Number(i.p16)
-                  ? (Number(i.p16) + Number(prevDay.p16)) * Number(prevDay.p10)
+                Number(prevDay.p16) > Number(i.p16)
+                  ? Number(i.p16) * Number(prevDay.p10)
                   : (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
               let cash =
-                Number(prevDay.p17) >= Number(i.p17)
-                  ? (Number(i.p17) + Number(prevDay.p17)) * Number(prevDay.p11)
+                Number(prevDay.p17) > Number(i.p17)
+                  ? Number(i.p17) * Number(prevDay.p11)
                   : (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
               let bill =
-                Number(prevDay.p18) >= Number(i.p18)
-                  ? (Number(i.p18) + Number(prevDay.p18)) * Number(prevDay.p12)
+                Number(prevDay.p18) > Number(i.p18)
+                  ? Number(i.p18) * Number(prevDay.p12)
                   : (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
               let caxs = await clacData1(i.p2, i, prevDay);
@@ -646,16 +645,16 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
             });
             if (prevDay) {
               let coin =
-                Number(prevDay.p16) >= Number(i.p16)
-                  ? (Number(i.p16) + Number(prevDay.p16)) * Number(prevDay.p10)
+                Number(prevDay.p16) > Number(i.p16)
+                  ? Number(i.p16) * Number(prevDay.p10)
                   : (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
               let cash =
-                Number(prevDay.p17) >= Number(i.p17)
-                  ? (Number(i.p17) + Number(prevDay.p17)) * Number(prevDay.p11)
+                Number(prevDay.p17) > Number(i.p17)
+                  ? Number(i.p17) * Number(prevDay.p11)
                   : (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
               let bill =
-                Number(prevDay.p18) >= Number(i.p18)
-                  ? (Number(i.p18) + Number(prevDay.p18)) * Number(prevDay.p12)
+                Number(prevDay.p18) > Number(i.p18)
+                  ? Number(i.p18) * Number(prevDay.p12)
                   : (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
               let caxs = await clacData1(i.p2, i, prevDay);
@@ -1130,16 +1129,16 @@ const getItemDaysService = async (ownerId, date, endDate) => {
             });
             if (prevDay) {
               let coin =
-                Number(prevDay.p16) >= Number(i.p16)
-                  ? (Number(i.p16) + Number(prevDay.p16)) * Number(prevDay.p10)
+                Number(prevDay.p16) > Number(i.p16)
+                  ? Number(i.p16) * Number(prevDay.p10)
                   : (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
               let cash =
-                Number(prevDay.p17) >= Number(i.p17)
-                  ? (Number(i.p17) + Number(prevDay.p17)) * Number(prevDay.p11)
+                Number(prevDay.p17) > Number(i.p17)
+                  ? Number(i.p17) * Number(prevDay.p11)
                   : (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
               let bill =
-                Number(prevDay.p18) >= Number(i.p18)
-                  ? (Number(i.p18) + Number(prevDay.p18)) * Number(prevDay.p12)
+                Number(prevDay.p18) > Number(i.p18)
+                  ? Number(i.p18) * Number(prevDay.p12)
                   : (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
               let caxs = await clacData1(i.p2, i, prevDay);
@@ -1179,16 +1178,16 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 
             if (prevDay) {
               let coin =
-                Number(prevDay.p16) >= Number(i.p16)
-                  ? (Number(i.p16) + Number(prevDay.p16)) * Number(prevDay.p10)
+                Number(prevDay.p16) > Number(i.p16)
+                  ? Number(i.p16) * Number(prevDay.p10)
                   : (Number(i.p16) - Number(prevDay.p16)) * Number(prevDay.p10);
               let cash =
-                Number(prevDay.p17) >= Number(i.p17)
-                  ? (Number(i.p17) + Number(prevDay.p17)) * Number(prevDay.p11)
+                Number(prevDay.p17) > Number(i.p17)
+                  ? Number(i.p17) * Number(prevDay.p11)
                   : (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11);
               let bill =
-                Number(prevDay.p18) >= Number(i.p18)
-                  ? (Number(i.p18) + Number(prevDay.p18)) * Number(prevDay.p12)
+                Number(prevDay.p18) > Number(i.p18)
+                  ? Number(i.p18) * Number(prevDay.p12)
                   : (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12);
               let result1 = coin + cash + bill;
               let caxs = await clacData1(i.p2, i, prevDay);
@@ -1306,7 +1305,6 @@ const getItemDaysLinear = async (req, res) => {
   try {
     const { ownerId, date, endDate } = req.query;
     const data = await getItemDaysService(ownerId, date, endDate);
-    console.log("=-+++++++++++++++++++++++++++++++++++");
     return res.json({ succes: true, data });
   } catch (e) {
     console.log("something went wrong", e);
