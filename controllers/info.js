@@ -52,7 +52,7 @@ const destroy = async (req, res) => {
 const createInfo = async (req, res) => {
   try {
     const data = req.body;
-    await ItemValues.create(data);
+      await ItemValues.create(data);
     return res.json({ succes: true });
   } catch (e) {
     console.log("something went wrong", e);
@@ -195,7 +195,6 @@ const clacData = async (req, res) => {
         i.PrcetOfModeValueSecond,
         getModeTimer(i.mode)
       );
-      console.log(i, "---------------------------------");
       data.push({
         ...itemValues,
         functionId: i.functionId,
