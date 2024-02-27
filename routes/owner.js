@@ -7,6 +7,7 @@ const infoControllers = require("../controllers/info");
 const authMiddleWare = require("../middlewares/adminAuthMiddleware");
 
 router.post("/create", authMiddleWare, ownerController.create);
+router.post("/edit", authMiddleWare, ownerController.edit);
 router.post("/pay", authMiddleWare, ownerController.changePaymentStatus);
 router.post("/generate", ownerController.generateUnicue);
 router.get("/", authMiddleWare, ownerController.getAll);
@@ -19,7 +20,7 @@ router.post("/delete-owner", authMiddleWare, ownerController.delateAccount);
 router.get("/boxes-owners", boxController.getAllBoxesOfOwners);
 router.post("/edit-item", authMiddleWare, itemController.edit);
 router.get("/item-single", authMiddleWare, itemController.getSingle);
-router.post('/item-edit-name',authMiddleWare,itemController.editName)
+router.post("/item-edit-name", authMiddleWare, itemController.editName);
 
 // info
 

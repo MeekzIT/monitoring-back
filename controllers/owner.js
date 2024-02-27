@@ -43,6 +43,7 @@ const create = async (req, res) => {
       countryId,
       userId,
       deviceOwner,
+      variant,
     } = req.body;
     const oldUser = await Owner.findOne({
       where: { email, role: "owner" },
@@ -60,7 +61,7 @@ const create = async (req, res) => {
         subscribe: false,
         lastPay: "",
         countryId,
-        variant: "standart",
+        variant,
         role: "owner",
         userId,
         deviceOwner,
@@ -75,6 +76,27 @@ const create = async (req, res) => {
       });
       return res.json({ succes: true, data: user });
     }
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const edit = async (req, res) => {
+  try {
+    const { id, firstName, lastName, email, phoneNumber, countryId, variant } =
+      req.body;
+    const user = await Owner.findOne({
+      where: { id },
+    });
+    console.log(user);
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.phoneNumber = phoneNumber;
+    user.countryId = countryId;
+    user.variant = variant;
+    await user.save();
+    return res.json({ succes: true, data: user });
   } catch (e) {
     console.log("something went wrong", e);
   }
@@ -212,6 +234,7 @@ const generateUnicue = async (req, res) => {
 
 module.exports = {
   create,
+  edit,
   getAll,
   getSingle,
   delateAccount,

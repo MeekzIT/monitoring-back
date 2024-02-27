@@ -107,19 +107,19 @@ const login = async (req, res) => {
       return res.json({ data: superAdmin, succes: true });
     }
 
-    const user = await Admin.findOne({
-      where: { email: email.toLowerCase() },
-    });
+    // const user = await Admin.findOne({
+    //   where: { email: email.toLowerCase() },
+    // });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign(
-        { user_id: user.id, email, role: user.role },
-        process.env.TOKEN_KEY_ADMIN
-      );
-      user.token = token;
-      user.save();
-      return res.json({ data: user, succes: true });
-    }
+    // if (user && (await bcrypt.compare(password, user.password))) {
+    //   const token = jwt.sign(
+    //     { user_id: user.id, email, role: user.role },
+    //     process.env.TOKEN_KEY_ADMIN
+    //   );
+    //   user.token = token;
+    //   user.save();
+    //   return res.json({ data: user, succes: true });
+    // }
 
     const user1 = await Users.findOne({
       where: { email: email.toLowerCase() },
@@ -158,12 +158,13 @@ const logout = async (req, res) => {
   try {
     const { user_id, role } = req.user;
 
-    if (role == "admin") {
-      const user = await Admin.findOne({ where: { id: user_id } });
-      user.token = null;
-      await user.save();
-      return res.json({ succes: true });
-    } else if (role == "superAdmin") {
+    // if (role == "admin") {
+    //   const user = await Admin.findOne({ where: { id: user_id } });
+    //   user.token = null;
+    //   await user.save();
+    //   return res.json({ succes: true });
+    // } else
+    if (role == "superAdmin") {
       const user = await SuperAdmin.findOne({ where: { id: 1 } });
       user.token = null;
       await user.save();
@@ -188,14 +189,15 @@ const changeSettings = async (req, res) => {
   try {
     const { user_id, role } = req.user;
     const { email, firstName, lastName } = req.body;
-    if (role == "admin") {
-      const user = await Admin.findOne({ where: { id: 1 } });
-      user.email = email;
-      user.firstName = firstName;
-      user.lastName = lastName;
-      await user.save();
-      return res.json({ succes: true });
-    } else if (role == "superAdmin") {
+    // if (role == "admin") {
+    //   const user = await Admin.findOne({ where: { id: 1 } });
+    //   user.email = email;
+    //   user.firstName = firstName;
+    //   user.lastName = lastName;
+    //   await user.save();
+    //   return res.json({ succes: true });
+    // } else 
+    if (role == "superAdmin") {
       const user = await SuperAdmin.findOne({ where: { id: user_id } });
       user.email = email;
       user.password = password;

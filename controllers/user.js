@@ -106,17 +106,24 @@ const getSingle = async (req, res) => {
             },
             {
               model: Box,
-              // include: [
-              //   {
-              //     model: Item,
-              //   },
-              // ],
             },
           ],
         },
       ],
     });
-    return res.json(user);
+    const activeOwners = await Owner.findAll({
+      where: { userId: id, subscribe: true },
+    });
+    const pasiveveOwners = await Owner.findAll({
+      where: { userId: id, subscribe: false },
+    });
+    return res.json({
+      data: user,
+      actives: {
+        active: activeOwners,
+        pasiveve: pasiveveOwners,
+      },
+    });
   } catch (e) {
     console.log("something went wrong", e);
   }

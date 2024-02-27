@@ -52,7 +52,7 @@ const destroy = async (req, res) => {
 const createInfo = async (req, res) => {
   try {
     const data = req.body;
-      await ItemValues.create(data);
+    await ItemValues.create(data);
     return res.json({ succes: true });
   } catch (e) {
     console.log("something went wrong", e);
