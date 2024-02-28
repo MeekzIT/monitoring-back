@@ -18,6 +18,7 @@ const superStatisticsRouter = require("./routes/superStatistics");
 const categoryRouter = require("./routes/categories");
 const OwnerRouter = require("./routes/owner");
 const boxRouter = require("./routes/box");
+const orderRouter = require("./routes/order");
 const { getAll } = require("./services/item");
 
 // view engine setup
@@ -38,6 +39,7 @@ app.use("/api/v1/superStatistics", superStatisticsRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/owner", OwnerRouter);
 app.use("/api/v1/box", boxRouter);
+app.use("/api/v1/order", orderRouter);
 
 cron.schedule("0 0 * * *", () => {
   console.log("Running a task every day at 00:00");

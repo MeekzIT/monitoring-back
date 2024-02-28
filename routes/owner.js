@@ -9,6 +9,8 @@ const authMiddleWare = require("../middlewares/adminAuthMiddleware");
 router.post("/create", authMiddleWare, ownerController.create);
 router.post("/edit", authMiddleWare, ownerController.edit);
 router.post("/pay", authMiddleWare, ownerController.changePaymentStatus);
+router.post("/edit-system", authMiddleWare, ownerController.editSystem);
+router.get("/system", authMiddleWare, ownerController.getSystem);
 router.post("/generate", ownerController.generateUnicue);
 router.get("/", authMiddleWare, ownerController.getAll);
 router.get("/single", authMiddleWare, ownerController.getSingle);

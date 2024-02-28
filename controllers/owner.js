@@ -1,4 +1,5 @@
 const Owner = require("../models").Owner;
+const OwnerSystem = require("../models").OwnerSystem;
 const Contry = require("../models").Country;
 const Items = require("../models").Item;
 const Items2 = require("../models").Item2;
@@ -66,6 +67,9 @@ const create = async (req, res) => {
         userId,
         deviceOwner,
       });
+      await OwnerSystem.create({
+        ownerId: id,
+      });
       const user = await Owner.findOne({
         where: { id: newUser.id },
         include: [
@@ -88,7 +92,6 @@ const edit = async (req, res) => {
     const user = await Owner.findOne({
       where: { id },
     });
-    console.log(user);
     user.firstName = firstName;
     user.lastName = lastName;
     user.email = email;
@@ -232,6 +235,54 @@ const generateUnicue = async (req, res) => {
   }
 };
 
+// system
+
+const addSystem = async (req, res) => {
+  try {
+    const { id, api, login, password, currencyCode } = req.body;
+
+    const ownerSystem = await OwnerSystem.create({
+      ownerId: id,
+      api,
+      login,
+      password,
+      currencyCode,
+    });
+
+    return res.json({ succes: true, data: ownerSystem });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const editSystem = async (req, res) => {
+  try {
+    const { id, api, login, password, currencyCode } = req.body;
+
+    const ownerSystem = await OwnerSystem.findOne({ where: { ownerId: id } });
+    ownerSystem.api = api;
+    ownerSystem.login = login;
+    ownerSystem.password = password;
+    ownerSystem.currencyCode = currencyCode;
+    await ownerSystem.save();
+    return res.json({ succes: true, data: ownerSystem });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
+const getSystem = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    const ownerSystem = await OwnerSystem.findOne({ where: { ownerId: id } });
+
+    return res.json({ succes: true, data: ownerSystem });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 module.exports = {
   create,
   edit,
@@ -241,4 +292,7 @@ module.exports = {
   changePaymentStatus,
   getAllOwnersOfUser,
   generateUnicue,
+  addSystem,
+  editSystem,
+  getSystem,
 };
