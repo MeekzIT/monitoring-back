@@ -29,23 +29,25 @@ const registrate = async (req, res) => {
       returnUrl: "https://monitoring.jsxmachines.com/result",
     });
     axios
-      .post(ownerSystem.api, {
-        userName: ownerSystem.login,
-        password: ownerSystem.password,
-        amount: owner.variant,
-        currency: "051",
-        language: country.short.toLowerCase(),
-        orderNumber: subscribe.id,
-        returnUrl: "https://monitoring.jsxmachines.com/result",
+      .post(ownerSystem.api, null, {
+        params: {
+          userName: ownerSystem.login,
+          password: ownerSystem.password,
+          amount: owner.variant,
+          currency: "051",
+          language: country.short.toLowerCase(),
+          orderNumber: subscribe.id,
+          returnUrl: "https://monitoring.jsxmachines.com/result",
+        },
       })
       .then(async function (response) {
-        console.log(response.data, "---");
-        // if ((response.data.errorCode = 0)) {
-        // subscribe.mdOrder = response.data.mdOrder;
-        subscribe.mdOrder = "xxx-uuuuuu-askdhjvaisdv-asidhvaiscdv";
-        await subscribe.save();
-        return res.json({ succes: true, data: subscribe });
-        // }
+        console.log(response, "---");
+        if ((response.data.errorCode = 0)) {
+          subscribe.mdOrder = response.data.mdOrder;
+          // subscribe.mdOrder = "xxx-uuuuuu-askdhjvaisdv-asidhvaiscdv";
+          await subscribe.save();
+          return res.json({ succes: true, data: response.data.formUrl });
+        }
       })
       .catch(function (error) {
         console.log(error);
