@@ -19,19 +19,27 @@ const registrate = async (req, res) => {
       status: "pending",
       amount: owner.variant,
     });
-
+    console.log({
+      userName: ownerSystem.login,
+      password: ownerSystem.password,
+      amount: owner.variant,
+      currency: "051",
+      language: country.short.toLowerCase(),
+      orderNumber: subscribe.id,
+      returnUrl: "https://monitoring.jsxmachines.com/result",
+    });
     axios
       .post(ownerSystem.api, {
         userName: ownerSystem.login,
         password: ownerSystem.password,
         amount: owner.variant,
-        currency: 643,
+        currency: "051",
         language: country.short.toLowerCase(),
         orderNumber: subscribe.id,
         returnUrl: "https://monitoring.jsxmachines.com/result",
       })
       .then(async function (response) {
-        console.log(response.data,"---");
+        console.log(response.data, "---");
         // if ((response.data.errorCode = 0)) {
         // subscribe.mdOrder = response.data.mdOrder;
         subscribe.mdOrder = "xxx-uuuuuu-askdhjvaisdv-asidhvaiscdv";
