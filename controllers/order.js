@@ -31,6 +31,7 @@ const registrate = async (req, res) => {
         returnUrl: "https://monitoring.jsxmachines.com/result",
       })
       .then(async function (response) {
+        console.log(response.data,"---");
         // if ((response.data.errorCode = 0)) {
         // subscribe.mdOrder = response.data.mdOrder;
         subscribe.mdOrder = "xxx-uuuuuu-askdhjvaisdv-asidhvaiscdv";
