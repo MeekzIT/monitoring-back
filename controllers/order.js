@@ -41,11 +41,10 @@ const registrate = async (req, res) => {
         },
       })
       .then(async function (response) {
-        console.log(response, "---");
-        if ((response.data.errorCode = 0)) {
+        if ((response.data.errorCode == 0)) {
           subscribe.mdOrder = response.data.mdOrder;
-          // subscribe.mdOrder = "xxx-uuuuuu-askdhjvaisdv-asidhvaiscdv";
           await subscribe.save();
+          console.log();
           return res.json({ succes: true, data: response.data.formUrl });
         }
       })
