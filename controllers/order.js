@@ -4,6 +4,7 @@ const Subscribtions = require("../models").Subscribtion;
 const Contry = require("../models").Country;
 
 const axios = require("axios");
+const { getCuurentDate } = require("../services/item");
 
 const registrate = async (req, res) => {
   try {
@@ -19,15 +20,7 @@ const registrate = async (req, res) => {
       status: "pending",
       amount: owner.variant,
     });
-    console.log({
-      userName: ownerSystem.login,
-      password: ownerSystem.password,
-      amount: owner.variant,
-      currency: "051",
-      language: country.short.toLowerCase(),
-      orderNumber: subscribe.id,
-      returnUrl: "https://monitoring.jsxmachines.com/result",
-    });
+
     axios
       .post(ownerSystem.api, null, {
         params: {
@@ -41,10 +34,10 @@ const registrate = async (req, res) => {
         },
       })
       .then(async function (response) {
-        if ((response.data.errorCode == 0)) {
-          subscribe.mdOrder = response.data.mdOrder;
+        if (response.data.errorCode == 0) {
+          subscribe.mdOrder = response.data.orderId;
           await subscribe.save();
-          console.log();
+          console.log(subscribe, response.data, "[[[[[[[[[]]]]]]]]]]");
           return res.json({ succes: true, data: response.data.formUrl });
         }
       })
@@ -56,36 +49,46 @@ const registrate = async (req, res) => {
   }
 };
 
-const create = async (req, res) => {
+const getStatus = async (req, res) => {
   try {
-    const { mdOrder, number, name, expiry, cvc } = req.body;
-
+    const { orderId } = req.body;
     const subscribe = await Subscribtions.findOne({
-      where: { mdOrder },
+      where: { mdOrder: orderId },
     });
+    console.log(subscribe, "---");
+
     const ownerSystem = await OwnerSystem.findOne({
       where: { ownerId: subscribe.ownerId },
     });
-
-    subscribe.cart = number;
-    subscribe.year = expiry.slice(0, 4);
-    subscribe.month = expiry.slice(4, 6);
-    subscribe.cvv = cvc;
-    subscribe.name = name;
-    await subscribe.save();
-
+    const owner = await Owner.findOne({
+      where: { id: subscribe.ownerId },
+    });
     axios
-      .post(ownerSystem.api, {
-        userName: ownerSystem.login,
-        password: ownerSystem.password,
-        $PAN: number,
-        $CVC: cvc,
-        YYYY: expiry.slice(0, 4),
-        MM: expiry.slice(4, 6),
-        TEXT: name,
-        language: subscribe.language,
-      })
+      .post(
+        "https://ipay.arca.am/payment/rest/getOrderStatusExtended.do",
+        null,
+        {
+          params: {
+            userName: ownerSystem.login,
+            password: ownerSystem.password,
+            orderId,
+          },
+        }
+      )
       .then(async function (response) {
+        if (response.data.errorCode == 0) {
+          subscribe.status = "success";
+          await subscribe.save();
+          owner.subscribe = true;
+          owner.lastPay = getCuurentDate();
+          await owner.save();
+          console.log();
+          return res.json({ succes: true, data: subscribe });
+        } else {
+          subscribe.status = "fail";
+          await subscribe.save();
+          return res.json({ succes: false });
+        }
         console.log(response.data);
       })
       .catch(function (error) {
@@ -98,5 +101,5 @@ const create = async (req, res) => {
 
 module.exports = {
   registrate,
-  create,
+  getStatus,
 };
