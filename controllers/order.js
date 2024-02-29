@@ -34,10 +34,11 @@ const registrate = async (req, res) => {
         },
       })
       .then(async function (response) {
+        console.log(response.data, "[[[[[[[[[]]]]]]]]]]");
+
         if (response.data.errorCode == 0) {
           subscribe.mdOrder = response.data.orderId;
           await subscribe.save();
-          console.log(subscribe, response.data, "[[[[[[[[[]]]]]]]]]]");
           return res.json({ succes: true, data: response.data.formUrl });
         }
       })
