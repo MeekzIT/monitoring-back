@@ -379,19 +379,31 @@ const getInfoItemValuesGraph = async (item, ownerID) => {
 
 const getCuurentDate = () => {
   const currentDate = new Date();
-
-  // Extract year, month, and day
-  const year = currentDate.getFullYear() % 100; // Get last two digits of the year
-  const month = currentDate.getMonth() + 1; // Month is zero-based, so add 1
+  const year = currentDate.getFullYear() % 100;
+  const month = currentDate.getMonth() + 1;
   const day = currentDate.getDate();
-
-  // Format the date as YY-MM-DD
   const formattedDate = `${year}-${month < 10 ? "0" + month : month}-${
     day < 10 ? "0" + day : day
   }`;
-
   return formattedDate;
 };
+
+function dateDifferenceInDays(inputDate) {
+  const inputParts = inputDate.split("-");
+  const inputYear = parseInt(inputParts[0], 10) + 2000;
+  const inputMonth = parseInt(inputParts[1], 10) - 1;
+  const inputDay = parseInt(inputParts[2], 10);
+  const inputDateTime = new Date(inputYear, inputMonth, inputDay);
+  const currentDateTime = new Date();
+  const timeDifference = inputDateTime - currentDateTime;
+  const differenceInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+  if (differenceInDays > 0) {
+    return false;
+  } else if (Math.sign(differenceInDays) <= 30) {
+    return true;
+  }
+  return false;
+}
 
 module.exports = {
   getAll,
@@ -402,4 +414,5 @@ module.exports = {
   getInfoItemValuesGraph,
   getSingle,
   getCuurentDate,
+  dateDifferenceInDays,
 };

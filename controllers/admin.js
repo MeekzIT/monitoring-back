@@ -5,6 +5,7 @@ const Contry = require("../models").Country;
 const Owner = require("../models").Owner;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { dateDifferenceInDays } = require("../services/item");
 
 const create = async (req, res) => {
   try {
@@ -196,7 +197,7 @@ const changeSettings = async (req, res) => {
     //   user.lastName = lastName;
     //   await user.save();
     //   return res.json({ succes: true });
-    // } else 
+    // } else
     if (role == "superAdmin") {
       const user = await SuperAdmin.findOne({ where: { id: user_id } });
       user.email = email;
@@ -337,6 +338,12 @@ const getMe = async (req, res) => {
       const user = await Owner.findOne({
         where: { id: user_id },
       });
+      const subscribeDayDifrence = dateDifferenceInDays(user.lastPay);
+      if (!subscribeDayDifrence) {
+        user.subscribe = true;
+        await user.save();
+      }
+
       return res.json({ data: user, super: "owner", succes: true });
     }
   } catch (e) {

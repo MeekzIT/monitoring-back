@@ -34,7 +34,6 @@ const registrate = async (req, res) => {
         },
       })
       .then(async function (response) {
-        console.log(response.data, "[[[[[[[[[]]]]]]]]]]");
 
         if (response.data.errorCode == 0) {
           subscribe.mdOrder = response.data.orderId;
