@@ -69,6 +69,7 @@ const create = async (req, res) => {
       });
       await OwnerSystem.create({
         ownerId: id,
+        variant: 0,
       });
       const user = await Owner.findOne({
         where: { id: newUser.id },
