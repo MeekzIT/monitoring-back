@@ -399,7 +399,7 @@ function dateDifferenceInDays(inputDate) {
   const differenceInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
   if (differenceInDays > 0) {
     return false;
-  } else if (Math.sign(differenceInDays) <= 30) {
+  } else if (Math.sign(differenceInDays) <= 3) {
     return true;
   }
   return false;
