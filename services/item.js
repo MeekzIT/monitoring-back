@@ -403,7 +403,7 @@ function dateDifferenceInDays(inputDate) {
   );
   if (differenceInDays > 0) {
     return false;
-  } else if (Math.abs(differenceInDays) <= 3) {
+  } else if (Math.abs(differenceInDays) >= 3) {
     return true;
   }
   return false;
