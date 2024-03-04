@@ -339,6 +339,7 @@ const getMe = async (req, res) => {
         where: { id: user_id },
       });
       const subscribeDayDifrence = dateDifferenceInDays(user.lastPay);
+      console.log(subscribeDayDifrence,"--------subscribeDayDifrence-------------subscribeDayDifrence-----subscribeDayDifrence");
       if (!subscribeDayDifrence) {
         user.subscribe = true;
         await user.save();
