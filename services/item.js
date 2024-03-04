@@ -398,12 +398,13 @@ function dateDifferenceInDays(inputDate) {
   const timeDifference = inputDateTime - currentDateTime;
   const differenceInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
   console.log(
-    differenceInDays,Math.abs(differenceInDays),
+    differenceInDays,
+    Math.abs(differenceInDays) <= 3,
     "differenceInDays----------------differenceInDays----------------differenceInDays----------------"
   );
   if (differenceInDays > 0) {
     return false;
-  } else if (Math.abs(differenceInDays) >= 3) {
+  } else if (Math.abs(differenceInDays) <= 3) {
     return true;
   }
   return false;
