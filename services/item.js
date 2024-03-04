@@ -398,7 +398,7 @@ function dateDifferenceInDays(inputDate) {
   const timeDifference = inputDateTime - currentDateTime;
   const differenceInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
   console.log(
-    differenceInDays,
+    differenceInDays,Math.sign(differenceInDays),
     "differenceInDays----------------differenceInDays----------------differenceInDays----------------"
   );
   if (differenceInDays > 0) {
