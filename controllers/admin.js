@@ -97,57 +97,52 @@ const login = async (req, res) => {
     const superAdmin = await SuperAdmin.findOne({
       where: { email: email.toLowerCase() },
     });
-
-    if (superAdmin && (await bcrypt.compare(password, superAdmin.password))) {
-      const token = jwt.sign(
-        { user_id: superAdmin.id, email, role: superAdmin.role },
-        process.env.TOKEN_KEY_ADMIN
-      );
-      superAdmin.token = token;
-      superAdmin.save();
-      return res.json({ data: superAdmin, succes: true });
+    if (superAdmin.dataValues.token === null) {
+      if (superAdmin && (await bcrypt.compare(password, superAdmin.password))) {
+        const token = jwt.sign(
+          { user_id: superAdmin.id, email, role: superAdmin.role },
+          process.env.TOKEN_KEY_ADMIN
+        );
+        superAdmin.token = token;
+        superAdmin.save();
+        return res.json({ data: superAdmin, succes: true });
+      }
+    } else {
+      return res.json({ succes: false });
     }
-
-    // const user = await Admin.findOne({
-    //   where: { email: email.toLowerCase() },
-    // });
-
-    // if (user && (await bcrypt.compare(password, user.password))) {
-    //   const token = jwt.sign(
-    //     { user_id: user.id, email, role: user.role },
-    //     process.env.TOKEN_KEY_ADMIN
-    //   );
-    //   user.token = token;
-    //   user.save();
-    //   return res.json({ data: user, succes: true });
-    // }
 
     const user1 = await Users.findOne({
       where: { email: email.toLowerCase() },
     });
-
-    if (user1 && (await bcrypt.compare(password, user1.password))) {
-      const token = jwt.sign(
-        { user_id: user1.id, email, role: user1.role },
-        process.env.TOKEN_KEY_ADMIN
-      );
-      user1.token = token;
-      user1.save();
-      return res.json({ succes: true, data: user1 });
+    if (user1.dataValues.token === null) {
+      if (user1 && (await bcrypt.compare(password, user1.password))) {
+        const token = jwt.sign(
+          { user_id: user1.id, email, role: user1.role },
+          process.env.TOKEN_KEY_ADMIN
+        );
+        user1.token = token;
+        user1.save();
+        return res.json({ succes: true, data: user1 });
+      }
+    } else {
+      return res.json({ succes: false });
     }
 
     const owner = await Owner.findOne({
       where: { email: email.toLowerCase() },
     });
-
-    if (owner && (await bcrypt.compare(password, owner.password))) {
-      const token = jwt.sign(
-        { user_id: owner.id, email, role: owner.role },
-        process.env.TOKEN_KEY_ADMIN
-      );
-      owner.token = token;
-      owner.save();
-      return res.json({ succes: true, data: owner });
+    if (owner.dataValues.token === null) {
+      if (owner && (await bcrypt.compare(password, owner.password))) {
+        const token = jwt.sign(
+          { user_id: owner.id, email, role: owner.role },
+          process.env.TOKEN_KEY_ADMIN
+        );
+        owner.token = token;
+        owner.save();
+        return res.json({ succes: true, data: owner });
+      }
+    } else {
+      return res.json({ succes: false });
     }
     return res.json({ error: ["Invalid credentials"] });
   } catch (e) {
