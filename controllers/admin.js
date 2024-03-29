@@ -107,8 +107,6 @@ const login = async (req, res) => {
         superAdmin.save();
         return res.json({ data: superAdmin, succes: true });
       }
-    } else {
-      return res.json({ succes: false });
     }
 
     const user1 = await Users.findOne({
@@ -124,9 +122,7 @@ const login = async (req, res) => {
         user1.save();
         return res.json({ succes: true, data: user1 });
       }
-    } else {
-      return res.json({ succes: false });
-    }
+    } 
 
     const owner = await Owner.findOne({
       where: { email: email.toLowerCase() },
@@ -141,8 +137,6 @@ const login = async (req, res) => {
         owner.save();
         return res.json({ succes: true, data: owner });
       }
-    } else {
-      return res.json({ succes: false });
     }
     return res.json({ error: ["Invalid credentials"] });
   } catch (e) {
