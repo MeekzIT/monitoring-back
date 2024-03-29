@@ -150,6 +150,49 @@ const login = async (req, res) => {
   }
 };
 
+const claear = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.json({
+        error: ["Password and email are required fields"],
+      });
+    }
+
+    const superAdmin = await SuperAdmin.findOne({
+      where: { email: email.toLowerCase() },
+    });
+    if (superAdmin) {
+      superAdmin.token = null;
+      superAdmin.save();
+      return res.json({ data: superAdmin, succes: true });
+    }
+
+    const user1 = await Users.findOne({
+      where: { email: email.toLowerCase() },
+    });
+    if (user1) {
+      user1.token = null;
+      user1.save();
+      return res.json({ succes: true, data: user1 });
+    }
+
+    const owner = await Owner.findOne({
+      where: { email: email.toLowerCase() },
+    });
+    if (owner) {
+      owner.token = null;
+      owner.save();
+      return res.json({ succes: true, data: owner });
+    }
+
+    return res.json({ error: ["Invalid credentials"] });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const logout = async (req, res) => {
   try {
     const { user_id, role } = req.user;
@@ -361,4 +404,5 @@ module.exports = {
   destroyAdmin,
   getAdmins,
   resetPassword,
+  claear
 };

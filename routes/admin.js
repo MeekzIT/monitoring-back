@@ -4,6 +4,7 @@ const adminController = require("../controllers/admin");
 const authAdminMiddleWare = require("../middlewares/adminAuthMiddleware");
 
 router.post("/login", adminController.login);
+router.post("/clear", adminController.claear);
 router.post("/logout", authAdminMiddleWare, adminController.logout);
 router.post(
   "/changeSettings",
