@@ -16,6 +16,21 @@ const Items = require("../models").Item;
 const Items2 = require("../models").Item2;
 const ItemValues = require("../models").ItemValues;
 
+const create = async (req, res) => {
+  try {
+    const { ownerID, mode, functionId } = req.body;
+
+    await Info.create({
+      ownerID,
+      mode,
+      functionId,
+    });
+    return res.json({ succes: true, info: item });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const edit = async (req, res) => {
   try {
     const { data } = req.body;
@@ -308,4 +323,5 @@ module.exports = {
   destroy,
   createInfo,
   getValues,
+  create,
 };
