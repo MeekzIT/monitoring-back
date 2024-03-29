@@ -152,6 +152,17 @@ const getAllBoxesOfOwners = async (req, res) => {
   }
 };
 
+const destroyBox = async (req, res) => {
+  try {
+    const { id } = req.body;
+    await Boxes.destroy({ where: { id } });
+
+    return res.json({ succes: true });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 // ------------------------------------  box expenses
 
 const createExpense = async (req, res) => {
@@ -232,4 +243,5 @@ module.exports = {
   editExpense,
   destroy,
   getAllBoxExpenses,
+  destroyBox,
 };

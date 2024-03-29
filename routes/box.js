@@ -9,6 +9,8 @@ router.post("/edit-box", authMiddleWare, boxController.edit);
 router.post("/edit", authMiddleWare, boxController.editExpense);
 router.post("/edit", authMiddleWare, boxController.editExpense);
 router.post("/del", authMiddleWare, boxController.destroy);
+router.post("/destroy", authMiddleWare, boxController.destroyBox);
+
 router.get("/", authMiddleWare, boxController.getAllBoxExpenses);
 
 module.exports = router;
