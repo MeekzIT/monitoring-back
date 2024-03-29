@@ -97,7 +97,7 @@ const login = async (req, res) => {
     const superAdmin = await SuperAdmin.findOne({
       where: { email: email.toLowerCase() },
     });
-    if (superAdmin.dataValues.token === null) {
+    if (superAdmin && superAdmin.dataValues.token === null) {
       if (superAdmin && (await bcrypt.compare(password, superAdmin.password))) {
         const token = jwt.sign(
           { user_id: superAdmin.id, email, role: superAdmin.role },
@@ -114,7 +114,7 @@ const login = async (req, res) => {
     const user1 = await Users.findOne({
       where: { email: email.toLowerCase() },
     });
-    if (user1.dataValues.token === null) {
+    if (user1 &&  user1.dataValues.token === null) {
       if (user1 && (await bcrypt.compare(password, user1.password))) {
         const token = jwt.sign(
           { user_id: user1.id, email, role: user1.role },
@@ -131,7 +131,7 @@ const login = async (req, res) => {
     const owner = await Owner.findOne({
       where: { email: email.toLowerCase() },
     });
-    if (owner.dataValues.token === null) {
+    if (owner && owner.dataValues.token === null) {
       if (owner && (await bcrypt.compare(password, owner.password))) {
         const token = jwt.sign(
           { user_id: owner.id, email, role: owner.role },
