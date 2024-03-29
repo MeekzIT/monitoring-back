@@ -25,7 +25,7 @@ const create = async (req, res) => {
       mode,
       functionId,
     });
-    return res.json({ succes: true, info: item });
+    return res.json({ succes: true });
   } catch (e) {
     console.log("something went wrong", e);
   }
