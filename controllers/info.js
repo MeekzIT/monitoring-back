@@ -31,6 +31,19 @@ const create = async (req, res) => {
   }
 };
 
+const destroyInfo = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    await Info.destroy({
+      where: { id },
+    });
+    return res.json({ succes: true });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
+
 const edit = async (req, res) => {
   try {
     const { data } = req.body;
@@ -324,4 +337,5 @@ module.exports = {
   createInfo,
   getValues,
   create,
+  destroyInfo,
 };

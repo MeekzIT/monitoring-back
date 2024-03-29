@@ -28,6 +28,7 @@ router.post("/item-edit-name", authMiddleWare, itemController.editName);
 
 router.post("/item-info-edit", authMiddleWare, infoControllers.edit);
 router.post("/item-info", infoControllers.create);
+router.post("/item-info-del", infoControllers.destroyInfo);
 router.post(
   "/item-accessability",
   authMiddleWare,
