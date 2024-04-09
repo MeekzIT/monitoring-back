@@ -429,6 +429,7 @@ const clacData1 = async (ownerID, item, prevItem) => {
 			})
 		})
 		let caxs = 0
+    console.log(data,"erfdghjk,jhgfrghjm,k.mnhbgfdghjm,");
 		await data.map(i => (caxs = caxs + Number(i.total)))
 		return { data, caxs }
 	} catch (e) {
