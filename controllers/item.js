@@ -589,6 +589,8 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 									: (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12)
 							let result1 = coin + cash + bill
 							let caxs = await clacData1(i.p2, i, prevDay)
+
+              console.log(caxs,"111111111111 111111")
 							allResult.push({
 								id: i.p2,
 								result: result1,
@@ -609,6 +611,8 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 							let cash = Number(i.p17) * Number(i.p11)
 							let bill = Number(i.p18) * Number(i.p12)
 							let caxs = await clacData1(i.p2, i)
+
+               console.log(caxs, "111111111111 =----------- 111111")
 							let result1 = coin + cash + bill
 							allResult.push({
 								id: i.p2,
