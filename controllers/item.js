@@ -430,7 +430,10 @@ const clacData1 = async (ownerID, item, prevItem) => {
 		})
 		let caxs = 0
 		console.log(data, "erfdghjk,jhgfrghjm,k.mnhbgfdghjm,")
-		await data.map(i => (caxs = caxs + Number(i.total)))
+		await data.map(i => {
+			console.log(i, "lllllllllllllll")
+			caxs = caxs + Number(i.total)
+		})
 		console.log(caxs, " caxscaxscaxscaxscaxscaxscaxscaxs")
 		return { data, caxs }
 	} catch (e) {
