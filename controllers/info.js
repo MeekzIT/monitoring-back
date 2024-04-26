@@ -234,7 +234,10 @@ const clacData = async (req, res) => {
 				order: i.mode,
 			})
 		})
-		return res.json({ succes: true, data })
+		return res.json({
+			succes: true,
+			data: data.sort((a, b) => a.order - b.order),
+		})
 	} catch (e) {
 		console.log("something went wrong", e)
 	}
