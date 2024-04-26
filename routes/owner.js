@@ -7,7 +7,7 @@ const infoControllers = require("../controllers/info");
 const authMiddleWare = require("../middlewares/adminAuthMiddleware");
 
 router.post("/create", authMiddleWare, ownerController.create);
-router.post("/edit", authMiddleWare, ownerController.edit);
+router.post("/edit", ownerController.edit);
 router.post("/pay", authMiddleWare, ownerController.changePaymentStatus);
 router.post("/edit-system", authMiddleWare, ownerController.editSystem);
 router.get("/system", authMiddleWare, ownerController.getSystem);
