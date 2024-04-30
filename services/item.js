@@ -1,6 +1,7 @@
 const Item = require("../models").Item
 const Item2 = require("../models").Item2
 const Item3 = require("../models").Item3
+const { Op } = require("sequelize")
 const Info = require("../models").Info
 const Info2 = require("../models").Info2
 const ItemValues = require("../models").ItemValues
@@ -36,11 +37,6 @@ const getAll = async () => {
 		axios
 			.get(`${process.env.SERVER_URL}/devices`)
 			.then(async function (response) {
-				// handle success
-				// await Item.destroy({
-				// 	where: {},
-				// 	truncate: true,
-				// })
 				await Item2.destroy({
 					where: {},
 					truncate: true,
@@ -57,10 +53,21 @@ const getAll = async () => {
 								async (i, index) =>
 									await Info.create({ ownerID: item.p2, mode: index + 1 })
 							)
-						const entery = await Item.findOne({ where: { p2: item.p2 } })
-						// await Item.create({ ...item, access: true })
-						await entery.update({ ...item, access: true })
-						await ItemValues.create({ ...item, datatime: formattedDate })
+						const entery = await Item.findOne({
+							where: {
+								p2: {
+									[Op.like]: String(item.p2),
+								},
+							},
+						})
+
+						if (entery) {
+							entery.update({ ...item })
+							await ItemValues.create({ ...item, datatime: formattedDate })
+						} else {
+							await Item.create({ ...item, access: true })
+							await ItemValues.create({ ...item, datatime: formattedDate })
+						}
 					} else if (item.p0 == 2) {
 						const haveInfo = await checkInfo(item.p2, 2)
 						haveInfo &&
