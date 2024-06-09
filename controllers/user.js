@@ -67,6 +67,7 @@ const edit = async (req, res) => {
 			where: { email, role: "user" },
 		})
 		let encryptedPassword = await bcrypt.hash(password, 10)
+		user.id = id
 		user.firstName = firstName
 		user.lastName = lastName
 		user.email = email
