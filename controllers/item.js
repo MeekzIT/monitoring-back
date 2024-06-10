@@ -56,6 +56,16 @@ const edit = async (req, res) => {
 	}
 }
 
+const destroyItem = async (req, res) => {
+	try {
+		const { id } = req.body
+		const item = await Items.findOne({ where: { p2: id } })
+		await item.destroy()
+	} catch (e) {
+		console.log("something went wrong", e)
+	}
+}
+
 const editName = async (req, res) => {
 	try {
 		const { name, ownerId } = req.body
@@ -1481,4 +1491,5 @@ module.exports = {
 	getItemDaysLinear,
 	getBoxesInfoLinear,
 	editName,
+	destroyItem,
 }
