@@ -7,22 +7,6 @@ const Items2 = require("../models").Item2
 const Items3 = require("../models").Item3
 const BoxExpenses = require("../models").BoxExpenses
 
-function extractValues(inputArray) {
-	const uniqueValues = new Set()
-
-	inputArray.forEach(obj => {
-		obj.Items.forEach(item => {
-			for (const key in item) {
-				uniqueValues.add(item["p2"])
-			}
-		})
-	})
-
-	return Array.from(uniqueValues)
-
-	return result
-}
-
 const create = async (req, res) => {
 	try {
 		const { name, ownerId, geolocation } = req.body

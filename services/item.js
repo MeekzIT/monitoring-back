@@ -25,12 +25,12 @@ const checkInfo = async (ownerID, devicesTytpe) => {
 	}
 }
 
-const getAll = async () => {
+const getAll = async setInfo => {
 	try {
 		let currentDate = new Date()
 
 		let year = currentDate.getFullYear()
-		let month = (currentDate.getMonth() + 1).toString().padStart(2, "0") // Months are zero-based
+		let month = (currentDate.getMonth() + 1).toString().padStart(2, "0")
 		let day = currentDate.getDate().toString().padStart(2, "0")
 		let formattedDate = `${year}-${month}-${day}`
 
@@ -63,10 +63,12 @@ const getAll = async () => {
 
 						if (entery) {
 							entery.update({ ...item })
-							await ItemValues.create({ ...item, datatime: formattedDate })
+							setInfo &&
+								(await ItemValues.create({ ...item, datatime: formattedDate }))
 						} else {
 							await Item.create({ ...item, access: true })
-							await ItemValues.create({ ...item, datatime: formattedDate })
+							setInfo &&
+								(await ItemValues.create({ ...item, datatime: formattedDate }))
 						}
 					} else if (item.p0 == 2) {
 						const haveInfo = await checkInfo(item.p2, 2)
@@ -81,16 +83,17 @@ const getAll = async () => {
 								time2: 40,
 							}))
 						await Item2.create(item)
-						await Item2Values.create({ ...item, datatime: formattedDate })
+						setInfo &&
+							(await Item2Values.create({ ...item, datatime: formattedDate }))
 					} else if (item.p0 == 3) {
 						await Item3.create(item)
-						await Item3Values.create({ ...item, datatime: formattedDate })
+						setInfo &&
+							(await Item3Values.create({ ...item, datatime: formattedDate }))
 					}
 					console.log("--------------------- ready --------------------------")
 				})
 			})
 			.catch(function (error) {
-				// handle error
 				console.log(error)
 			})
 	} catch (e) {

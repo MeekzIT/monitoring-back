@@ -1,7 +1,7 @@
 const Admin = require("../models").Admin
 const SuperAdmin = require("../models").SuperAdmin
 const Users = require("../models").User
-const Contry = require("../models").Country
+const Country = require("../models").Country
 const Owner = require("../models").Owner
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
@@ -57,7 +57,7 @@ const adminActivity = async (req, res) => {
 
 const destroyAdmin = async (req, res) => {
 	try {
-		const { id, block } = req.body
+		const { id } = req.body
 		const { role } = req.user
 
 		if (role == "superAdmin") {
@@ -97,7 +97,6 @@ const login = async (req, res) => {
 		const superAdmin = await SuperAdmin.findOne({
 			where: { email: email.toLowerCase() },
 		})
-		// if (superAdmin && superAdmin.dataValues.token == null) {
 		if (superAdmin && (await bcrypt.compare(password, superAdmin.password))) {
 			const token = jwt.sign(
 				{ user_id: superAdmin.id, email, role: superAdmin.role },
@@ -107,12 +106,10 @@ const login = async (req, res) => {
 			superAdmin.save()
 			return res.json({ data: superAdmin, succes: true })
 		}
-		// }
 
 		const user1 = await Users.findOne({
 			where: { email: email.toLowerCase() },
 		})
-		// if (user1 &&  user1.dataValues.token == null) {
 		if (user1 && (await bcrypt.compare(password, user1.password))) {
 			const token = jwt.sign(
 				{ user_id: user1.id, email, role: user1.role },
@@ -122,12 +119,10 @@ const login = async (req, res) => {
 			user1.save()
 			return res.json({ succes: true, data: user1 })
 		}
-		// }
 
 		const owner = await Owner.findOne({
 			where: { email: email.toLowerCase() },
 		})
-		// if (owner && owner.dataValues.token == null) {
 		if (owner && (await bcrypt.compare(password, owner.password))) {
 			const token = jwt.sign(
 				{ user_id: owner.id, email, role: owner.role },
@@ -137,7 +132,6 @@ const login = async (req, res) => {
 			owner.save()
 			return res.json({ succes: true, data: owner })
 		}
-		// }
 		return res.json({ error: ["Invalid credentials"] })
 	} catch (e) {
 		console.log("something went wrong", e)
@@ -222,14 +216,6 @@ const changeSettings = async (req, res) => {
 	try {
 		const { user_id, role } = req.user
 		const { email, firstName, lastName } = req.body
-		// if (role == "admin") {
-		//   const user = await Admin.findOne({ where: { id: 1 } });
-		//   user.email = email;
-		//   user.firstName = firstName;
-		//   user.lastName = lastName;
-		//   await user.save();
-		//   return res.json({ succes: true });
-		// } else
 		if (role == "superAdmin") {
 			const user = await SuperAdmin.findOne({ where: { id: user_id } })
 			user.email = email
@@ -361,7 +347,7 @@ const getMe = async (req, res) => {
 				where: { id: user_id },
 				include: [
 					{
-						model: Contry,
+						model: Country,
 					},
 				],
 			})
@@ -371,10 +357,6 @@ const getMe = async (req, res) => {
 				where: { id: user_id },
 			})
 			const subscribeDayDifrence = dateDifferenceInDays(user.lastPay)
-			console.log(
-				subscribeDayDifrence,
-				"--------subscribeDayDifrence-------------subscribeDayDifrence-----subscribeDayDifrence"
-			)
 			if (!subscribeDayDifrence) {
 				user.subscribe = false
 				await user.save()

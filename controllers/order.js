@@ -55,7 +55,6 @@ const getStatus = async (req, res) => {
     const subscribe = await Subscribtions.findOne({
       where: { mdOrder: orderId },
     });
-    console.log(subscribe, "---");
 
     const ownerSystem = await OwnerSystem.findOne({
       where: { ownerId: subscribe.ownerId },
@@ -82,14 +81,12 @@ const getStatus = async (req, res) => {
           owner.subscribe = true;
           owner.lastPay = getCuurentDate();
           await owner.save();
-          console.log();
           return res.json({ succes: true, data: subscribe });
         } else {
           subscribe.status = "fail";
           await subscribe.save();
           return res.json({ succes: false });
         }
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);

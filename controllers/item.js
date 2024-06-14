@@ -602,7 +602,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 							let result1 = coin + cash + bill
 							let caxs = await clacData1(i.p2, i, prevDay)
 
-							console.log(caxs, "111111111111 111111")
 							allResult.push({
 								id: i.p2,
 								result: result1,
@@ -624,7 +623,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 							let bill = Number(i.p18) * Number(i.p12)
 							let caxs = await clacData1(i.p2, i)
 
-							console.log(caxs, "111111111111 =----------- 111111")
 							let result1 = coin + cash + bill
 							allResult.push({
 								id: i.p2,
@@ -735,7 +733,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 						} else {
 							let result2 = Number(i.p18) * Number(i.p12)
 							const caxs = await clacData2(i.p2)
-							// const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
 							allResult.push({
 								id: i.p2,
 								ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
@@ -744,7 +741,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 								firstValue1: caxs.firstValue1,
 								secondValue1: caxs.secondValue1,
 								type: 2,
-								// box,
 							})
 						}
 				  })
@@ -762,7 +758,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 							let result2 =
 								(Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12)
 							const caxs = await clacData2(i.p2)
-							// const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
 							allResult.push({
 								id: i.p2,
 								result: result2,
@@ -774,7 +769,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 						} else {
 							let result2 = Number(i.p18) * Number(i.p12)
 							const caxs = await clacData2(i.p2)
-							// const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
 							allResult.push({
 								id: i.p2,
 								ratio: caxs !== 0 ? (caxs / result2) * 100 : 100,
@@ -798,7 +792,6 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 		let coin = 0
 		let cash = 0
 		let bill = 0
-		console.log(allResult, "--------------")
 		await allResult.map(i => {
 			result = result + i.result
 			expense = expense + i.caxs
