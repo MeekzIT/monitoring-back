@@ -885,7 +885,13 @@ const getBoxesInfo = async (req, res) => {
 		console.log(box, "boxboxbox")
 		await Promise.all(
 			await box.map(async i => {
-				const data = await getBoxInfoService(ownerId, date, endDate, i.id)
+				const data = await getBoxInfoService(
+					ownerId,
+					date,
+					endDate,
+					i.dataValues.id
+				)
+				console.log(data, "datadatadatadatadatadatadatadata")
 				result.push(data.data)
 			})
 		)
