@@ -895,6 +895,7 @@ const getBoxesInfo = async (req, res) => {
 			})
 		)
 		const dayExspanse = Math.round(expenseValueMonth / 30)
+		console.log(result, expenseValueMonth, "http://localhost:5001/")
 
 		return res.json(
 			boxId
