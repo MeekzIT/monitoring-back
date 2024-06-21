@@ -1149,9 +1149,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 
 							allResult.push({
 								id: i.p2,
-								result: result1,
+								result: result1 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result1,
 								date: i.datatime.slice(0, 10),
 							})
 						} else {
@@ -1163,9 +1163,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 
 							allResult.push({
 								id: i.p2,
-								result: result1,
+								result: result1 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result1,
 								date: i.datatime.slice(0, 10),
 							})
 						}
@@ -1206,9 +1206,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 							)
 							allResult.push({
 								id: i.p2,
-								result: result1,
+								result: result1 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result1,
 								date: i.datatime.slice(0, 10),
 							})
 						} else {
@@ -1219,9 +1219,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 							let result1 = coin + cash + bill
 							allResult.push({
 								id: i.p2,
-								result: result1,
+								result: result1 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result1,
 								date: i.datatime.slice(0, 10),
 							})
 						}
@@ -1245,9 +1245,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 							// const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
 							allResult.push({
 								id: i.p2,
-								result: result2,
+								result: result2 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result2,
 								date: i.datatime.slice(0, 10),
 							})
 						} else {
@@ -1255,9 +1255,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 							const caxs = await clacData2(i.p2)
 							allResult.push({
 								id: i.p2,
-								result: result2,
+								result: result2 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result2,
 								date: i.datatime.slice(0, 10),
 							})
 						}
@@ -1278,9 +1278,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 							// const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
 							allResult.push({
 								id: i.p2,
-								result: result2,
+								result: result2 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result2,
 								date: i.datatime.slice(0, 10),
 							})
 						} else {
@@ -1288,9 +1288,9 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 							const caxs = await clacData2(i.p2)
 							allResult.push({
 								id: i.p2,
-								result: result2,
+								result: result2 + caxs.caxs,
 								caxs: caxs.caxs,
-								all: result1 + caxs.caxs,
+								all: result2,
 								date: i.datatime.slice(0, 10),
 							})
 						}
