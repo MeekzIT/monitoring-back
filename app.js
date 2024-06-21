@@ -46,10 +46,10 @@ cron.schedule("0 0 * * *", () => {
 	getAll(true)
 })
 
-cron.schedule("0 * * * *", () => {
-	console.log("Logging every hour:", new Date().toLocaleString())
-	getAll(false)
-})
+// cron.schedule("0 * * * *", () => {
+// 	console.log("Logging every hour:", new Date().toLocaleString())
+// 	getAll(false)
+// })
 
 
 app.use(function (req, res, next) {
