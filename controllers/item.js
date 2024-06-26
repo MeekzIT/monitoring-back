@@ -532,7 +532,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 					where: {
 						...queryObj,
 						p2: {
-							[Op.like]: String(ownerId),
+							[Op.like]: String(ownerId) + "%",
 						},
 						datatime: {
 							[Op.like]: entery + "%",
@@ -560,7 +560,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 					where: {
 						...queryObj,
 						p2: {
-							[Op.like]: String(ownerId),
+							[Op.like]: String(ownerId) + "%",
 						},
 						datatime: {
 							[Op.like]: entery + "%",
@@ -579,7 +579,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 				? await item.map(async i => {
 						const prevDay = await ItemValues.findOne({
 							where: {
-								...queryObj,
+								// ...queryObj,
 								p2: i.p2,
 								datatime: {
 									[Op.like]: getPreviousDayDate(i.datatime) + "%",
@@ -644,7 +644,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 				: items1.map(async i => {
 						const prevDay = await ItemValues.findOne({
 							where: {
-								...queryObj,
+								// ...queryObj,
 								p2: i.p2,
 								datatime: {
 									[Op.like]: getPreviousDayDate(i.datatime) + "%",
@@ -707,7 +707,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 				? await item2.map(async i => {
 						const prevDay2 = await ItemValues2.findOne({
 							where: {
-								...queryObj,
+								// ...queryObj,
 								p2: i.p2,
 								datatime: {
 									[Op.like]: getPreviousDayDate(i.datatime) + "%",
@@ -747,7 +747,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 				: items2.map(async i => {
 						const prevDay2 = await ItemValues2.findOne({
 							where: {
-								...queryObj,
+								// ...queryObj,
 								p2: i.p2,
 								datatime: {
 									[Op.like]: getPreviousDayDate(i.datatime) + "%",
@@ -885,13 +885,7 @@ const getBoxesInfo = async (req, res) => {
 		console.log(box, "boxboxbox")
 		await Promise.all(
 			await box.map(async i => {
-				const data = await getBoxInfoService(
-					ownerId,
-					date,
-					endDate,
-					i.dataValues.id
-				)
-				console.log(data, "datadatadatadatadatadatadatadata")
+				const data = await getBoxInfoService(ownerId, date, endDate, i.id)
 				result.push(data.data)
 			})
 		)
@@ -902,7 +896,6 @@ const getBoxesInfo = async (req, res) => {
 			})
 		)
 		const dayExspanse = Math.round(expenseValueMonth / 30)
-		console.log(result, expenseValueMonth, "http://localhost:5001/")
 
 		return res.json(
 			boxId
