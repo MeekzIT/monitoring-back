@@ -1389,6 +1389,8 @@ const getBoxesInfoLinear = async (req, res) => {
 				},
 			},
 		})
+
+		console.log(itemCurrent, "itemCurrentitemCurrentitemCurrent")
 		await Promise.all(
 			days.map(async entery => {
 				const point = await ItemValues.findOne({
@@ -1426,7 +1428,7 @@ const getBoxesInfoLinear = async (req, res) => {
 		let boxIdis = []
 
 		await Promise.all(
-			days.length
+			days.length > 1
 				? await items1.concat(items2).map(async i => {
 						boxIdis.push(i.p2)
 				  })
@@ -1437,6 +1439,12 @@ const getBoxesInfoLinear = async (req, res) => {
 						.map(async i => {
 							boxIdis.push(i.p2)
 						})
+		)
+		console.log(
+			boxIdis,
+			days,
+			days.length,
+			"boxIdisboxIdisboxIdisboxIdisboxIdisboxIdisboxIdisboxIdisboxIdisboxIdis"
 		)
 		await Promise.all(
 			await [...new Set(boxIdis)].map(async entery => {
