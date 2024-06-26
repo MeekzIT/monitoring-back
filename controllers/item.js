@@ -1375,17 +1375,17 @@ const getBoxesInfoLinear = async (req, res) => {
 		})
 		const itemCurrent = await Items.findAll({
 			where: {
-				// ...queryObj,
+				...queryObj,
 				p2: {
-					[Op.like]: String(ownerId),
+					[Op.like]: String(ownerId) + "%",
 				},
 			},
 		})
 		const itemCurrent2 = await Item2.findAll({
 			where: {
-				// ...queryObj,
+				...queryObj,
 				p2: {
-					[Op.like]: String(ownerId),
+					[Op.like]: String(ownerId) + "%",
 				},
 			},
 		})
