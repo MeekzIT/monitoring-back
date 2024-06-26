@@ -1039,14 +1039,14 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 			where: {
 				...queryObj,
 				p2: {
-					[Op.like]: String(ownerId),
+					[Op.like]: String(ownerId) + "%",
 				},
 			},
 		})
 		const itemCurrent = await Items.findAll({
 			where: {
 				p2: {
-					[Op.like]: String(ownerId),
+					[Op.like]: String(ownerId) + "%",
 				},
 			},
 		})
@@ -1054,14 +1054,14 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 			where: {
 				...queryObj,
 				p2: {
-					[Op.like]: String(ownerId),
+					[Op.like]: String(ownerId) + "%",
 				},
 			},
 		})
 		const item2Current = await Item2.findAll({
 			where: {
 				p2: {
-					[Op.like]: String(ownerId),
+					[Op.like]: String(ownerId) + "%",
 				},
 			},
 		})
@@ -1082,7 +1082,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 				const itemCurrent = await Items.findOne({
 					where: {
 						p2: {
-							[Op.like]: String(ownerId),
+							[Op.like]: String(ownerId) + "%",
 						},
 						datatime: {
 							[Op.like]: entery + "%",
@@ -1109,7 +1109,7 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 				const item2Current = await Item2.findOne({
 					where: {
 						p2: {
-							[Op.like]: String(ownerId),
+							[Op.like]: String(ownerId) + "%",
 						},
 						datatime: {
 							[Op.like]: entery + "%",
@@ -1196,15 +1196,6 @@ const getItemDaysService = async (ownerId, date, endDate) => {
 									: (Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12)
 							let result1 = coin + cash + bill
 							let caxs = await clacData1(i.p2, i, prevDay)
-							console.log(
-								i.datatime,
-								coin,
-								cash,
-								bill,
-								caxs.caxs,
-								result1,
-								"---------------------------------"
-							)
 							allResult.push({
 								id: i.p2,
 								result: result1 - caxs.caxs,
