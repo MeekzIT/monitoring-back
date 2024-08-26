@@ -882,10 +882,10 @@ const getBoxesInfo = async (req, res) => {
 				ownerId,
 			},
 		})
-		console.log(box, "boxboxbox")
 		await Promise.all(
 			await box.map(async i => {
 				const data = await getBoxInfoService(ownerId, date, endDate, i.id)
+				console.log(data,"data");
 				result.push(data.data)
 			})
 		)
@@ -896,7 +896,7 @@ const getBoxesInfo = async (req, res) => {
 			})
 		)
 		const dayExspanse = Math.round(expenseValueMonth / 30)
-
+		console.log(result,"result");
 		return res.json(
 			boxId
 				? [
