@@ -1,5 +1,5 @@
 const { editData, getInfoItemValues, getModeName } = require("../services/item")
-const { Op } = require("sequelize")
+const { Op, where } = require("sequelize")
 const Items = require("../models").Item
 const Item2 = require("../models").Item2
 const Item3 = require("../models").Item3
@@ -875,6 +875,14 @@ const getBoxesInfo = async (req, res) => {
 			}
 		}
 		const box = await Boxes.findAll({ where: { ownerId } })
+		const itemsOfBox = await Items.findAll({
+      where: {
+        p2: {
+          [Op.like]: String(ownerId) + "%",
+        },
+        p5: boxId,
+      },
+    });
 		const result = []
 		const expenses = await BoxExpenses.findAll({
 			where: {
@@ -883,13 +891,13 @@ const getBoxesInfo = async (req, res) => {
 			},
 		})
 		await Promise.all(
-			await box.map(async i => {
-				console.log(box,i,"curdi");
-				const data = await getBoxInfoService(ownerId, date, endDate, i.id)
-				console.log(data,"data");
-				result.push(data.data)
-			})
-		)
+      await itemsOfBox.map(async (i) => {
+        console.log(itemsOfBox, "curdi");
+        const data = await getBoxInfoService(i.p2, date, endDate, false);
+        console.log(data, "data");
+        result.push(data.data);
+      })
+    );
 		let expenseValueMonth = 0
 		await Promise.all(
 			await expenses.map(async i => {
