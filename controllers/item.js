@@ -906,18 +906,19 @@ const getBoxesInfo = async (req, res) => {
 		)
 		const dayExspanse = Math.round(expenseValueMonth / 30)
 		console.log(result,"result");
+		const boxResults = mergeValues(result);
 		return res.json(
-			boxId
-				? [
-						{
-							...result[0],
-							expense: result[0].expense + dayExspanse,
-							ratio:
-								((result[0].expense + dayExspanse) / result[0].result) * 100,
-						},
-				  ]
-				: result
-		)
+      boxId
+        ? [
+            {
+              ...boxResults,
+              expense: boxResults.expense + dayExspanse,
+              ratio:
+                ((boxResults.expense + dayExspanse) / boxResults.result) * 100,
+            },
+          ]
+        : result
+    );
 	} catch (e) {
 		console.log("something went wrong", e)
 	}
@@ -1314,6 +1315,30 @@ const getItemDaysLinear = async (req, res) => {
 	} catch (e) {
 		console.log("something went wrong", e)
 	}
+}
+
+function mergeValues(arr) {
+  return arr.reduce(
+    (acc, curr) => {
+      acc.result += curr.result;
+      acc.expense += curr.expense;
+      acc.benefit += curr.benefit;
+      acc.ratio += curr.ratio;
+      acc.coin += curr.coin;
+      acc.cash += curr.cash;
+      acc.bill += curr.bill;
+      return acc;
+    },
+    {
+      result: 0,
+      expense: 0,
+      benefit: 0,
+      ratio: 0,
+      coin: 0,
+      cash: 0,
+      bill: 0,
+    }
+  );
 }
 
 function mergeData(inputData) {
