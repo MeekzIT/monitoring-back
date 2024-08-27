@@ -894,7 +894,7 @@ const getBoxesInfo = async (req, res) => {
       await itemsOfBox.map(async (i) => {
         console.log(itemsOfBox, "curdi");
         const data = await getBoxInfoService(i.p2, date, endDate, false);
-        console.log(data, "data");
+        console.log(data, "data111");
         result.push(data.data);
       })
     );
