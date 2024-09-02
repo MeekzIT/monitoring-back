@@ -289,9 +289,9 @@ const getCurrentDateMoney = async (req, res) => {
 						? Number(item.p16) * Number(prevDay.p10)
 						: (Number(item.p16) - Number(prevDay.p16)) * Number(prevDay.p10)
 				let cash =
-					Number(prevDay.p17) > Number(i.p17)
+                    Number(prevDay.p17) > Number(item.p17)
 						? Number(item.p17) * Number(prevDay.p11)
-						: (Number(i.p17) - Number(prevDay.p17)) * Number(prevDay.p11)
+                        : (Number(item.p17) - Number(prevDay.p17)) * Number(prevDay.p11)
 				let bill =
 					Number(prevDay.p18) > Number(item.p18)
 						? Number(item.p18) * Number(prevDay.p12)
