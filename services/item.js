@@ -232,7 +232,7 @@ const getModeName = mode => {
 		case "19":
 			return "wheelpump"
 		case "20":
-            return "foampressure"
+            return "foamPressure"
 		case "21":
 			return "fan"
 	}
