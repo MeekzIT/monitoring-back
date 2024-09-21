@@ -68,5 +68,5 @@ router.get("/get-box-days", itemController.getBoxesInfoLinear)
 
 // loyals
 
-router.get("/item-loyal", itemController.getItemLoyal)
+// router.get("/item-loyal", itemController.getItemLoyal)
 module.exports = router
