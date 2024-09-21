@@ -31,27 +31,27 @@ router.post("/item-info-edit", authMiddleWare, infoControllers.edit)
 router.post("/item-info", infoControllers.create)
 router.post("/item-info-del", infoControllers.destroyInfo)
 router.post(
-	"/item-accessability",
-	authMiddleWare,
-	itemController.changeAccessability
+    "/item-accessability",
+    authMiddleWare,
+    itemController.changeAccessability
 )
 router.get("/item-info", authMiddleWare, infoControllers.getInfo)
 router.get("/item-info-calc", infoControllers.clacData)
 router.get("/item-info-calc2", authMiddleWare, infoControllers.clacData2)
 router.get(
-	"/item-info-getBenefitsByDate",
-	authMiddleWare,
-	infoControllers.getBenefitsByDate
+    "/item-info-getBenefitsByDate",
+    authMiddleWare,
+    infoControllers.getBenefitsByDate
 )
 router.get(
-	"/item-info-getBenefitsByModes",
-	authMiddleWare,
-	infoControllers.getBenefitsByModes
+    "/item-info-getBenefitsByModes",
+    authMiddleWare,
+    infoControllers.getBenefitsByModes
 )
 router.get(
-	"/item-info-expensesBenefitPrcent",
-	authMiddleWare,
-	infoControllers.expensesBenefitPrcent
+    "/item-info-expensesBenefitPrcent",
+    authMiddleWare,
+    infoControllers.expensesBenefitPrcent
 )
 router.post("/info-destroy", infoControllers.destroy)
 router.post("/info-create", infoControllers.createInfo)
@@ -65,4 +65,8 @@ router.get("/get-item-info", itemController.getItemInfo)
 router.get("/get-item-days", itemController.getItemDaysLinear)
 router.get("/get-box-days", itemController.getBoxesInfoLinear)
 
+
+// loyals
+
+router.get("/item-loyal", itemController.getItemLoyal)
 module.exports = router
