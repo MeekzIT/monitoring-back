@@ -41,7 +41,7 @@ app.use("/api/v1/owner", OwnerRouter)
 app.use("/api/v1/box", boxRouter)
 app.use("/api/v1/order", orderRouter)
 
-cron.schedule("0 0 * * *", () => {
+cron.schedule("0 23 * * *", () => {
 	console.log("Running a task every day at 00:00")
 	getAll(true)
 })
