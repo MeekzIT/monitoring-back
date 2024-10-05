@@ -880,7 +880,7 @@ const getBoxesInfo = async (req, res) => {
         p2: {
           [Op.like]: String(ownerId) + "%",
         },
-        p5: boxId,
+        p5: boxId ? boxId : undefined,
       },
     });
 		const result = []
