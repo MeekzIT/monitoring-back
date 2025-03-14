@@ -715,6 +715,9 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 							},
 						})
 						if (prevDay2) {
+							let coin = Number(i.p16) * Number(i.p10)
+							let cash = Number(i.p17) * Number(i.p11)
+							let bill = Number(i.p18) * Number(i.p12)
 							let result2 =
 								(Number(i.p18) - Number(prevDay2.p18)) * Number(prevDay2.p12)
 							const caxs = await clacData2(i.p2)
