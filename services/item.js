@@ -82,11 +82,11 @@ const getAll = async setInfo => {
 								time1: 40,
 								time2: 40,
 							}))
-						await Item2.create(item)
+						await Item2.create({ ...item, access: true })
 						setInfo &&
 							(await Item2Values.create({ ...item, datatime: formattedDate }))
 					} else if (item.p0 == 3) {
-						await Item3.create(item)
+						await Item3.create({ ...item, access: true })
 						setInfo &&
 							(await Item3Values.create({ ...item, datatime: formattedDate }))
 					}
