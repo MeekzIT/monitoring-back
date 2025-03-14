@@ -32,7 +32,6 @@ router.post("/item-info", infoControllers.create)
 router.post("/item-info-del", infoControllers.destroyInfo)
 router.post(
     "/item-accessability",
-    authMiddleWare,
     itemController.changeAccessability
 )
 router.get("/item-info", authMiddleWare, infoControllers.getInfo)
