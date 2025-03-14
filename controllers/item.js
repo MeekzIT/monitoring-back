@@ -716,7 +716,7 @@ const getBoxInfoService = async (ownerId, date, endDate, moikaId) => {
 						})
 						if (prevDay2) {
 							let result2 =
-								(Number(i.p18) - Number(prevDay.p18)) * Number(prevDay.p12)
+								(Number(i.p18) - Number(prevDay2.p18)) * Number(prevDay2.p12)
 							const caxs = await clacData2(i.p2)
 							// const box = await Boxes.findOne({ where: { id: i.p5, ownerId } });
 							allResult.push({
