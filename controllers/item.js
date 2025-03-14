@@ -111,19 +111,34 @@ const getSingle = async (req, res) => {
 }
 
 const changeAccessability = async (req, res) => {
-	try {
-		const { id, access } = req.body
-		const { role } = req.user
-		if (role == "owner") {
-			const item = await Items.findOne({ where: { p2: id } })
-			item.access = access
-			await item.save()
-			return res.json({ succes: true, data: item })
-		} else return res.json({ succes: false })
-	} catch (e) {
-		console.log("something went wrong", e)
-	}
-}
+  try {
+    const { id, access } = req.body;
+    const { role } = req.user;
+    if (role == "owner") {
+      const item = await Items.findOne({ where: { p2: id } });
+      const item2 = await Item2.findOne({ where: { p2: id } });
+      const item3 = await Item3.findOne({ where: { p2: id } });
+
+      if (item) {
+        item.access = access;
+        await item.save();
+        return res.json({ succes: true, data: item });
+      } else if (item2) {
+        item2.access = access;
+        await item2.save();
+        return res.json({ succes: true, data: item2 });
+      } else if (item3) {
+        item3.access = access;
+        await item3.save();
+        return res.json({ succes: true, data: item3 });
+      }
+
+      return res.json({ succes: true, data: item });
+    } else return res.json({ succes: false });
+  } catch (e) {
+    console.log("something went wrong", e);
+  }
+};
 
 const getItemDays = async (req, res) => {
 	try {
